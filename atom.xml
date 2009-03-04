@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Joel McCracken</title>
+ <link href="http://joelmccracken.github.com/atom.xml" rel="self"/>
+ <link href="http://joelmccracken.github.com/"/>
+ <updated>2009-03-04T13:21:24-05:00</updated>
+ <id>http://joelmccracken.github.com/</id>
+ <author>
+   <name>Joel McCracken</name>
+   <email>jom24g@gmail.com</email>
+ </author>
+ 
+ 
+ <entry>
+   <title>Jekyll Reactions</title>
+   <link href="http://joelmccracken.github.com/2009/02/16/jekyll-reactions.html"/>
+   <updated>2009-02-16T00:00:00-05:00</updated>
+   <id>http://joelmccracken.github.com/2009/02/16/jekyll-reactions</id>
+   <content type="html">&lt;h1 id='jekyll_reactions'&gt;Jekyll Reactions&lt;/h1&gt;
+
+&lt;p&gt;Every once in a while, I notice a gaping hole in a markets. One of those holes is free blogging platforms. I know there are many blogging solutions available, but I haven&amp;#8217;t been able to find one that is feature-rich. Mostly, they are all the same in any way that matters. I am slowly writing more and more, however I am not ready to begin using paid hosting, because I&amp;#8217;m not sure what I want exactly I want to blog about.&lt;/p&gt;
+
+&lt;p&gt;As a programmer, I wanted to be able to have syntax highlighting in my code. This is a requirement. It is very hard to read code that is not properly formatted and highlighted. Nothing provided this functionality. Also, and less so, I wanted have the option of using LaTeX math whenever I needed it. Often, ideas are much easier to describe with math notation than via programs.&lt;/p&gt;
+
+&lt;p&gt;So, I waited, dragging my feet. If any of you have actually looked through some of &lt;a href='http://nyaj.wordpress.com'&gt;my old blog&lt;/a&gt; posts on programming, you know that it is awful to read code on wordpress without any plugins. And, I&amp;#8217;ve never even attempted to write anything with math in it, as that would be totally unreadable.&lt;/p&gt;
+
+&lt;p&gt;Until I stumbled upon on Jekyll. &lt;a href='http://github.com/mojombo/jekyll/tree/master'&gt;Jekyll&lt;/a&gt; is a static site generator, which has been somewhat optimized for blogging. You write your content, and then Jekyll converts the document to html, adding in headers, footers, and whatever else you desier.&lt;/p&gt;
+
+&lt;p&gt;Jekyll virtues:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Latex! &lt;span class='maruku-inline'&gt;&lt;img class='maruku-png' src='/images/latex/b229af7db272652d48493bfa021c2eae.png' alt='equation' style='vertical-align: -0.0ex;height: 1.77777777777778ex;' /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Syntax highlighting! &lt;div class='highlight'&gt;&lt;pre&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;lamdba&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;f&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;lambda&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;x&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;f&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;x&lt;/span&gt; &lt;span class='nv'&gt;x&lt;/span&gt;&lt;span class='p'&gt;))))&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;lambda &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;x&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;f&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;x&lt;/span&gt; &lt;span class='nv'&gt;x&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Easy to use whatever text editor I want (emacs, for me)&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Git versioning, since it is hosted on github.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Layout is completely user-definable. No need to be limited by other peoples&amp;#8217; templates&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Jekyll problems:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;By nature, commenting is impossible. This has made me very hesitant to adopt it completely, however I don&amp;#8217;t think this will be a huge problem in the long run.&lt;/li&gt;
+
+&lt;li&gt;It is unwieldy. For example, I currently have not been able to determine why my blog often does not get plublished on the server. I am fairly certain that this is because the server is running a different version of jekyll. To get around this, my solution is to publish the Jekyll code locally, and then push site content to github. The downside to doing this is that I don&amp;#8217;t get the github copy of my original documents, only the generated content.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So, while Jekyll is very useful and interesting, and certainly occupies a local optima, it does how its drawbacks. For now, it is the best available publishing solution. So far, I am happy with it.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>How to Convert an NFA to a DFA</title>
+   <link href="http://joelmccracken.github.com/2009/01/12/nfa-to-a-dfa.html"/>
+   <updated>2009-01-12T00:00:00-05:00</updated>
+   <id>http://joelmccracken.github.com/2009/01/12/nfa-to-a-dfa</id>
+   <content type="html">&lt;h1 id='how_to_convert_an_nfa_to_a_dfa'&gt;How to Convert an NFA to a DFA&lt;/h1&gt;
+
+&lt;p&gt;Exxample: &lt;span class='maruku-inline'&gt;&lt;img class='maruku-png' src='/images/latex/66c0100364c3a1fdece2bef7768edbc6.png' alt='equation' style='vertical-align: -0.555555555555556ex;height: 2.22222222222222ex;' /&gt;&lt;/span&gt; for &lt;span class='maruku-inline'&gt;&lt;img class='maruku-png' src='/images/latex/ac2a59537a6c813937dbc07572a8ed23.png' alt='equation' style='vertical-align: -0.333333333333333ex;height: 1.88888888888889ex;' /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;map &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='k'&gt;lambda &lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nf'&gt;x&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;+ &lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt; &lt;span class='nv'&gt;x&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+     &lt;span class='o'&gt;&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt; &lt;span class='mi'&gt;2&lt;/span&gt; &lt;span class='mi'&gt;3&lt;/span&gt; &lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content>
+ </entry>
+ 
+ 
+</feed>
