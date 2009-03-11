@@ -1,3 +1,0 @@
-Nulls are the bane of some programming languages -- and for good reason. 
-
-FP removes this -- a function transforms a collection, so we never encouter the concept of an empty collection!
