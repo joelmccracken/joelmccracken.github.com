@@ -3,21 +3,12 @@ layout: default
 title: Joel McCracken
 ---
  
-<div class="site">
-  <div class="title">
-    <a href="/">Joel McCracken</a>
-  </div>
-  
-   
- 
 <div id="home">
   <h1>Blog Posts</h1>
   <ul class="posts">
-    
-      <li><span>16 Feb 2009</span> &raquo; <a href="/2009/02/16/jekyll-reactions.html">Jekyll Reactions</a></li>
-    
-      <li><span>12 Jan 2009</span> &raquo; <a href="/2009/01/12/nfa-to-a-dfa.html">How to Convert an NFA to a DFA</a></li>
-    
+    {% for post in site.posts %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
   </ul>
  
  
@@ -28,32 +19,7 @@ title: Joel McCracken
   </ul>
 </div>
  
-<notextile><div class="highlight"><pre><span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">lambda </span><span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+ </span><span class="mi">1</span> <span class="nv">x</span><span class="p">))</span>
-     <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">))</span>
-</pre></div></notextile>
-
-  
-  <div class="footer">
-    <div class="contact">
-      <p>
-        Joel McCracken<br />
-        jom24g@gmail.com
-      </p>
-    </div>
-  </div>
-</div>
-
-
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-7759066-1");
-pageTracker._trackPageview();
-} catch(err) {}</script> 
- 
-</body>
-</html>
- 
+{% highlight scheme %}
+(map (lambda (x) (+ 1 x))
+     '(1 2 3 4 5))
+{% endhighlight %}

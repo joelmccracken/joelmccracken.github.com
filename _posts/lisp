@@ -1,0 +1,42 @@
+The Ideal Programming Language
+
+Lisp is a fantastic language, and it certainly occupies a certain optimal place in the programming language world. However, it isn't quite the best, and I'll discuss why. For a quick look, I say that
+I believe Haskell is currently at another edge of the spectrum. In fact, all models have their individual merits and weaknesses. 
+
+Multimethods Vs OO
+
+Fundamentally, there is not a large difference between the usage of Multimethods vs OO in the programming language world. 
+
+Formalization
+
+some people don't like formalization. Paul Graham, for example, makes this clear when he talks about exploratory programming in Lisp. (note: just accept the strawman here). I have to agree with him.
+In exploratory programming, we want to be able to get results as soon as possible. We want to be able to see what works and what doesnt as soon as possible. It makes no sense for Java to yelp at me
+about some stupid typing issue, whenever I haven't even decided if this approach is promising or not. 
+
+And languages like Lisp and Python prove it. This is why google has adopted Python. 
+
+
+
+However, after exploration, we need formalization. 
+
+Programming is analygous to writing. Weakly typed programs tend to be freewriting quality. You may be able to communicate your ideas effectively, however you never really know if your ideas are 
+quite correct or not until you tie your argument down. Will the reader agree or disagree with you? Do they hold different basic assumptions? Will you alienate them by saying something initially
+that you assume they accept, however you fail to back up?
+
+
+The same is true of a program. The formalization aspect, IE type safety, takes a program that quite possibly will have bad instructions in it, and checks it for a wide variety of these conditions.
+Imagine that functions are paragraphs in our model. The input to the function are either prepositions, or conclusions from the preceeding paragraphs. The outputs are new conclusions. Our programs 
+break whenever we haven't thoroughly thought about the input and output of our functions (thus the program runs erroniously), and our essays break whenever our readers see a glaring omission in our
+discussion. 
+
+Point being, it is most helpful if we do both!
+
+What is the best way to do this? I can see two practical models. 
+
+In the first, programmers annotate their applications with types, ala scheme TK(what is this, exactly? references). The provides programmers the ability to slowly add type safety to their
+applications -- which fits right in line with the principle of exploratory programming. However, this also means that it isn't incredibly easy for verification that a program is currently 
+correct, and that its types are being used safely. Possibly an execution flag can force the issue, but I'm not certain this is the way to go. Use strict?
+
+
+
+
