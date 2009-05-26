@@ -19,7 +19,7 @@ Until I stumbled upon on Jekyll. [Jekyll][] is a static site generator, which ha
 [Jekyll]: http://github.com/mojombo/jekyll/tree/master
 
 Jekyll virtues:
-* Latex! $E = mc^2$
+* <del>Latex!</del>
 * Syntax highlighting! {% highlight scheme %}(lamdba (f) (lambda(x) (f (x x)))) (lambda (x) (f (x x))) {% endhighlight %}
 * Easy to use whatever text editor I want (emacs, for me)
 * Git versioning, since it is hosted on github.
