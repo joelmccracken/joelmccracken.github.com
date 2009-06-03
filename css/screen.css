@@ -77,6 +77,14 @@ ul.posts {
 /* Site
 /*
 /*****************************************************************************/
+
+blockquote {
+	   padding: .5em;
+	   padding-left: 1em;
+	   background: #EEEEEE none repeat scroll 0 0;
+	   margin: 1em;
+}
+
  
 .site {
   font-size: 110%;
@@ -190,3 +198,5 @@ ul.posts {
   #related h2 {
     margin-bottom: 1em;
   }
+
+
