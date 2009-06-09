@@ -1,0 +1,53 @@
+---
+layout: post
+title: Emacs Foo
+---
+
+
+{{ page.title }}
+================
+
+Two carpenters are vying for a job on our construction site, 
+and we are trying to pick which one to hire for
+a job. We've seen their work, and they both have roughly equal ability 
+to produce the required woodwork, and thus the decision isn't totally totally 
+easy. 
+
+One carpenter exclusively uses one big knife to do all of his work. He uses
+the knife to chop limbs from trees and to strip bark -- but he also uses that same
+knife to do his most intricate designs. Given, he is good with his knife, and
+it doesn't seem like his dedication to that one knife hurts the quality of his
+carvings -- and he swears by it!
+
+The other carpenter is a tool specialist. He has more than a few toolboxes, with 
+specialized tools that do all sorts of things, and he is good with all of them.
+He uses an ax to chop apart trees, sandpaper for sanding, and a fine knife for
+details. 
+
+Which one would you hire? I know that I would pick the man that has the sense 
+to use the right tools for the job. However, the uncanny part of this illustration
+is that **it maps almost perfectly to programming**. 
+
+Programming is crafting, and I am sure this requires no arguing. However, I
+regularly talk to programmers defend their choice of inferior tools. They don't see 
+the sense of learning to use the right tools for the right jobs.
+
+The first carpenter would use a Windows & gargantuan IDE user if he were a programmer. 
+Admittedly, it may do it's job pretty well. But, what happens whenever you need 
+to do something outside of what it was designed to do? You need other tools. 
+And sometimes Explorer just doesn't cut it.
+
+The second carpenter would be a Unix hacker. He would know his text editor, sure,
+but also find, grep, sed. He would know how to script his shell to automate
+tasks for him. He is no stranger to make files, using them to automate as much
+of his programming life as he can. 
+
+Programming is a young discipline, and it is not yet well understood. This general 
+lack of understanding is what creates this anomaly of programmers
+who do not recognize how important their tools are to their success. The general 
+computing industry will not begin to understand this for a long time, just as
+it does not understand that programmers are not interchangeable parts, even
+though the business world tries to treat us that way. 
+
+Learn your tools, and join the ranks of the very productive. Once you are able
+to script away the trivial, you can spend your time focusing on the worthwhile.
