@@ -85,6 +85,10 @@ blockquote {
 	   margin: 1em;
 }
 
+body{
+
+	
+}
  
 .site {
   font-size: 110%;
@@ -101,7 +105,8 @@ blockquote {
 }
  
   .site .title a {
-    color: #a00;
+    color: #a1d43B;
+    font-size: 3em;
     text-decoration: none;
   }
   
