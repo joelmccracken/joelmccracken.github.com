@@ -4,28 +4,21 @@ title: Joel McCracken
 ---
 
 <div id="home">
-  <p> I'm a programmer by lifestyle.</p>
+  <p> i'm a programmer by lifestyle.</p>
   
-  <h1>Pages</h1>
-  <ul>
-    <a href="/freshlorem.html">
-       </ul>
-  <h1>Blog Posts</h1>
+  <h1>writing</h1>
   <ul class="posts">
     {% for post in site.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
  
   
-  <h1>Open Source Projects</h1>
-  <ul class="posts">
-    <li><a href="http://github.com/joelmccracken/mummy/">Mummy:</a> A scheme interpreter written specifically for interaction with the <a href="http://www.xomb.org/">XOmB</a> Operating System.</li>
-  </ul>
 </div>
 
-<h1>Things From Across the Web</h1>
+<h1>other places to find me</h1>
 <ul>
-  <li><a href="http://projecteuler.net/index.php?section=profile&profile=notyouravgjoel">Project Euler</a> (you must be logged in to Project Euler to view any profile)</li>
-  <li><a href="http://www.last.fm/user/notyouravgjoel">Last.FM</a></li>
+  <li><a href="http://www.twitter.com/JoelMcCracken">@JoelMcCracken</a></li>
+  <li><a href="http://www.facebook.com/joel.mccracken">facebook</a></li>
+  <li><a href="http://projecteuler.net/index.php?section=profile&profile=notyouravgjoel">project euler</a> (you must be logged in to project euler to view any profile)</li>
 </ul>
