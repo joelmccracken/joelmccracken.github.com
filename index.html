@@ -3,10 +3,20 @@ layout: default
 title: Joel McCracken
 ---
 
+
+
+<div class="title">Joel McCracken</div>
+
 <div id="home">
-  <p> i'm a programmer by lifestyle.</p>
+  <p> I'm a programmer.</p>
   
-  <h1>writing</h1>
+
+  <h1>content</h1>
+  <ul class="posts">
+  <a href="/content/create-words.html">create words</a>
+  </ul>
+
+  <h1>updates</h1>
   <ul class="posts">
     {% for post in site.posts %}
       <li><a href="{{ post.url }}">{{ post.title }}</a></li>
@@ -16,9 +26,8 @@ title: Joel McCracken
   
 </div>
 
-<h1>other places to find me</h1>
+<h1>elsewhere on the internet</h1>
 <ul>
   <li><a href="http://www.twitter.com/JoelMcCracken">@JoelMcCracken</a></li>
   <li><a href="http://www.facebook.com/joel.mccracken">facebook</a></li>
-  <li><a href="http://projecteuler.net/index.php?section=profile&profile=notyouravgjoel">project euler</a> (you must be logged in to project euler to view any profile)</li>
 </ul>

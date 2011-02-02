@@ -1,3 +1,5 @@
+
+
 /*****************************************************************************/
 /*
 /* Common
@@ -79,10 +81,8 @@ ul.posts {
 /*****************************************************************************/
 
 blockquote {
-	   padding: .5em;
-	   padding-left: 1em;
+	   padding: 1em;
 	   background: #EEEEEE none repeat scroll 0 0;
-	   margin: 1em;
 }
 
 body{
@@ -98,17 +98,7 @@ body{
   line-height: 1.5em;
 }
  
-.title {
-  color: #a00;
-  font-weight: bold;
-  margin-bottom: 2em;
-}
  
-  .site .title a {
-    color: #a1d43B;
-    font-size: 3em;
-    text-decoration: none;
-  }
   
   .site .title a:hover {
     color: black;
@@ -155,44 +145,67 @@ body{
         border: 0;
       }
     
+
+
+
 /*****************************************************************************/
 /*
-/* Posts
+/* common
 /*
 /*****************************************************************************/
- 
-#post {
+
+  .site .title {
+    color: #a1d43B;
+    font-size: 3em;
+    text-decoration: none;
+
+    padding-top: .2em;
+    padding-bottom: 1em;
+
+  }
+
+
+
+
+.footnotes {
+    margin-top: 5em;
+    padding: 1em;
+    background: #EEEEEE;
+    display: block;
+}
+
+.post {
   
 }
  
   /* standard */
   
-  #post pre {
+  .post pre {
     border: 1px solid #ddd;
     background-color: #eef;
     padding: 0 .4em;
   }
   
-  #post code {
+  .post code {
     border: 1px solid #ddd;
     background-color: #eef;
     font-size: 95%;
     padding: 0 .2em;
   }
   
-    #post pre code {
+    .post pre code {
       border: none;
     }
     
   /* terminal */
   
-  #post pre.terminal {
+  .post pre.terminal {
     border: 1px solid black;
     background-color: #333;
     color: white;
   }
   
-  #post pre.terminal code {
+  .post pre.terminal code {
     background-color: #333;
   }
  
@@ -205,3 +218,16 @@ body{
   }
 
 
+
+
+/*****************************************************************************/
+/*
+/* Posts
+/*
+/*****************************************************************************/
+ 
+/*****************************************************************************/
+/*
+/* pages
+/*
+/*****************************************************************************/
