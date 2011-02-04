@@ -15,13 +15,14 @@ title: Gaining Words
 >
 > -- George Orwell, Nineteen Eighty-Four
 
-The words we know and use are really important, and sometimes I forget
-how important. To illustrate, try this experiment with me, please. 
+The words we know and use are really important.
+To illustrate exactly how important they are, try
+this experiment with me, please. 
 
 First, think of an apple, but try to not use words -- think of the
 apple, but not in terms of the word. You might be able to consider an
 apple some other way besides mental words. For example,  you might be
-able to "see" an apple, mentally. 
+able to "see" an apple with your mind's eye. 
 
 Now, think about the idea of "rebellion", again without using any mental
 words. Notice anything different? 
@@ -58,7 +59,7 @@ be much limited than otherwise.
 ## Gaining Words
 
 However, there is a flip to this. If we learn new words, we have
-access to new ideas. We can have much more rich thought. We are
+access to new ideas. We can have richer thought. We are
 smarter, able to notice opportunity better than before. Having more
 raw materiel ("words") fom which to create thought is a really super
 useful thing. 

@@ -8,8 +8,7 @@ title: Joel McCracken
 <div class="title">Joel McCracken</div>
 
 <div id="home">
-  <p> I'm a programmer.</p>
-  
+  <p> I'm a programmer and aspiring man of the renaissance.</p>
 
   <h1>content</h1>
   <ul class="posts">
@@ -19,14 +18,16 @@ title: Joel McCracken
   <h1>updates</h1>
   <ul class="posts">
     {% for post in site.posts %}
-      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+      <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <br/>
+        <span class="post-date">{{ post.date|date:'%A, %B %d'}}</span>
+      </li>
     {% endfor %}
   </ul>
- 
   
 </div>
 
-<h1>elsewhere on the internet</h1>
+<h1>elsewhere</h1>
 <ul>
   <li><a href="http://www.twitter.com/JoelMcCracken">@JoelMcCracken</a></li>
   <li><a href="http://www.facebook.com/joel.mccracken">facebook</a></li>
