@@ -5,9 +5,8 @@ title: Automate Everything
 ---
 
 Ever since I started to practice Test Driven Development, it has bothered me. While
-it is a really great and 
-process, I always felt like it was a shadow of another idea. There are
-many things that are really similar to TDD, but aren't part of the
+it is a really great idea, I always felt like it was a shadow of another idea. There are
+many valuable thingss that are similar to TDD, but aren't part of the
 testing process. 
 
 For example, I always noticed that testing out the way your function
@@ -30,7 +29,7 @@ it?
 
 All of this made testing seem like a small piece of a greater,
 possibly more important practice, and for the first eight months or so
-of my practicing TDD, they bothered me. Until one day, inspiration
+of my practicing TDD, it bothered me. Until one day, inspiration
 struck.[Test Driven Development isn't *really* about *testing*, it is about
 *automation*](/content/automatic-test-driven-development.html).
 We can automate ourselves, and this

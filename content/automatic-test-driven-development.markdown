@@ -59,7 +59,9 @@ Lets call it
 called TDD, ought to be called 
 **Automated Test Driven Development** 
 (ATDD). ATDD, as a term, focuses on the true value of TDD, hopefully giving
-some insight to people who haven't been doing TDD for long. 
+some insight to people who haven't been doing TDD for
+long. Additionally, I think the insight that automation is what makes
+TDD so great is [rather important](/content/automate-everything.html). 
 
 
 <span class="footnotes">
