@@ -12,7 +12,7 @@ testing process.
 For example, I always noticed that testing out the way your function
 behaves in an interactive shell is really similar to writing a
 test. Indeed, they seem to be almost the same 
-thing<sup><a href="#python-for-example">1</a></sup>. Why are they so
+thing[<sup>1</sup>][pfe]. Why are they so
 similar? 
 
 Or, whenever I am learning a new library, I play around with
@@ -46,8 +46,10 @@ making a strong effort do figure out what
 areas of my life could benefit from automation, and I'm figuring out
 what the best way to do it is. I hope to post the results here.
 
-<span class="footnotes">
-1. <a id="python-for-example"></a> Check out 
-[Python's doctest library](http://docs.python.org/library/doctest.html)
-for an interesting look at this idea.
-</span>
+
+1. Check out [Pythons doctest library][pdtl] for an interesting look
+at this idea. [#][pfe]{: #python-for-example}
+{: .footnotes}
+
+[pfe]: #python-for-example
+[pdtl]: http://docs.python.org/library/doctest.html

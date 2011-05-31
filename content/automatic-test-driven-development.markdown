@@ -10,8 +10,7 @@ If you do not already practice it, you at least have heard of it and
 know something about it. 
 The thing is, many people don't do TDD, and it 
 is unclear to them that they should. Other coders who do
-practice TDD will fall into non-TDD development<a
-href="#i-am-guilty"><sup>1</sup></a>, 
+practice TDD will fall into non-TDD development[<sup>1</sup>][iag], 
 without a good guiding principle about when and why they should
 test. Besides that,
 occasionally articles on [hacker news](http://news.ycombinator.com) 
@@ -64,8 +63,10 @@ long. Additionally, I think the insight that automation is what makes
 TDD so great is [rather important](/content/automate-everything.html). 
 
 
-<span class="footnotes">
-1. <a id="i-am-guilty"></a> Yes, I am guilty of this. I began to write
+
+1. Yes, I am guilty of this. I began to write
 this as a way to overcome my tendency to fall out of the good
-habit of writing tests. 
-</span>
+habit of writing tests. [#][iag]{: #i-am-guilty }
+{:.footnotes}
+
+[iag]: #i-am-guilty
