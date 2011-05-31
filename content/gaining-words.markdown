@@ -78,12 +78,11 @@ world might become a better place if your new word goes viral!
 
 
 
-**
-The Takeaway: Care about words. They're the stuff your existance is
-made out of. Learn new ones. And, possibly, if someday you come up
-with a really great thought, make a new word to share your thought
-with others. 
-**
+**The Takeaway: Care about words. They're the stuff your existance is
+  made out of. Learn new ones. And, possibly, if someday you come up
+  with a really great thought, make a new word to share your thought
+  with others.** 
+
 
 [feelbetter]: http://www.reuters.com/article/idUSTRE56C1B320090713
 
