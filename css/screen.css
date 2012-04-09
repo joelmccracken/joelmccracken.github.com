@@ -157,7 +157,8 @@ body{
  *****************************************************************************/
 
 .site .title {
-    color: #a1d43B;
+/*    color: #a1d43B; */
+    color: #555555;
     font-size: 3em;
     text-decoration: none;
 
@@ -235,3 +236,18 @@ li {
  * pages
  *
  *****************************************************************************/
+
+.fatfoot {
+    width: 100%; 
+    color: #eeeeee;
+    background: #222222;
+    padding
+}
+
+.fatfoot a {
+    color: #aaaaaa;
+}
+
+.fatfoot a:hover { 
+    color: #cccccc;
+}

@@ -2,3 +2,4 @@ _site
 images/latex
 *~
 .#*
+.DS_Store
