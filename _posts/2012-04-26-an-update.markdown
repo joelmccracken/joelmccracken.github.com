@@ -1,0 +1,38 @@
+---
+layout: post
+title: An Update
+---
+
+Wow. It has been a little over a year. Time for an update. The last
+year has been pretty crazy, and I have learned quite a bit. I have not
+been living under a rock, but as far as the rest of the world is
+concerned, I may as well have been. Most of my
+personal time has been focused around figuring out the nature of
+programming, test driven development, and language. So, time for some
+reflection. 
+
+All code can act as documentation, as long as you know how to read
+it. A program's most authoratative and correct documentation is its
+code. This doesn't help much when a language is hard to read, but
+using higher level languages can be a big help. Bash scripts make
+this pretty cool because the script contents are basically the same
+thing that you would be writing to accomplish the task. 
+
+Writing support code for your application is great. This includes
+things like deployment and build scripts, development scripts,
+and environment setup files. Scripts like this provide 
+documentation for your application, besides 
+
+Tests are a type of support code. They are 
+beneficial in that it allows us to test the state of our
+application during development, and thus avoid bugs an enable
+refactoring. 
+I learned test driven development in the context of
+functional and unit tests, but I have since learned that the
+discussion of testing than these types. 
+Testing the state and behavior of external services, 
+for example, would be very wrong in TDD. Should we ignore writing 
+code to test these though? 
+
+There is more to come, but I really needed to get this out there. I'm
+writing a blog, not a book.  

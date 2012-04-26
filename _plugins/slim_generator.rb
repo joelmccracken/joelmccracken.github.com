@@ -4,12 +4,6 @@
 module Jekyll
   require 'slim'
   
-  class SlimFile < StaticFile
-#    def write(file)
-#      puts "HERE"
-#    end
-  end
-  
   class SlimGenerator < Generator
     safe true
     priority :low
@@ -33,9 +27,6 @@ module Jekyll
         if needs_gen?(slim_path, html_path)
           out = Slim::Template.new(slim_path).render;
           f = File.write(html_path, out)
-          
-          # Add this output file so it won't be cleaned
-#          site.static_files << SlimFile.new(site, site.source, html_dir_relative, html_name)
         end
       end
     end
