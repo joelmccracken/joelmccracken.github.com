@@ -8,7 +8,17 @@ title: Joel McCracken
 <div id="home">
   <p> I'm a programmer and aspiring man of the renaissance.</p>
 
-  <h1>content</h1>
+  <h1>updates</h1>
+  <ul class="posts">
+    {% for post in site.posts %}
+      <li>
+        <a href="{{ post.url }}">{{ post.title }}</a> <br/>
+        <span class="post-date">{{ post.date|date:'%A, %B %d'}}</span>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h1>pages</h1>
   <ul class="posts">
     <li>
       <a href="/content/automate-everything.html">Automate Everything</a>
@@ -25,15 +35,6 @@ title: Joel McCracken
     </li>
   </ul>
 
-  <h1>updates</h1>
-  <ul class="posts">
-    {% for post in site.posts %}
-      <li>
-        <a href="{{ post.url }}">{{ post.title }}</a> <br/>
-        <span class="post-date">{{ post.date|date:'%A, %B %d'}}</span>
-      </li>
-    {% endfor %}
-  </ul>
   
 </div>
 
