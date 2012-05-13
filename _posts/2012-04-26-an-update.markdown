@@ -21,7 +21,7 @@ thing that you would be writing to accomplish the task.
 Writing support code for your application is great. This includes
 things like deployment and build scripts, development scripts,
 and environment setup files. Scripts like this provide 
-documentation for your application, besides 
+documentation for your application, besides. 
 
 Tests are a type of support code. They are 
 beneficial in that it allows us to test the state of our
@@ -29,7 +29,7 @@ application during development, and thus avoid bugs an enable
 refactoring. 
 I learned test driven development in the context of
 functional and unit tests, but I have since learned that the
-discussion of testing than these types. 
+discussion of testing extends beyond functional and unit tests. 
 Testing the state and behavior of external services, 
 for example, would be very wrong in TDD. Should we ignore writing 
 code to test these though? 
