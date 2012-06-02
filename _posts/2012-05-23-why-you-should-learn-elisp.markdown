@@ -72,9 +72,10 @@ So, without further ado, 5 reasons to learn Emacs Lisp today:
    immediately useful. 
 
 
-3. Dynamic binding is actually pretty awesome. Lets go through a quick
+3. [Dynamic binding is actually pretty awesome](/2012/06/02/emacs-hack-set-todo-done-yesterday.html). 
+   Lets go through a quick
    review of what dynamic binding is, exactly, and contrast it with the
-   other option, which is lexical binding.
+   other option, lexical binding.
 
    First, lets talk about variable binding, specifically, in pseudo-Javascript:
 
