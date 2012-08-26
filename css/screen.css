@@ -19,8 +19,7 @@ html, body {
 
 body {
     background-color: white;
-    font: 13.34px helvetica, arial, clean, sans-serif;
-    *font-size: small;
+    font: 15px helvetica, arial, clean, sans-serif;
     text-align: center;
 }
 
@@ -82,6 +81,12 @@ ul.posts span {
  *
  *****************************************************************************/
 
+
+h1 {
+    font-size: 2em;
+    margin-top: 1em;
+}
+
 blockquote {
     padding: 1em;
     background: #EEEEEE none repeat scroll 0 0;
@@ -121,10 +126,11 @@ body{
 }
 
 .site .footer {
-    font-size: 80%;
-    color: #666;
+    font-size: 100%;
+    color: #EEE;
     border-top: 4px solid #eee;
     margin-top: 2em;
+    padding: 1em;
     overflow: hidden;
 }
 
@@ -240,8 +246,7 @@ li {
 .fatfoot {
     width: 100%; 
     color: #eeeeee;
-    background: #222222;
-    padding
+    background-color: #555;
 }
 
 .fatfoot a {
