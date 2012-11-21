@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: Fast Emacs Lisp Regression Test Framework Tutorial
 ---

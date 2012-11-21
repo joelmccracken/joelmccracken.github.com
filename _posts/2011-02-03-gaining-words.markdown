@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: Just put up a page about words
 ---

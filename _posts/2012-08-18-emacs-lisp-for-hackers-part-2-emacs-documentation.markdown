@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: Emacs Lisp for Hackers Part 2 -- Emacs Documentation
 ---

@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: 'The Misery of Lisp'
 ---

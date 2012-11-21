@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: I failed. Time to try again 
 ---

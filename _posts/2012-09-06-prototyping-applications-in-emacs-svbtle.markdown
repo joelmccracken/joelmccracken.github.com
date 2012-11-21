@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: 'Prototyping Applications in Emacs: My Own Svbtle'
 ---

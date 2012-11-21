@@ -1,4 +1,5 @@
 ---
+status: published
 title: 5 Reasons Why you Should Learn Emacs Lisp Today
 layout: post
 ---

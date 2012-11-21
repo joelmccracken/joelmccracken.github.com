@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: Ruby from Lisp-Colored Glasses
 ---

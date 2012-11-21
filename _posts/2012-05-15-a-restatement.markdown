@@ -1,4 +1,5 @@
 ---
+status: published
 title: A Restatement
 layout: post
 ---

@@ -1,4 +1,5 @@
 ---
+status: published
 title: Learning French with Duolingo
 layout: post
 ---

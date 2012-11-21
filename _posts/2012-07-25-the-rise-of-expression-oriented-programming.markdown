@@ -1,4 +1,5 @@
 ---
+status: published
 title: The Rise of Expression-Oriented Programming
 layout: post
 ---

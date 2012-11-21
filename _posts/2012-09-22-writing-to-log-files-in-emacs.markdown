@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: 'Writing to Log files in Emacs Without a Message'
 ---

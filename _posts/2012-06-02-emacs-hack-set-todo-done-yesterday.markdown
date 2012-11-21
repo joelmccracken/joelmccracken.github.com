@@ -1,4 +1,5 @@
 ---
+status: published
 title: "Quick Emacs Hack: Set TODO to done yesterday"
 layout: post
 ---

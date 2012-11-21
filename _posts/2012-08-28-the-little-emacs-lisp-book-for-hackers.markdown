@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: The Little Emacs Lisp Book for for Hackers
 ---

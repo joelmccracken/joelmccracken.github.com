@@ -1,4 +1,5 @@
 ---
+status: published
 title: "Emacs Lisp for hackers -- Part 1: Lisp Essentials"
 layout: post
 ---

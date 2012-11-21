@@ -1,4 +1,5 @@
 ---
+status: published
 
 layout: post
 title: Added "Automatic Test Driven Development"

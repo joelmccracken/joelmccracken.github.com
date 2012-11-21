@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: 'The Sketchiness of "Teaching you how to Make Money"'
 ---

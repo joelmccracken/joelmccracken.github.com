@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: The Two Phases of Learning to Program
 ---

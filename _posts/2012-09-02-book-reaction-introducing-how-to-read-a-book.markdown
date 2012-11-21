@@ -1,4 +1,5 @@
 ---
+status: published
 layout: post
 title: 'Book Reaction: Introducing "How to Read a Book"'
 ---
