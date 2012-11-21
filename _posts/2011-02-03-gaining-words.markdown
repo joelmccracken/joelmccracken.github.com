@@ -1,5 +1,4 @@
 ---
-
 layout: post
 title: Just put up a page about words
 ---
