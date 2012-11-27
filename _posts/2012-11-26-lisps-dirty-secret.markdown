@@ -1,5 +1,5 @@
 ---
-status: idea
+status: published
 layout: post
 title: 'Lisp\'s dirty secret'
 ---
