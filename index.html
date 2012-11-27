@@ -25,12 +25,10 @@ title: Joel McCracken
   <h1>updates</h1>
   <ul class="posts">
     {% for post in site.posts %}
-      {% if post.status == 'published' %}
         <li>
           <a href="{{ post.url }}">{{ post.title }}</a> <br/>
           <span class="post-date">{{ post.date|date:'%A, %B %d'}}</span>
         </li>
-      {% endif %}
     {% endfor %}
   </ul>
 
