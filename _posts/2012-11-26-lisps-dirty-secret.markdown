@@ -1,7 +1,7 @@
 ---
 status: published
 layout: post
-title: 'Lisp\'s dirty secret'
+title: 'Lisps dirty secret'
 ---
 
 I have been a Lisp supporter for half a decade now. Learning Lisp
