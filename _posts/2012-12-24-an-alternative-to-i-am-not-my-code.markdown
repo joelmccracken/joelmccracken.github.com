@@ -1,6 +1,6 @@
 ---
 status: published
-layout: post
+layout: post2
 title: 'An Alternative to "I Am Not My Code"'
 ---
 
