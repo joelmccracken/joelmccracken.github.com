@@ -85,6 +85,7 @@ ul.posts span {
 h1 {
     font-size: 2em;
     margin-top: 1em;
+    line-height: 1em;
 }
 
 blockquote {
@@ -100,7 +101,7 @@ body{
 .site {
     font-size: 110%;
     text-align: justify;
-    width: 40em;
+    width: 30em;
     margin: 3em auto 2em auto;
     line-height: 1.5em;
 }
@@ -255,7 +256,6 @@ div.post {
  *****************************************************************************/
 
 .fatfoot {
-    width: 100%; 
     color: #eeeeee;
     background-color: #555;
 }
