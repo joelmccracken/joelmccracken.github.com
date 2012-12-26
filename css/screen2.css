@@ -256,15 +256,13 @@ li {
 }
 
 .sidebar .first-line, .sidebar .third-line{
-    font-size: 1em;
+    font-size: 1.3em;
     font-style: italic;
 }
 
 .sidebar .second-line, .sidebar .fourth-line, .sidebar .fifth-line{
     font-size: 3em;
 }
-
-
 
 
 div.post {
