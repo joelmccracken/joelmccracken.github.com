@@ -1,0 +1,3 @@
+[submodule ".themes/venice"]
+	path = .themes/venice
+	url = git://github.com/octopress-themes/venice.git
