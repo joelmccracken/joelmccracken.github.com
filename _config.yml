@@ -2,12 +2,12 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://joelmccracken.github.com
+title: The Journal of Joel McCracken
+subtitle: The journeys of a fascinated programmer
+author: Joel McCracken
 simple_search: http://google.com/search
-description:
+description: 
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -27,7 +27,8 @@ email:
 
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
 root: /
-permalink: /blog/:year/:month/:day/:title/
+# permalink: /blog/:year/:month/:day/:title/
+permalink: /entries/:title/
 source: source
 destination: public
 plugins: plugins
@@ -45,7 +46,9 @@ titlecase: true       # Converts page and post titles to titlecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.html]
+#, asides/delicious.html, asides/pinboard.html, asides/googleplus.html
+
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
@@ -58,13 +61,13 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.ht
 # ----------------------- #
 
 # Github repositories
-github_user:
-github_repo_count: 0
+github_user: JoelMcCracken
+github_repo_count: 10
 github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user:
+twitter_user: JoelMcCracken
 twitter_tweet_count: 4
 twitter_show_replies: false
 twitter_follow_button: true

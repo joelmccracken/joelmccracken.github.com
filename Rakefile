@@ -1,6 +1,8 @@
 require "rubygems"
 require "bundler/setup"
 require "stringex"
+require "date"
+require "fileutils"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -354,6 +356,40 @@ task :setup_github_pages, :repo do |t, args|
   puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
 end
 
+
+
+
+task :joel_copy_old_posts do |t|
+
+  old_posts_dir = "../joelmccracken.github.com/_posts/*"
+  new_posts_dir = "source/_posts/"
+
+  Dir[old_posts_dir].grep(/markdown/).each do |post_file|
+    post_filename = File.basename(post_file)
+    parts = post_filename.match(/(\d+)-(\d+)-(\d+)-(.*)\.markdown/)
+    year = parts[1].to_i
+    month = parts[2].to_i
+    day = parts[3].to_i
+    alias_name_to_add = Date.new(year, month, day).strftime("/%Y/%m/%d/#{parts[4]}.html")
+
+    new_filename = new_posts_dir+post_filename
+
+
+    old_file = File.open(post_file, "r")
+    new_file = File.open(new_filename, "w")
+
+    old_file.lines do |line|
+      if line =~ /^title/
+        new_file.puts line
+        new_file.puts "alias: #{alias_name_to_add}"
+      else
+        new_file.puts line
+      end
+    end
+  end
+end
+
+
 def ok_failed(condition)
   if (condition)
     puts "OK"
@@ -366,6 +402,7 @@ def get_stdin(message)
   print message
   STDIN.gets.chomp
 end
+
 
 def ask(message, valid_options)
   if valid_options
