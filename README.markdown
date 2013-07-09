@@ -1,3 +1,18 @@
+# My Journal
+
+
+I couldnt remember how to run the journal, so i'm documenting it here
+
+To run the journal server, do:
+
+   bin/rake preview
+
+This is basically all you need, the other commands can mostly be ignored.
+
+
+
+# Octopress Readme:
+
 ## What is Octopress?
 
 Octopress is [Jekyll](https://github.com/mojombo/jekyll) blogging at its finest.
