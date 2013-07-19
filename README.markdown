@@ -1,11 +1,22 @@
 # My Journal
 
 
+## Installing
+
+if you're reading this you probably have the source
+
+    # assume we have a ruby installed...
+
+    bundle # install the gems required
+
+
+## running
+
 I couldnt remember how to run the journal, so i'm documenting it here
 
 To run the journal server, do:
 
-   bin/rake preview
+    bin/rake preview
 
 This is basically all you need, the other commands can mostly be ignored.
 
