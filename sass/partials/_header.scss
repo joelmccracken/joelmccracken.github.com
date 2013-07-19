@@ -1,5 +1,9 @@
+
+
+$subtitle_color: #191919; // rather dark
+
 body > header {
-  background: $header-bg;
+  //background: $header-bg;
   h1 {
     display: inline-block;
     margin: 0;
@@ -12,7 +16,7 @@ body > header {
     margin: .2em 0 0;
     @extend .sans;
     font-size: 1em;
-    color: $subtitle-color;
+    color: $subtitle_color;
     font-weight: normal;
   }
 }
