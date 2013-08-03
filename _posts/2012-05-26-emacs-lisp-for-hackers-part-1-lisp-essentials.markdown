@@ -100,7 +100,7 @@ More:
 [Emacs Lisp Reference Manual: Strings](http://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html#Strings-and-Characters)
 
 
-## Symbols ## 
+## Symbols ##
 
 A symbol is a name for something. Just as names are
 essentially strings, so are symbols just essentially strings.
