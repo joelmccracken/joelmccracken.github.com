@@ -2,12 +2,11 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://joelmccracken.github.com
+url: http://joelmccracken.github.io
 title: The Journal of Joel McCracken
 subtitle: The journeys of a fascinated programmer
 author: Joel McCracken
-simple_search: http://google.com/search
-description: 
+description:
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
