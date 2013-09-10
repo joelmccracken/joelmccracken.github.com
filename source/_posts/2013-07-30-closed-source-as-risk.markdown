@@ -3,8 +3,8 @@ layout: post
 title: "Closed Source as Risk"
 date: 2013-07-30 22:02
 comments: true
-categories: Open Source
-published: false
+categories: open-source
+published: true
 ---
 
 I've been using and thinking about open source for a long time now.
