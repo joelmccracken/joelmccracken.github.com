@@ -20,6 +20,11 @@ To run the journal server, do:
 
 This is basically all you need, the other commands can mostly be ignored.
 
+## pushing
+
+
+    bin/rake generate && bin/rake push
+
 
 
 # Octopress Readme:
