@@ -1,0 +1,1 @@
+../source/_posts/2013-09-16-how-to-develop-a-chef-recipe-with-chef-solo.markdown
