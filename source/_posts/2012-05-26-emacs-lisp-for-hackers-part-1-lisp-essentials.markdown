@@ -24,41 +24,41 @@ All a hacker really needs to know is enough to get
 comfortable, and some guidance over the various gotchas on the
 platform. I personally prefer a "layered" approach to
 learning, which alternates between exploration, instruction, and
-creation. That is the style that I would like to try to follow.  
+creation. That is the style that I would like to try to follow.
 
 So, I assume that you are a programmer, and that you know nothing
 about functional programming or Lisp. If you do not know how to
 program, then I suggest you look into document that would be more
 suited to you, [An Introduction to Programming in Emacs
-Lisp](http://www.gnu.org/software/emacs/emacs-lisp-intro/).  
+Lisp](http://www.gnu.org/software/emacs/emacs-lisp-intro/).
 
-This first post covers the very basics of lisp. 
+This first post covers the very basics of lisp.
 
 # Getting Started #
 
 First of all, you need to know how to evaluate Emacs Lisp. For this
 tutorial, at first I suggest you use ielm, the interactive Emacs Lisp
-interpreter. 
+interpreter.
 
 To get started, open Emacs. Type `M-x ielm`, and then press
-return. A new buffer should appear which looks like: 
+return. A new buffer should appear which looks like:
 
     *** Welcome to IELM ***  Type (describe-mode) for help.
     ELISP>
 
-Now enter: 
+Now enter:
 
     (message "hullo middle earth")
 
 and press return. If your console looks something like below, you are
-read to continue. 
+read to continue.
 
     *** Welcome to IELM ***  Type (describe-mode) for help.
     ELISP> (message "hullo middle earth")
     "hullo middle earth"
-    ELISP> 
+    ELISP>
 
-For now, you use ielm to experiment with Emacs Lisp. 
+For now, you use ielm to experiment with Emacs Lisp.
 
 
 # Introduction to Lisp #
@@ -71,7 +71,7 @@ Lisp). You can always come back here to review.
 
 ## Numbers ##
 
-In Lisp, an integer looks like this: 
+In Lisp, an integer looks like this:
 
     ELISP> 1
     1
@@ -101,12 +101,12 @@ More:
 [Emacs Lisp Reference Manual: Strings](http://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html#Strings-and-Characters)
 
 
-## Symbols ## 
+## Symbols ##
 
 A symbol is a name for something. Just as names are
 essentially strings, so are symbols just essentially strings.
 Symbols are used to reference a variety of things within Lisp,
-espeically to values and functions. 
+espeically to values and functions.
 
     ELISP> my-symbol
     *** Eval error ***  Symbol's value as variable is void: my-symbol
@@ -116,7 +116,7 @@ espeically to values and functions.
 If you notice, the first expression gave an error. It recognized that
 "my-symbol" was a symbol, but it tried to evaluate it. Since
 "my-symbol" doesn't refer to anything here, evaluating it doesn't make
-sense. 
+sense.
 
 Afterwards, I "quoted" my symbol with the single quotation mark and
 the symbol name. That meant just return the symbol, and do not
@@ -131,10 +131,10 @@ More:
 ## Evaluation ##
 
 Evaluation is the process of taking an expression and "evaluating"
-it. 
+it.
 
-We have already seen what happens when we evaluate a number, 
-a string, a symbol, and a quoted symbol: 
+We have already seen what happens when we evaluate a number,
+a string, a symbol, and a quoted symbol:
 
     ELISP> 56
     56
@@ -148,23 +148,23 @@ a string, a symbol, and a quoted symbol:
 Evaluation is the process of taking an expression and figuring out
 what it "means".
 
-More: 
+More:
 [Emacs Lisp Reference Manual: Evaluation](http://www.gnu.org/software/emacs/manual/html_node/elisp/Evaluation.html#Evaluation)
 
 
 ### calling functions ###
 
-In Lisp, calling a function looks like: 
+In Lisp, calling a function looks like:
 
     (function-name arg1 arg2 arg3)
 
-So, the following calls the function "+" with the arguments 1 and 2. 
+So, the following calls the function "+" with the arguments 1 and 2.
 
     ELISP> (+ 1 2)
     3
 
 Thus, evaluating a list (a list is indicted by the parentheses) means
-"apply these arguments to this function". 
+"apply these arguments to this function".
 
 [Emacs Lisp Reference Manual: Evaluation of Function Forms](http://www.gnu.org/software/emacs/manual/html_node/elisp/Function-Forms.html#Function-Forms)
 
@@ -177,14 +177,14 @@ want to create a list of the first three numbers.
     *** Eval error ***  Invalid function: 1
 
 That was an error because when emacs evaluates that statement, since
-it is a list, it thinks that this is a function call. 
+it is a list, it thinks that this is a function call.
 
-Of course, we can create a list using a regular function: 
+Of course, we can create a list using a regular function:
 
     ELISP> (list 1 2 3)
     (1 2 3)
 
-However, this gets unwieldly: 
+However, this gets unwieldly:
 
     ELISP> (list (list 1) (list 2) (list 3))
     ((1)
@@ -200,9 +200,9 @@ the single quotation mark, '.
      (2)
      (3))
 
-Quoting makes it much, much easier to reference things within your code. 
+Quoting makes it much, much easier to reference things within your code.
 
-More: 
+More:
 
 [Emacs Lisp Reference Manual: Quoting](http://www.gnu.org/software/emacs/manual/html_node/elisp/Quoting.html#Quoting)
 
@@ -212,6 +212,5 @@ Next time, we will talk about some specifics of Emacs Lisp, which
 should hopefully be enough to enable you to understand most Emacs Lisp
 that you come accross. But for now, this covers the essentials of a
 Lisp program, and you should already be equipped to "read" an Emacs Lisp
-program while relying heavily on a reference. 
-
+program while relying heavily on a reference.
 
