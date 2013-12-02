@@ -13,11 +13,15 @@ The
 is available on Github, and you can view the
 slides
 [here](http://joelmccracken.github.io/functional-programming-in-ruby/),
-or view them them below.
+or view them them below. There is a
+[recording of the talk](http://pghrb.confbots.com/video/80331619),
+thanks to [Corey Purcell](https://twitter.com/coreypurcell).
 
 
 <iframe style='width: 640px; height: 480px;' src='http://joelmccracken.github.io/functional-programming-in-ruby/'>
 </iframe>
+
+
 
 On a semi-unrelated note, since
 [reveal.js](http://lab.hakim.se/reveal-js/)
