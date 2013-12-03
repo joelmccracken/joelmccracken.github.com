@@ -1,5 +1,6 @@
 ---
 title: "Adding Comments to be Blog"
+layout: post
 ---
 
 Comments are one of those things that I've always felt a little
