@@ -4,40 +4,53 @@ single: true
 ---
 
 <div>
-<article class="hentry" role="article">
-  {% include article.html %}
-  <footer>
-    <p class="meta">
-      {% include post/author.html %}
-      {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
-      {% include post/categories.html %}
-    </p>
-    {% unless page.sharing == false %}
+  <article class="hentry" role="article">
+    {% include article.html %}
+    <footer>
+      <p class="meta">
+        {% include post/author.html %}
+        {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
+        {% include post/categories.html %}
+      </p>
+      {% unless page.sharing == false %}
       {% include post/sharing.html %}
-    {% endunless %}
-    <p class="meta">
-      {% if page.previous.url %}
+      {% endunless %}
+      <p class="meta">
+        {% if page.previous.url %}
         <a class="basic-alignment left" href="{{page.previous.url}}" title="Previous Post: {{page.previous.title}}">&laquo; {{page.previous.title}}</a>
-      {% endif %}
-      {% if page.next.url %}
+        {% endif %}
+        {% if page.next.url %}
         <a class="basic-alignment right" href="{{page.next.url}}" title="Next Post: {{page.next.title}}">{{page.next.title}} &raquo;</a>
-      {% endif %}
-    </p>
-  </footer>
-</article>
-{% if site.disqus_short_name and page.comments == true %}
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
-  </section>
-{% endif %}
+        {% endif %}
+      </p>
+    </footer>
+  </article>
+
+
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+   })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
 </div>
 {% unless page.sidebar == false %}
 <aside class="sidebar">
   {% if site.post_asides.size %}
-    {% include_array post_asides %}
+  {% include_array post_asides %}
   {% else %}
-    {% include_array default_asides %}
+  {% include_array default_asides %}
   {% endif %}
 </aside>
 {% endunless %}
