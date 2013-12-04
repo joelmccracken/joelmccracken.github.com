@@ -3,6 +3,7 @@ status: published
 layout: post
 title: 'Lets Fix the Internet'
 alias: /2012/12/14/lets-fix-the-internet.html
+categories: Fix-the-Internet
 ---
 
 Recently, Anil Dash posted an article entitled
@@ -16,7 +17,7 @@ minimum, but the ones I do use are simply too valuable to me to go
 without them. I could avoid using twitter, but the network effects are
 really high, and I just haven't had the time to work out the rough
 edges to using
-[my rstat.us account](https://rstat.us/users/JoelMcCracken). 
+[my rstat.us account](https://rstat.us/users/JoelMcCracken).
 
 
 A Solution: People-Friendly Servers
@@ -45,7 +46,7 @@ Moving Forward
 Obviously, such a system would face huge technical
 challenges. I don't think such challenges would stop something like
 this, but they might require some rethinking of the way network
-servers are built. 
+servers are built.
 
 I have been spending time exploring this idea. I'm really awful about
 polishing and publishing scripts that I write, but this is something
@@ -56,4 +57,4 @@ a system. A Co-op or a B-Corp seems like the most realistic and
 ideologically sounds system for something like this.
 
 Do you have any thoughts? Do you want to help build something like
-this? Let me know. 
+this? Let me know.
