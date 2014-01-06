@@ -17,7 +17,7 @@ Emacs Lisp.
 ## Saying "Hello, World" in Emacs ##
 
 Lets get right to it: our very first, very minimal function. Run `M-x
-elm` to open up an 
+ielm` to open up an 
 elisp interpreter, and evaluate the following code: 
 
     (defun say-hello ()
