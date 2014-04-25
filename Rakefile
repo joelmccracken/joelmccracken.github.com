@@ -3,7 +3,7 @@ new_page_ext    = "markdown"  # default new page file extension when using the n
 posts_dir       = "_posts"    # directory for blog files
 deploy_dir      = "_github_deploy"   # deploy directory (for Github pages
 public_dir      = "_site"    # compiled site directory
-
+deploy_branch   = "master"
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
@@ -99,7 +99,7 @@ multitask :push do
     message = "Site updated at #{Time.now.utc}"
     system "git commit -m \"#{message}\""
     puts "\n## Pushing generated #{deploy_dir} website"
-    system "git push origin #{deploy_branch}"
+    system "git push origin #{deploy_branch} -f"
     puts "\n## Github Pages deploy complete"
   end
 end
