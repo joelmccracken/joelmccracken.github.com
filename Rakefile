@@ -1,5 +1,13 @@
+require "rubygems"
+require "bundler/setup"
+require "stringex"
+require "date"
+require "fileutils"
+
+
 source_dir = "."
-new_page_ext    = "markdown"  # default new page file extension when using the new_page task
+new_page_ext    = "markdown"
+new_post_ext    = "markdown"
 posts_dir       = "_posts"    # directory for blog files
 deploy_dir      = "_github_deploy"   # deploy directory (for Github pages
 public_dir      = "_site"    # compiled site directory
