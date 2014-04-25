@@ -1,0 +1,6 @@
+name: Joel's Journal
+markdown: redcarpet
+highlighter: pygments
+description: "My personal place to write about the things I find interesting. Programming, Lisp, Ruby, Emacs, etc."
+url: "http://joelmccracken.com"
+permalink: /entries/:title/
