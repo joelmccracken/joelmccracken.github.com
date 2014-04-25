@@ -4,6 +4,9 @@ posts_dir       = "_posts"    # directory for blog files
 deploy_dir      = "_github_deploy"   # deploy directory (for Github pages
 public_dir      = "_site"    # compiled site directory
 deploy_branch   = "master"
+github_repository_url = "git@github.com:joelmccracken/joelmccracken.github.com"
+
+
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
@@ -102,4 +105,73 @@ multitask :push do
     system "git push origin #{deploy_branch} -f"
     puts "\n## Github Pages deploy complete"
   end
+end
+
+
+
+
+
+desc "Set up _deploy folder and deploy branch for Github Pages deployment"
+task :setup_github_pages, :repo do |t, args|
+  repo_url = github_repository_url
+  protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
+  if protocol == 'git'
+    user = repo_url.match(/:([^\/]+)/)[1]
+  else
+    user = repo_url.match(/github\.com\/([^\/]+)/)[1]
+  end
+  branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
+  project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
+  unless (`git remote -v` =~ /origin.+?octopress(?:\.git)?/).nil?
+    # If octopress is still the origin remote (from cloning) rename it to octopress
+    system "git remote rename origin octopress"
+    if branch == 'master'
+      # If this is a user/organization pages repository, add the correct origin remote
+      # and checkout the source branch for committing changes to the blog source.
+      system "git remote add origin #{repo_url}"
+      puts "Added remote #{repo_url} as origin"
+      system "git config branch.master.remote origin"
+      puts "Set origin as default remote"
+      system "git branch -m master source"
+      puts "Master branch renamed to 'source' for committing your blog source files"
+    else
+      unless !public_dir.match("#{project}").nil?
+        system "rake set_root_dir[#{project}]"
+      end
+    end
+  end
+  jekyll_config = IO.read('_config.yml')
+  jekyll_config.sub!(/^url:.*$/, "url: #{blog_url(user, project)}")
+  File.open('_config.yml', 'w') do |f|
+    f.write jekyll_config
+  end
+  rm_rf deploy_dir
+  mkdir deploy_dir
+  cd "#{deploy_dir}" do
+    system "git init"
+    system "echo 'My Octopress Page is coming soon &hellip;' > index.html"
+    system "git add ."
+    system "git commit -m \"Octopress init\""
+    system "git branch -m gh-pages" unless branch == 'master'
+    system "git remote add origin #{repo_url}"
+    rakefile = IO.read(__FILE__)
+    rakefile.sub!(/deploy_branch(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_branch\\1=\\2\\3#{branch}\\3")
+    rakefile.sub!(/deploy_default(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_default\\1=\\2\\3push\\3")
+    File.open(__FILE__, 'w') do |f|
+      f.write rakefile
+    end
+  end
+  puts "\n---\n## Now you can deploy to #{repo_url} with `rake deploy` ##"
+end
+
+
+
+def blog_url(user, project)
+  url = if File.exists?('source/CNAME')
+    "http://#{IO.read('source/CNAME').strip}"
+  else
+    "http://#{user}.github.io"
+  end
+  url += "/#{project}" unless project == ''
+  url
 end
