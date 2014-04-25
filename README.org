@@ -1,0 +1,3 @@
+* Joel's Journal
+
+... recently reworked because octopress argh.
