@@ -6,6 +6,10 @@ comments: true
 categories: unix automation
 ---
 
+*Updates:*
+
+*May 04, 2014: Added Matt Might's Bash By Example*
+
 I have an intense love-hate relationship with Bash.
 It sure feels like achieving reasonable proficiency at Bash has been
 the hardest and most frustrating thing in my professional career thus
@@ -38,6 +42,13 @@ the clearest and most useful I have found.
    [Bash Pitfalls](http://mywiki.wooledge.org/BashPitfalls)
    reference.
 
-I hope to add more quality resources in the future as I find
-them. Hopefully you, dear reader, will have an easier time than I
+3. [Matt Might's bash by example](http://matt.might.net/articles/bash-by-example/)
+   is probably my new favorite resource.
+
+
+
+
+Hopefully you, dear reader, will have an easier time than I
 wrangling the beast that is Bash.
+
+
