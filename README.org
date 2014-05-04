@@ -1,3 +1,26 @@
 * Joel's Journal
 
 ... recently reworked because octopress argh.
+
+
+to build: 
+#+BEGIN_SRC sh
+
+  jekyll build
+
+#+END_SRC
+
+serve:
+#+BEGIN_SRC sh
+
+  jekyll serve
+
+#+END_SRC
+
+
+deploy:
+#+BEGIN_SRC sh
+
+  rake push
+
+#+END_SRC
