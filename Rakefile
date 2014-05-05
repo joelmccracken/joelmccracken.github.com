@@ -183,3 +183,18 @@ def blog_url(user, project)
   url += "/#{project}" unless project == ''
   url
 end
+
+
+
+desc "list posts that already exist, because I forget what I've written in the past"
+task "list-posts" do |t|
+  Dir["_posts/*"].each do |post_name|
+    puts readable_name(post_name)
+  end
+end
+
+
+def readable_name filename
+  name_parts = filename.match /(\d+-\d+-\d+)-(.*)\.(markdown|md)/
+  name_parts[2].gsub "-", " "
+end
