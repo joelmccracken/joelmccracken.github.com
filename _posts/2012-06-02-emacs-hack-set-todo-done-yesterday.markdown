@@ -3,6 +3,7 @@ status: published
 title: "Quick Emacs Hack: Set TODO to done yesterday"
 alias: /2012/06/02/emacs-hack-set-todo-done-yesterday.html
 layout: post
+categories: emacs org-mode
 ---
 
 You have probably heard of [org mode](http://orgmode.org/), the tool which helps keep you

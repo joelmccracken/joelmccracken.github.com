@@ -3,6 +3,7 @@ status: published
 layout: post
 title: 'What Emacs Means to Me'
 alias: /2012/10/12/what-emacs-means-to-me.html
+categories: emacs org-mode
 ---
 
 I really love Emacs. It provides a great outlet for my creative energy
