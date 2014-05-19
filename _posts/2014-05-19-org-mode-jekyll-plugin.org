@@ -1,0 +1,237 @@
+---
+title: An Org-Mode Jekyll Plugin
+layout: post
+---
+
+I have wanted to write blog posts with Org-mode for a long time, but it
+never bothered me enough to want to actually sit down and write one,
+until recently. It ended up being rather interesting.
+
+I don't think I have ever written about literate programming[fn:1], but I
+think it is one of the most powerful and under-explored concepts in
+computer engineering. Org mode has fantastic facilities for doing
+literate programming, and as that is a primary motivation for using
+Org mode, this document is written in a literate style. You may find
+the source here (TODO FILL IN THE SOURCE LINK).
+
+[fn:1] the [[http://c2.com/cgi/wiki?LiterateProgramming][c2 Wiki]] has more on the topic. Knuth's [[http://www.literateprogramming.com/knuthweb.pdf][paper]] (PDF link) on
+the topic is an excellent introduction.
+
+* The Jekyll Plugin
+
+Jekyll has a plugin architecture that supports defining new structure
+types. The documentation for creating a converter for file types is
+found [[http://jekyllrb.com/docs/plugins/#converters][here]].
+
+
+A converter is a class that gets instantiated within Jekyll. Its
+~matches~ method is used to determine if the converter should
+be used for this file type. 
+
+Assuming that ~matches~ returns true, the ~convert~
+method is called. It is passed the content of the document it needs to
+convert, and should return the output for publishing. 
+
+A plugin's overall structure looks like this:
+
+#+name: org-converter-plugin-structure
+#+BEGIN_SRC ruby
+  module Jekyll
+    class OrgConverter < Converter
+      safe true
+      priority :low
+
+      def matches(ext)
+        # simple code that jekyll uses to determine if this
+        # converter should be used
+      end
+
+      def output_ext(ext)
+        ".html"
+      end
+
+      def convert(content)
+        # code to convert the org text to html text
+      end
+    end
+  end
+#+END_SRC
+
+** The Matches Method
+We need to fill in the missing pieces.
+
+The easiest part to handle is the body of matches, which ends up being
+a very simple regular expression:
+
+#+name: matches-definition
+#+BEGIN_SRC ruby
+      def matches(ext)
+        ext =~ /^\.org$/i
+      end
+#+END_SRC
+
+** The Convert Method
+
+The goal is to use Emacs and Org-mode to do the conversion.
+To do this, we run an emacs instance in batch mode, write the post
+content to its standard input, and have the emacs process write the
+content to standard output.
+
+Briefly, the function works as follows: 
+1. IO pipes are created for communicating with the emacs process. 
+3. The content of the org document is written to the input pipe.
+3. Emacs is run via the ~spawn~ method, and sets up the input
+   and output pipes.
+3. When Emacs finishes, the resulting html is read from the output
+   pipe. 
+
+*** IO Pipes
+It took me some time to settle on this code. I wanted to use
+~spawn~ since it was recommended on the Parley group, and I
+had never used it before.
+
+This use case seemed like a clear candidate for ~StringIO~,
+but apparently ~StringIO~ doesn't work with ~spawn~.
+The next best thing is using IO pipes.
+
+Most of us are probably familiar with pipes as they are used in Bash,
+but inside of a Unix program they look different. A pipe consists of
+two file descriptors, the "input FD" and the "output FD". Information
+that is written to the input FD is then available on the output
+FD. However, we actually need two pipes: One for providing input to
+the emacs process, and one for reading the output from the emacs
+process. Since each pipe is two file descriptors, that means there are 
+four open file descriptors in total.
+
+
+Thus, we create a pipe for spawn's input, a pipe for spawn's output,
+and write the org document content to the input pipe:
+
+#+name: io-pipes
+#+BEGIN_SRC ruby
+    inread, inwrite = IO.pipe
+    outread, outwrite = IO.pipe
+
+    inwrite.write content
+    inwrite.close
+#+END_SRC
+
+*** Spawning Emacs
+Next, we construct the emacs invocation string, and hook up the file
+descriptors to the process:
+
+#+name: spawn-emacs
+#+BEGIN_SRC ruby 
+      emacs_execution_string = "emacs -Q --batch -L " \
+        "_vendor/org-8.2.6/lisp/ -l _lib/org-convert.el -f compile-org-file"
+      org_pid = spawn(emacs_execution_string, :in => inread, :out => outwrite, :err => :out)
+#+END_SRC
+
+Some notes on the Emacs command and arguments:
+
+- "-Q" makes emacs start up with the minimal number of
+  libraries, which is much faster.
+- "--batch" makes emacs start up in a "shell" mode, designed for
+  scripting.
+- "-L" adds a directory to emacs' load path. Here, we have specified a
+  directory ("_vendor/org-8.2.6/lisp/"), which contains the org mode
+  source our emacs will use.
+- "-l" actually loads a file. The contents of this file are executed.
+- "-f" runs a function in emacs. The ~compile-org-file~
+  function is defined in "org-convert.el".
+
+~emacs_execution_string~ is run with ~spawn~, which is
+passed the pipe endpoint file descriptors that were described earlier.
+The process id is saved in the variable ~org_pid~, which we
+use later to wait for the process to finish.
+*** Reading the Output from Emacs & Cleaning Up
+What remains is to have Jekyll wait for Emacs to finish, read the
+output from the Emacs process, and close any open files.
+
+#+name: read-emacs-output
+#+BEGIN_SRC ruby
+  inread.close
+  outwrite.close
+  Process.wait(org_pid)
+
+  out_content = outread.read
+  outread.close
+  out_content
+#+END_SRC
+*** All Together
+The final definition of the convert method:
+
+#+name: convert-definition
+#+BEGIN_SRC ruby :noweb yes
+  def convert(content)
+    <<io-pipes>>
+    <<spawn-emacs>>
+    <<read-emacs-output>>
+  end
+#+END_SRC
+** The Full Plugin
+#+BEGIN_SRC ruby :tangle ../_plugins/org-converter.rb :noweb yes
+  module Jekyll
+    class OrgConverter < Converter
+      safe true
+      priority :low
+
+      <<matches-definition>>
+
+      def output_ext(ext)
+        ".html"
+      end
+
+      <<convert-definition>>
+    end
+  end
+#+END_SRC
+On to the lisp that does the actual Org mode integration. 
+* The Emacs Lisp
+Much of the body of the ~convert~ method was developed in
+conjunction with the code from my 
+[[../reading-writing-data-in-emacs-stdin-stdout/][previous post]]
+about standard input and output in emacs batch mode.
+
+Here, we use that same code with a single minor tweak. 
+The function ~org-html-export-as-html~ accepts an argument to specify
+that we want to export the body only, and since the exported org
+document is going to be incorporated into a layout that is managed by
+Jekyll, we specify ~t~ for that setting.
+
+#+BEGIN_SRC emacs-lisp :tangle ../_lib/org-convert.el
+  (require 'org)
+  (require 'ox)
+  (require 'ox-html)
+
+
+  (defun compile-org-file ()
+    (interactive)
+    (let ((org-document-content "")
+          this-read)
+      (while (setq this-read (ignore-errors
+                               (read-from-minibuffer "")))
+        (setq org-document-content (concat org-document-content "\n" this-read)))
+      
+      (with-temp-buffer
+        (org-mode)
+        (insert org-document-content)
+        (org-html-export-as-html nil nil nil t)
+        (princ (buffer-string)))))
+#+END_SRC
+* Final Thoughts
+
+This entire exercise was fun and instructive. I didn't cover
+downloading the org mode source to ~_vendor~, but I think that should
+be straightforward enough. I do advise byte compiling the org source
+-- it produces a noticeable speedup. 
+
+
+So far, I have written this blog post using this code, and it
+works rather well. It would be nice if the compilation process were a
+little faster (say, possibly with a persistent Emacs process), but
+I will save that for later.
+
+If you'd like me to make this code easier for you to consume in some
+way (like, if you wanted to actually use it to compile org files in
+Jekyll), email me or leave a comment, and I will see what I can do.
