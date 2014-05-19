@@ -12,7 +12,7 @@ think it is one of the most powerful and under-explored concepts in
 computer engineering. Org mode has fantastic facilities for doing
 literate programming, and as that is a primary motivation for using
 Org mode, this document is written in a literate style. You may find
-the source here (TODO FILL IN THE SOURCE LINK).
+the source [[https://github.com/joelmccracken/joelmccracken.github.com/blob/writing/_posts/2014-05-19-org-mode-jekyll-plugin.org][here]].
 
 [fn:1] the [[http://c2.com/cgi/wiki?LiterateProgramming][c2 Wiki]] has more on the topic. Knuth's [[http://www.literateprogramming.com/knuthweb.pdf][paper]] (PDF link) on
 the topic is an excellent introduction.
