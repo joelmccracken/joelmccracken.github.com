@@ -1,0 +1,85 @@
+---
+title: A Literate Programming Primer
+layout: post
+---
+
+I love the concept of literate programming. Unfortunately, the
+idea never really caught on in industry. My experiments with it in
+the past have been successful, but there are many things
+that could be done to improve the experience -- many of which
+prevent me from advocating it to other programmers to practice.
+
+Literate programming is a technique invented by Don Knuth many years
+ago. Essentially, the idea is to embed code inside of an expository
+document that describes the code.
+That code makes up the program, and the surrounding documents provide
+insight into how and why the code does what it does.
+
+I have only personally used the LP facilities provided by [[http://orgmode.org/][Org]]
+(which are rather good), but I have read Knuth's paper that introduces
+LP, and have that familiarity with it. I mention this because there
+may be "prior art" that is relevant to some of what I say that I am
+unaware of.
+
+A basic LP system lets an author define blocks of code in a
+document. These blocks may be associated with a file: when the
+"tangle" process occurs, these blocks are written to that associated
+file. Thus, the content in the document can may then be executed, etc
+in a traditional manner.
+
+Blocks may be named. A block of code may reference another block by
+it's name. When "file" blocks are written to disk, any name-references they
+contain are replaced by the contents of the blocks they reference.
+
+So, here are some ideas I would like to see explored:
+
+- The Wiki as an organizational model. Most (all?) LP systems favor a
+  highly hierarchical document organization, such as a white
+  paper. This works for well-defined programs that will not change
+  over time.
+
+  However, I have never seen a living, active project that has that
+  kind of structure. To me, a "Wiki" feels much more appropriate for
+  how an actual project grows.
+
+- How does literate programming influence the design of code? I fear
+  that the structure provided by a LP document may mean that code
+  itself is poorly structured.
+
+  I know from personal experience that, looking at a LP document, it
+  is harder to see the underlying code structure
+
+- One pain point I have felt is that any file that needs to be
+  commented on in a literate document /also/ needs to be maintained by
+  that document in its entirety. So, for example, in order to make a
+  change to a file that was generated externally requires the
+  inclusion of the entire file inside the document.
+
+  However, if literate programming documents had first class support
+  for diffs of files not handled in the current system, this problem
+  would go away. Of course, editing diffs by hand is hard, and so some
+  deeper thought about diff-generation needs to be applied.
+
+- What is the relationship between literate programming and other
+  forms of code commentary, such as code comments, commit messages,
+  and pull request discussions?
+
+  I certainly don't know the answer to this one, but it is an
+  interesting question. Most developers (myself included,
+  interestingly) tend to dislike code comments. However, literate
+  programming feels very different 
+  from adding comments to code, although from a superficial
+  examination they seem very similar. 
+
+  And, although code comments are frowned upon, many developers have
+  strong opinions about commit messages -- and isn't a commit message
+  very similar to a code comment?
+
+  Git makes it easy to dig up information in commit
+  messages. Accessing the comments from GitHub pull requests is much
+  less easy, though. 
+
+I'm looking into this now for practical reasons: I am working on a
+literate document, but feel torn: I want to write the document for the
+basis of something I will be using in the future, but also making it
+publishable. For now, I'll just plug away, because I need to publish.
