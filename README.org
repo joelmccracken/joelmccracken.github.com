@@ -3,7 +3,7 @@
 ... recently reworked because octopress argh.
 
 
-to build: 
+to build:
 #+BEGIN_SRC sh
 
   jekyll build
@@ -14,6 +14,22 @@ serve:
 #+BEGIN_SRC sh
 
   jekyll serve
+
+#+END_SRC
+
+drafts:
+
+#+BEGIN_SRC sh
+
+  jekyll serve --drafts
+
+#+END_SRC
+
+recompile with changes:
+
+#+BEGIN_SRC sh
+
+  jekyll serve --watch
 
 #+END_SRC
 
