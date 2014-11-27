@@ -1,0 +1,50 @@
+---
+layout: post
+title: Automated Workstation Setup & Management
+category: Workstation Automation
+---
+
+Over the years, I have written lots of scripts to help automate
+something or other. Many of these have broken. Example of the scripts
+that have broken include a
+LastPass data exporter and encrypter in Ruby, Emacs Lisp of various
+kinds that integrate Emacs with other
+processes, a tiny script to toggle my Heroku authentication between
+my personal and work accounts, and others. Typically, I find
+this out about their brokenness at the worst possible time -- when I
+need to actually use the scripts I rely upon.
+
+This has become common enough that I have grown to expect it. Lots of
+things might cause one of these scripts to break: software upgrades,
+making incompatible changes to other pieces of code, accidentally
+removing something that the script relied upon have all played a part
+in things breaking.
+
+I really hate this. Taking the time to write something, only to have
+it be broken when you need it, makes you feel like you wasted your
+time writing the scripts in the first place. Because of this
+phenomenon, I tend to write fewer scripts and be more accepting of
+discomfort.
+
+I really hate this, too. I believe we /should/ script things. I believe
+this is a /key/ to being a productive programmer, and is one way that
+allows us to multiply out abilities as programmers.
+And, I'm not alone in
+thinking this way. It seems that all the best developers think the
+same thing: laziness is a virtue. Script away the things you would
+otherwise have to do manually.
+
+I've come to believe that an automated setup & configuration
+management system is the key for me to solve these problems. If I could
+safely reproduce the environment wherein my software works, and I
+had tests around the software, then I could write scripts more
+effectively and with greater freedom. I would be able to get back some
+of the effectiveness I am missing out on.
+
+Over the past year or so I have been making a concerted effort to
+solve this problem. Some things have worked out really well, others
+have not. At some point, the software to build this site was broken,
+and I didn't know why, and out of frustration I stopped writing and
+focused intensely on setting things up correctly from first
+principles. I'm nowhere near done, but it is time to start talking
+about what I have discovered.
