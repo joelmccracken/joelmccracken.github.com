@@ -34,6 +34,16 @@ recompile with changes:
 #+END_SRC
 
 
+prepare for deploy:
+
+deploy:
+#+BEGIN_SRC sh
+
+  rake setup_github_pages
+
+#+END_SRC
+
+
 deploy:
 #+BEGIN_SRC sh
 
