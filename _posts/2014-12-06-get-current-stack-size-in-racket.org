@@ -10,11 +10,11 @@ and I need to say more about it on here sometime.
 I am currently on Exercise 1.11, which centers around writing two
 separate functions that both compute a mathematical function. The
 first function should compute in
-a /tree-recursive/ way and the second should compute in a
-/tail-recursive/ way.
+a /recursive/ way and the second should compute in a
+/iterative/ way.
 
 The point of writing the function in these different ways is to
-highlight the fact that tail-recursive formulations are fast and take
+highlight the fact that iterative formulations are fast and take
 up significantly less memory; in fact, they can be computed
 in place/in constant space.
 
@@ -36,14 +36,14 @@ thread's continuation". Since a continuation represents the remaining
 work that a thread needs to perform as part of its computation, it
 seems like this would map fairly directly to the idea of the stack
 size showing how each function grows in space during the
-computation. If the tree-recursive continuation size
-continually grows, and the tail-recursive continuation size stays
+computation. If the recursive continuation size
+continually grows, and the iterative continuation size stays
 constant, that would be strong evidence that this would be answering
 my question.
 
 Measurements of the stack size performed as predicted. During the
-course of the execution, the tree-recursive continuation size kept
-growing. Surprisingly, the tail-recursive version kept *precisely the
+course of the execution, the recursive continuation size kept
+growing. Surprisingly, the iterative version kept *precisely the
 same*. I wasn't certain at the time that this would be the case, but
 to me, this clearly is a success.
 
