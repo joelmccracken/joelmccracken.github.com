@@ -1,0 +1,66 @@
+---
+title: SICP & Getting the Size of the Current "Stack" in Racket
+layout: post
+---
+
+
+I've been working through /SICP[1]/ again. Its really a great book --
+and I need to say more about it on here sometime.
+
+I am currently on Exercise 1.11, which centers around writing two
+separate functions that both compute a mathematical function. The
+first function should compute in
+a /tree-recursive/ way and the second should compute in a
+/tail-recursive/ way.
+
+The point of writing the function in these different ways is to
+highlight the fact that tail-recursive formulations are fast and take
+up significantly less memory; in fact, they can be computed
+in place/in constant space.
+
+While I was wrote these, it hit me: It's interesting to create these
+functions, but it would be even more interesting to show that the
+computations take up the amount of space we have predicted. So, I set
+out to see if I could
+figure out how to get current size of the stack, and then to watch the
+stack change during the course of both executions.
+
+As it turns out, it doesn't seem like Racket has the direct concept of
+a stack. This doesn't surprise me, because I understand that the
+concept of a stack is a little bit less clear-cut in languages that
+support continuations & tail call optimization.
+
+However, I was able to find a method [[http://docs.racket-lang.org/reference/runtime.html#%28def._%28%28quote._~23~25kernel%29._vector-set-performance-stats!%29%29][~vector-set-performance-stats!~]]
+that will provide "the number of bytes currently in use for the
+thread's continuation". Since a continuation represents the remaining
+work that a thread needs to perform as part of its computation, it
+seems like this would map fairly directly to the idea of the stack
+size showing how each function grows in space during the
+computation. If the tree-recursive continuation size
+continually grows, and the tail-recursive continuation size stays
+constant, that would be strong evidence that this would be answering
+my question.
+
+Measurements of the stack size performed as predicted. During the
+course of the execution, the tree-recursive continuation size kept
+growing. Surprisingly, the tail-recursive version kept *precisely the
+same*. I wasn't certain at the time that this would be the case, but
+to me, this clearly is a success.
+
+Ok, so how we measure the size of the continuation? The function  ~get-continuation-size~
+below finds the information for us.
+
+#+begin_src scheme
+  (define (get-continuation-size)
+    (let ((results (make-vector 20)))
+      (vector-set-performance-stats! results (current-thread))
+      ;; item 3 contains continuation size
+      (vector-ref results 3)))
+#+end_src
+
+I'm going to keep using this code to show exactly the same thing --
+that functions are executing within the space we expect them to.
+
+
+[1]: http://mitpress.mit.edu/sicp/full-text/book/book.html
+
