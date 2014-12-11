@@ -1,0 +1,44 @@
+---
+layout: post
+title: Objects Are Like Programs
+---
+
+Something that has been on my mind for a long time is how similar
+objects are to programs, especially Unix programs.
+I'm [[http://blog.codeclimate.com/blog/2012/11/28/your-objects-the-unix-way/][not the first]] to notice this similarity, but the similarities are
+so numerous I find it striking.
+Here are a bunch of interesting things, in no particular order:
+
+- Executables are like classes. They both contain the code necessary
+  to create new instances: for an executable, that would be a running
+  program. For a class, that would be an instance.
+
+- Programs are best when they are small, focused, and do one thing
+  well. Similarly, objects are best when they are small and
+  focused. Is your class more like /Microsoft Word/, or ~cat~?
+
+- Program reuse comes from this small focus. The same is true of
+  objects.
+
+- Processes conceptually have a lifecycle. They're "garbage-collected"
+  by the operating system when they finish executing, just like
+  objects.
+
+- Processes are a combination of code and data, just like
+  objects. Processes are independent of each other in a similar way to
+  how instance data is independent between instances.
+
+- There are many ways processes can interact with one another, but the
+  simplest seem very similar to the way objects should interact: via
+  sockets. Socket communication is essentially the same as message
+  passing between objects.
+
+- Long-lived objects seem awfully similar to server processes.
+
+In the oo-vs-functional debate, I'm somewhere in the middle. I /love/
+functional programming -- I just don't think it is somehow "more
+important" than object oriented programming, or that OO is
+misguided. Objects are just too general in concept and powerful in
+modeling ability. They even model functions rather well, and thus they
+can be used rather well for functional programming (when the syntax
+allows it; see Ruby).
