@@ -1,0 +1,151 @@
+---
+layout: post
+title: I should'a scripted it.
+categories: SICP, Racket
+---
+
+I was just working on SICP exercise 1.14 and had an interesting
+experience.
+
+The exercise is pretty simple. Draw a tree-graph of the
+execution of the ways-to-make-change-counting algorithm from earlier
+in the chapter. There is a similar graph of the execution of the
+Fibonacci function, so the pieces were all there.
+
+Instead of drawing on paper, I thought, why not create the graph
+using a program? That would
+certainly make the exercise more interesting.
+I've been wanting to do something interesting with graphviz, and
+drawing the execution tree seemed to be the perfect thing.
+
+I looked at this [[http://www.graphviz.org/pdf/dotguide.pdf][graphviz tutorial]] (warning; PDF) and I
+learned how to construct the graph how I wanted pretty quickly. I
+spent some time on it, and it worked out well.
+
+Now, if you notice, the SICP exercise specifies drawing the tree for
+counting the ways to change 11 cents. In my mind, this seemed like it
+should be pretty easy to do -- it is a very small number, after
+all.
+
+In actuality, creating this structure was a huge pain.
+Editing the nodes, doing calculations, and keeping things in order
+ended up taking much longer and was harder than I expectd.
+I made mistakes and got confused. Harumph!
+
+I wondered, can I somehow /script/ the creation of this file? Do I
+actually need to do this manually? I mean, all I would need to do is
+write some strings out to a file... it shouldn't be /that/ hard.
+
+So, I sprinkled some logging-style statements in the code that the
+book provides as the definition of the change counting algorithm.
+About half an hour later, I had a working, complete graph. Awesome.
+
+Here's the complete code:
+
+#+begin_src racket
+
+  #lang racket
+
+  (define (gen-count-change-graph)
+
+    (define output-filename "ex1-14.dot")
+    (when (file-exists? output-filename)
+        (delete-file output-filename))
+    (define output (open-output-file output-filename))
+    (define counter 0)
+    (define (++counter)
+      (let ([ncounter (add1 counter)])
+        (set! counter ncounter)
+        ncounter))
+
+    (define (record-cc amount kinds-of-coins my-id)
+      (fprintf output
+               "\texec~s [label=\"<f0>cc|<f1>~s|<f2>~s\"];\n"
+               my-id amount kinds-of-coins))
+
+    (define (record-1 id parent-id)
+      (fprintf output "\toneval~s [label=\"1\"];\n" id)
+      (fprintf output "\texec~s -> oneval~s;\n" parent-id id))
+
+
+    (define (record-0 id parent-id)
+      (fprintf output "\tzedval~s [label=\"0\"];\n" id)
+      (fprintf output "\texec~s -> zedval~s;\n" parent-id id))
+
+    (define (record-branching left-child-id right-child-id parent-id)
+      (fprintf output
+               "\texec~s -> {exec~s; exec~s}\n"
+               parent-id
+               left-child-id
+               right-child-id))
+
+    (define (count-change amount)
+      (cc amount 5 counter))
+
+    (define (cc amount kinds-of-coins my-id)
+      (record-cc amount kinds-of-coins my-id)
+      (let ([left-child-id (++counter)]
+            [right-child-id (++counter)])
+        (cond ((= amount 0)
+               (begin
+                 (record-1 left-child-id my-id)
+                 1))
+              ((or (< amount 0) (= kinds-of-coins 0))
+               (begin
+                 (record-0 left-child-id my-id)
+                 0))
+               (else (begin
+                       (record-branching left-child-id right-child-id my-id)
+                       (+ (cc amount
+                            (- kinds-of-coins 1)
+                            left-child-id)
+                        (cc (- amount
+                               (first-denomination kinds-of-coins))
+                            kinds-of-coins
+                            right-child-id)))))))
+
+
+    (define (first-denomination kinds-of-coins)
+      (cond ((= kinds-of-coins 1) 1)
+            ((= kinds-of-coins 2) 5)
+            ((= kinds-of-coins 3) 10)
+            ((= kinds-of-coins 4) 25)
+            ((= kinds-of-coins 5) 50)))
+
+    (display "digraph execution_tree {
+  node [shape=record];
+  " output)
+
+    (count-change 11)
+    (display " } " output)
+    (close-output-port output))
+
+  (gen-count-change-graph)
+
+#+end_src
+
+
+There were a few interesting facets to this experience:
+
+1. The execution graph to count the ways to change 11 cents is
+   surprisingly large.
+
+2. The interesting thing is that scripting this solution took
+   *significantly* less time than creating it manually. I probably
+   spent a few hours of working on this before I ended up starting to
+   script it, and I was only about half done.
+
+3. However, if I hadn't done it manually for so long, I'm not sure I
+   would have been able to understand so readily how to generate the
+   graph & what the dot syntax would be like. For that matter, the
+   graph I had created manually gave me something to spot-check the
+   generated graph against. So, I'm not really sure I /actually/ wasted
+   time doing it manually.
+
+
+I've heard people say that they might enjoy some movies, but feel
+inspired by others. This book really inspires me, which is why I think
+I love it so much. The problems are interesting enough that to
+"sink my teeth into" them is rewarding in many ways.
+
+
