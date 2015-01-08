@@ -1,0 +1,27 @@
+---
+title: Wish for a New Programming Language
+layout: post
+---
+
+There is a principle in program design: defer decisions to the last
+possible moment, because this is when you will have the most
+information about how to make the right choice.
+
+If I were to design a new programming language today, I would apply
+this to a programming language environment. It would look something
+like this:
+
+1. A runtime that is small -- optional, ideally -- but can grow and be
+   configured, incorporating ideas from different communities.
+
+2. A language that is equally small, but growable. This means Lisp,
+   but I include it from the standpoint of being a reasonable place to
+   start. Include facilities to extend the actual textual syntax of
+   the language, not just manipulating sexps.
+
+One of the more frustrating aspects of programming languages is that
+they make tradeoffs up front. The design decisions are made at the
+earliest possible moment. These decisions often are as permanent as
+the languages themselves are, which is a shame. Programming is a
+constantly growing, dynamic field. We will never know less about it
+than we know now.
