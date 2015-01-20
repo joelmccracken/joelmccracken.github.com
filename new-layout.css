@@ -1,0 +1,96 @@
+$body-text-color: #333;
+$lambda-color: red;
+
+
+@mixin inline-li {
+  min-width: 100px;
+  margin: auto;
+  display: inline-block;
+}
+
+@mixin central-column-wrapper {
+  max-width: 800px;
+  margin: auto;
+}
+
+body {
+  font-size: 24px;
+  font-family: Helvetica,Arial,sans-serif;
+  color: $body-text-color;
+}
+
+header {
+  @include central-column-wrapper;
+  font-size: 3em;
+}
+
+nav {
+  @include central-column-wrapper;
+  background-color: #bad8ff;
+  background-color: #ffe1ba;
+}
+
+main {
+  @include central-column-wrapper;
+}
+
+footer {
+  font-size: .7em;
+  @include central-column-wrapper;
+  margin-top: 7em;
+
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+    @include inline-li;
+  }
+}
+
+section {
+  margin-top: 5em;
+}
+
+ul.nav-links {
+  color: $lambda-color;
+
+  padding-left: 0px;
+  text-align: justify;
+
+  li:before {
+    content: "\03BB \020";
+  }
+
+  li {
+    a {
+      color: $body-text-color;
+    }
+    @include inline-li;
+  }
+
+  &:after {
+    content: ' ';
+    width:   100%;
+    display: inline-block;
+  }
+
+}
+
+
+
+
+ul.entries {
+  padding-left: 0;
+  list-style-type: circle;
+
+  li {
+    margin-top: 1em;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: $body-text-color;
+}
+

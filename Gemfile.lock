@@ -33,6 +33,10 @@ GEM
       toml (~> 0.1.0)
     jekyll-coffeescript (1.0.0)
       coffee-script (~> 2.2)
+    jekyll-sass (1.2.2)
+      colorator (~> 0.1)
+      jekyll (>= 0.10.0)
+      sass (>= 3.0.0)
     jekyll-sass-converter (1.0.0.rc3)
       sass (~> 3.2)
     liquid (2.5.5)
@@ -73,5 +77,6 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll (~> 2.0.0.alpha.3)
+  jekyll-sass
   pry
   stringex
