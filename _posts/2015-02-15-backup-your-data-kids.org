@@ -1,0 +1,23 @@
+---
+layout: post
+title: Backup Your Data, Kids
+---
+
+Last weekend, I deleted a directory that was "empty" that included
+some of my personal data.
+
+I use empty with scare quotes because the directory wasn't actually
+empty. I don't know what exactly caused it, but OS X was listing the
+directory as empty. I was trying to figure out what was going on with
+something else, noticed the directory, thought it was some junk
+directory I never actually used, deleted it, and then a few minutes
+later that a /number/ of directories were mysteriously empty. I
+restarted computer and they all came back.
+
+I didn't lose that much data because I do keep most things in
+git. However, there were a few projects that I had been working on
+recently that I hadn't pushed remotely.
+
+My personal lesson is to not have things that I want to keep not
+backed up, no matter how short a time it will be. I know, I know, this
+is obvious, common advice, but still.
