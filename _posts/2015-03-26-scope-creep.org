@@ -1,0 +1,78 @@
+---
+layout: post
+title: Scope Creep, or, the Decline and Fall of My Personal Projects
+---
+
+Scope creep can kill any project. There's no doubt about
+that. However, it surprises me just how often this problem
+manifests itself in my personal projects -- that is, whatever I am
+hacking on at the moment. I wonder what causes the
+problem?
+
+It is easy to give in to the urge to slowly add more features to
+projects. Its so easy to say "Oh! one more thing!", especially when you
+are your own boss, and there isn't necessarily anything that /needs/
+to be delivered -- There isn't necessarily an end goal, or singular,
+driving purpose. 
+
+You'd think it would be easier to have a fixed scope on my own
+projects. After all, I am the one who defines the scope. I'm also
+familiar with the problems of scope creep. As a general principle,
+I think it is probably true that its easier to control the scope on
+something you define (because /I/ control and define it, after
+all). However, I let my 
+wandering curiosity influence the direction of the projects I work on.
+This creates an ever-shifting set of goals that leaves a wake of
+half-done things behind. This makes sense, because my satisfying my
+curiosity brings me great pleasure & makes up a huge part of who I am.
+
+The problem, though, is
+that the spark of understanding comes, not at the /end/ of a project or
+investigation, but at the beginning of the project when things are
+still in a formative state. But once that understanding comes, it
+/moves/, ever forward.
+
+Another aspect to this is that most of my personal projects do not
+have an explicit goal I'm trying to achieve. I start with /some/ idea of what
+I want to do, but the project is defined ad hoc as I work through
+it. This is /fun/, but I think it is less effective than having a
+specific, finite goal in mind (at least effective for producing useful
+artifacts). 
+
+I'm going to go one step further. There's another pattern I've
+noticed, and this one is a bit less self-indulgent: when something
+gets too confusing and I get frustrated, I tend to drop the
+project. I'm probably less worried about this, because normally I
+change gears and work on something that would fill in my knowledge
+gaps, hopefully removing those frustrations. 
+
+I guess it ultimately depends upon what I'm trying to do. Am I trying
+to produce things on topics I love, or am I just trying to learn? If
+I'm trying to learn, is this the best way to do it? Am I just fooling
+myself, getting exciting about projects and then dropping them?
+
+---
+
+I recently started working on SICP again, and it got me thinking about
+this problem. Initially, my goal was something like: read the book,
+work through the exercises, and put the results on GitHub.
+"Oh," I thought, "the code should really have unit
+tests written to show that it works. I've been wanting to play with
+RackUnit anyway". A few exercises later, I thought, "I should really look into
+Scribble for documenting the code I am working on. I could use Plot to
+create charts in the Scribble docs, and show interactive examples of
+how it all works through the Literate-like facilities in Scribble".
+
+To be honest, this project definition has grown into something
+extremely interesting. I just wish it wasn't /so much work/, a little more
+finite, and easier to make progress on. As it stands, this is really a
+huge task. I started writing this post because I wanted to debug my
+brain, sorting out the threads that compose this phenomenon.
+
+
+---
+
+What lessons can I learn? I think I need to be more careful to think
+through my project goals, and learn to recognize when I'm changing
+them -- and before changing them, decide if the change is worth the
+effort. 
