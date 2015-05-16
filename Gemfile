@@ -1,6 +1,6 @@
 
 source 'https://rubygems.org'
 
-gem 'jekyll', '~> 2.0.0'
+gem 'jekyll', '~> 2.5.0'
 gem 'stringex'
 gem 'pry'

@@ -1,3 +1,4 @@
+EMACS_PATH=File.expand_path "~/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 module Jekyll
   class OrgConverter < Converter
@@ -15,7 +16,7 @@ module Jekyll
     def ensure_server!
       @server_pid ||=
         begin
-          emacs_execution_string = "/Applications/Emacs.app/Contents/MacOS/Emacs -Q" \
+          emacs_execution_string = EMACS_PATH + " -Q" \
           " --daemon=org-convert-daemon -L " \
             "_vendor/org-8.2.6/lisp/ -l _lib/org-convert.el -f start-compile-server"
           server_pid = spawn(emacs_execution_string)
