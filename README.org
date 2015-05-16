@@ -1,0 +1,53 @@
+#+STARTUP: showall
+* Joel's Journal
+
+... recently reworked because octopress argh.
+
+
+to build:
+#+BEGIN_SRC sh
+
+  jekyll build
+
+#+END_SRC
+
+serve:
+#+BEGIN_SRC sh
+
+  jekyll serve
+
+#+END_SRC
+
+drafts:
+
+#+BEGIN_SRC sh
+
+  jekyll serve --drafts
+
+#+END_SRC
+
+recompile with changes:
+
+#+BEGIN_SRC sh
+
+  jekyll serve --watch
+
+#+END_SRC
+
+
+prepare for deploy:
+
+deploy:
+#+BEGIN_SRC sh
+
+  rake setup_github_pages
+
+#+END_SRC
+
+
+deploy:
+#+BEGIN_SRC sh
+
+  rake push
+
+#+END_SRC

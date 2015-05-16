@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Joel&#39;s Journal</title>
+    <description>My personal place to write about the things I find interesting. Programming, Lisp, Ruby, Emacs, etc.</description>
+    <link>http://joelmccracken.github.io</link>
+    <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>A Mid-Course Review of &quot;From NAND to Tetris&quot; on Coursera</title>
+        <description>&lt;p&gt;
+I&#39;ve been taking the course &quot;From NAND to Tetris&quot; on Coursera. So far,
+the course has been very interesting, and I recommend it. It provides
+a good taste of how computers work from a low level, starting at the
+most basic logic gates and building up from there. I&#39;m over half way
+through, and have some observations.
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;This course has been a blast! Slowly building up a computer from
+first principles has been very rewarding. Its an amazing
+feeling to struggle with designing a chip and then to turn around
+and use it in another, more advanced chip!
+&lt;/li&gt;
+
+&lt;li&gt;The course hasn&#39;t been that hard. Now, I had some classes that
+dealt with this kind of thing at Pitt. I remember working with
+most of these concepts in the past, so this is not totally foreign
+to me. However, I also think that the professors did an excellent
+job simplify things to their essential concepts.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+I&#39;m really glad I have invested my time into this course. If you want
+to learn more about how computers work on a low level (or even if you
+would like a refresher into the topic), I highly recommend it.
+&lt;/p&gt;
+</description>
+        <pubDate>Sat, 16 May 2015 17:01:42 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/from-nand-to-tetris/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/from-nand-to-tetris/</guid>
+      </item>
+    
+      <item>
+        <title>Scope Creep, or, the Decline and Fall of My Personal Projects</title>
+        <description>&lt;p&gt;
+Scope creep can kill any project. There&#39;s no doubt about
+that. However, it surprises me just how often this problem
+manifests itself in my personal projects &amp;#x2013; that is, whatever I am
+hacking on at the moment. I wonder what causes the
+problem?
+&lt;/p&gt;
+
+&lt;p&gt;
+It is easy to give in to the urge to slowly add more features to
+projects. Its so easy to say &quot;Oh! one more thing!&quot;, especially when you
+are your own boss, and there isn&#39;t necessarily anything that &lt;i&gt;needs&lt;/i&gt;
+to be delivered &amp;#x2013; There isn&#39;t necessarily an end goal, or singular,
+driving purpose. 
+&lt;/p&gt;
+
+&lt;p&gt;
+You&#39;d think it would be easier to have a fixed scope on my own
+projects. After all, I am the one who defines the scope. I&#39;m also
+familiar with the problems of scope creep. As a general principle,
+I think it is probably true that its easier to control the scope on
+something you define (because &lt;i&gt;I&lt;/i&gt; control and define it, after
+all). However, I let my 
+wandering curiosity influence the direction of the projects I work on.
+This creates an ever-shifting set of goals that leaves a wake of
+half-done things behind. This makes sense, because my satisfying my
+curiosity brings me great pleasure &amp;amp; makes up a huge part of who I am.
+&lt;/p&gt;
+
+&lt;p&gt;
+The problem, though, is
+that the spark of understanding comes, not at the &lt;i&gt;end&lt;/i&gt; of a project or
+investigation, but at the beginning of the project when things are
+still in a formative state. But once that understanding comes, it
+&lt;i&gt;moves&lt;/i&gt;, ever forward.
+&lt;/p&gt;
+
+&lt;p&gt;
+Another aspect to this is that most of my personal projects do not
+have an explicit goal I&#39;m trying to achieve. I start with &lt;i&gt;some&lt;/i&gt; idea of what
+I want to do, but the project is defined ad hoc as I work through
+it. This is &lt;i&gt;fun&lt;/i&gt;, but I think it is less effective than having a
+specific, finite goal in mind (at least effective for producing useful
+artifacts). 
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;m going to go one step further. There&#39;s another pattern I&#39;ve
+noticed, and this one is a bit less self-indulgent: when something
+gets too confusing and I get frustrated, I tend to drop the
+project. I&#39;m probably less worried about this, because normally I
+change gears and work on something that would fill in my knowledge
+gaps, hopefully removing those frustrations. 
+&lt;/p&gt;
+
+&lt;p&gt;
+I guess it ultimately depends upon what I&#39;m trying to do. Am I trying
+to produce things on topics I love, or am I just trying to learn? If
+I&#39;m trying to learn, is this the best way to do it? Am I just fooling
+myself, getting exciting about projects and then dropping them?
+&lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+I recently started working on SICP again, and it got me thinking about
+this problem. Initially, my goal was something like: read the book,
+work through the exercises, and put the results on GitHub.
+&quot;Oh,&quot; I thought, &quot;the code should really have unit
+tests written to show that it works. I&#39;ve been wanting to play with
+RackUnit anyway&quot;. A few exercises later, I thought, &quot;I should really look into
+Scribble for documenting the code I am working on. I could use Plot to
+create charts in the Scribble docs, and show interactive examples of
+how it all works through the Literate-like facilities in Scribble&quot;.
+&lt;/p&gt;
+
+&lt;p&gt;
+To be honest, this project definition has grown into something
+extremely interesting. I just wish it wasn&#39;t &lt;i&gt;so much work&lt;/i&gt;, a little more
+finite, and easier to make progress on. As it stands, this is really a
+huge task. I started writing this post because I wanted to debug my
+brain, sorting out the threads that compose this phenomenon.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+What lessons can I learn? I think I need to be more careful to think
+through my project goals, and learn to recognize when I&#39;m changing
+them &amp;#x2013; and before changing them, decide if the change is worth the
+effort. 
+&lt;/p&gt;
+</description>
+        <pubDate>Thu, 26 Mar 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/scope-creep/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/scope-creep/</guid>
+      </item>
+    
+      <item>
+        <title>Context</title>
+        <description>&lt;p&gt;
+I believe &lt;i&gt;context&lt;/i&gt; as a concept is one of the most under-appreciated
+ideas in programming. When it is not appreciated and planned for,
+context can leak into areas of code that it shouldn&#39;t.
+&lt;/p&gt;
+
+&lt;p&gt;
+In the &quot;Data, Context, and Interaction&quot; (&lt;i&gt;DCI&lt;/i&gt;) model, context takes a
+central role. The intuition is that code and ideas may be correct in a
+certain context while being confusing and unclear in another.
+&lt;/p&gt;
+
+&lt;p&gt;
+We have an intuitive grasp of what context is. If we talk about a
+small piece of code, context might refer to code from the same
+package, class, or module. Or, it
+might refer to the code&#39;s usage &amp;#x2013; the context from which it is
+invoked.
+I think this is the most subtle form of coupling due to context that may arise.
+&lt;/p&gt;
+
+&lt;p&gt;
+Occasionally, I encounter code that looks a little strange.
+Typically, I&#39;ll then do a search of the code base, trying to find
+where that code is called from. Normally, I&#39;m able to understand what
+confused me: some oddity in the caller prompted the author to change
+the code-in-question, adding some behavior specific to that caller.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+What problems does context leaking cause?
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;It hampers reuse. I&#39;m less likely to find code useful that has
+strange pieces that were specific to some other story from a year
+ago. Often, the behavior
+&lt;/li&gt;
+
+&lt;li&gt;It makes the code more complicated. As I hinted at above, this kind
+of thing almost always makes the called code look &lt;i&gt;bizarre&lt;/i&gt;. The
+only way to make sense of it being to look up and understand
+the context of another caller.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+What can be done?
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;Limit context-specific code to &lt;i&gt;that context&lt;/i&gt;. For example, don&#39;t add logic
+specific to CSV importing to your core models. If you identify
+something that is &lt;i&gt;essential&lt;/i&gt; to the model, sure, add it.
+&lt;/li&gt;
+
+&lt;li&gt;Break your application into modules. When all the concepts in your
+application are blended together, it can be really hard to identify
+kind of context leakage.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+Failure to recognize context and conceptual boundaries will make your
+code worse. Throughout my career, it&#39;s something I&#39;ve seen over, and
+over, and over again.
+&lt;/p&gt;
+</description>
+        <pubDate>Sun, 15 Mar 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/context/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/context/</guid>
+      </item>
+    
+      <item>
+        <title>Backup Your Data, Kids</title>
+        <description>&lt;p&gt;
+Last weekend, I deleted a directory that was &quot;empty&quot; that included
+some of my personal data.
+&lt;/p&gt;
+
+&lt;p&gt;
+I use empty with scare quotes because the directory wasn&#39;t actually
+empty. I don&#39;t know what exactly caused it, but OS X was listing the
+directory as empty. I was trying to figure out what was going on with
+something else, noticed the directory, thought it was some junk
+directory I never actually used, deleted it, and then a few minutes
+later that a &lt;i&gt;number&lt;/i&gt; of directories were mysteriously empty. I
+restarted computer and they all came back.
+&lt;/p&gt;
+
+&lt;p&gt;
+I didn&#39;t lose that much data because I do keep most things in
+git. However, there were a few projects that I had been working on
+recently that I hadn&#39;t pushed remotely.
+&lt;/p&gt;
+
+&lt;p&gt;
+My personal lesson is to not have things that I want to keep not
+backed up, no matter how short a time it will be. I know, I know, this
+is obvious, common advice, but still.
+&lt;/p&gt;
+</description>
+        <pubDate>Sun, 15 Feb 2015 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/backup-your-data-kids/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/backup-your-data-kids/</guid>
+      </item>
+    
+      <item>
+        <title>Wish for a New Programming Language</title>
+        <description>&lt;p&gt;
+There is a principle in program design: defer decisions to the last
+possible moment, because this is when you will have the most
+information about how to make the right choice.
+&lt;/p&gt;
+
+&lt;p&gt;
+If I were to design a new programming language today, I would apply
+this to a programming language environment. It would look something
+like this:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;A runtime that is small &amp;#x2013; optional, ideally &amp;#x2013; but can grow and be
+configured, incorporating ideas from different communities.
+&lt;/li&gt;
+
+&lt;li&gt;A language that is equally small, but growable. This means Lisp,
+but I include it from the standpoint of being a reasonable place to
+start. Include facilities to extend the actual textual syntax of
+the language, not just manipulating sexps.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+One of the more frustrating aspects of programming languages is that
+they make tradeoffs up front. The design decisions are made at the
+earliest possible moment. These decisions often are as permanent as
+the languages themselves are, which is a shame. Programming is a
+constantly growing, dynamic field. We will never know less about it
+than we know now.
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 07 Jan 2015 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</guid>
+      </item>
+    
+      <item>
+        <title>I should&#39;a scripted it.</title>
+        <description>&lt;p&gt;
+I was just working on SICP exercise 1.14 and had an interesting
+experience.
+&lt;/p&gt;
+
+&lt;p&gt;
+The exercise is pretty simple. Draw a tree-graph of the
+execution of the ways-to-make-change-counting algorithm from earlier
+in the chapter. There is a similar graph of the execution of the
+Fibonacci function, so the pieces were all there.
+&lt;/p&gt;
+
+&lt;p&gt;
+Instead of drawing on paper, I thought, why not create the graph
+using a program? That would
+certainly make the exercise more interesting.
+I&#39;ve been wanting to do something interesting with graphviz, and
+drawing the execution tree seemed to be the perfect thing.
+&lt;/p&gt;
+
+&lt;p&gt;
+I looked at this &lt;a href=&quot;http://www.graphviz.org/pdf/dotguide.pdf&quot;&gt;graphviz tutorial&lt;/a&gt; (warning; PDF) and I
+learned how to construct the graph how I wanted pretty quickly. I
+spent some time on it, and it worked out well.
+&lt;/p&gt;
+
+&lt;p&gt;
+Now, if you notice, the SICP exercise specifies drawing the tree for
+counting the ways to change 11 cents. In my mind, this seemed like it
+should be pretty easy to do &amp;#x2013; it is a very small number, after
+all.
+&lt;/p&gt;
+
+&lt;p&gt;
+In actuality, creating this structure was a huge pain.
+Editing the nodes, doing calculations, and keeping things in order
+ended up taking much longer and was harder than I expectd.
+I made mistakes and got confused. Harumph!
+&lt;/p&gt;
+
+&lt;p&gt;
+I wondered, can I somehow &lt;i&gt;script&lt;/i&gt; the creation of this file? Do I
+actually need to do this manually? I mean, all I would need to do is
+write some strings out to a file&amp;#x2026; it shouldn&#39;t be &lt;i&gt;that&lt;/i&gt; hard.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, I sprinkled some logging-style statements in the code that the
+book provides as the definition of the change counting algorithm.
+About half an hour later, I had a working, complete graph. Awesome.
+&lt;/p&gt;
+
+&lt;p&gt;
+Here&#39;s the complete code:
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+
+&lt;pre class=&quot;src src-racket&quot;&gt;#lang racket
+
+(define (gen-count-change-graph)
+
+  (define output-filename &quot;ex1-14.dot&quot;)
+  (when (file-exists? output-filename)
+      (delete-file output-filename))
+  (define output (open-output-file output-filename))
+  (define counter 0)
+  (define (++counter)
+    (let ([ncounter (add1 counter)])
+      (set! counter ncounter)
+      ncounter))
+
+  (define (record-cc amount kinds-of-coins my-id)
+    (fprintf output
+	     &quot;\texec~s [label=\&quot;&amp;lt;f0&amp;gt;cc|&amp;lt;f1&amp;gt;~s|&amp;lt;f2&amp;gt;~s\&quot;];\n&quot;
+	     my-id amount kinds-of-coins))
+
+  (define (record-1 id parent-id)
+    (fprintf output &quot;\toneval~s [label=\&quot;1\&quot;];\n&quot; id)
+    (fprintf output &quot;\texec~s -&amp;gt; oneval~s;\n&quot; parent-id id))
+
+
+  (define (record-0 id parent-id)
+    (fprintf output &quot;\tzedval~s [label=\&quot;0\&quot;];\n&quot; id)
+    (fprintf output &quot;\texec~s -&amp;gt; zedval~s;\n&quot; parent-id id))
+
+  (define (record-branching left-child-id right-child-id parent-id)
+    (fprintf output
+	     &quot;\texec~s -&amp;gt; {exec~s; exec~s}\n&quot;
+	     parent-id
+	     left-child-id
+	     right-child-id))
+
+  (define (count-change amount)
+    (cc amount 5 counter))
+
+  (define (cc amount kinds-of-coins my-id)
+    (record-cc amount kinds-of-coins my-id)
+    (let ([left-child-id (++counter)]
+	  [right-child-id (++counter)])
+      (cond ((= amount 0)
+	     (begin
+	       (record-1 left-child-id my-id)
+	       1))
+	    ((or (&amp;lt; amount 0) (= kinds-of-coins 0))
+	     (begin
+	       (record-0 left-child-id my-id)
+	       0))
+	     (else (begin
+		     (record-branching left-child-id right-child-id my-id)
+		     (+ (cc amount
+			  (- kinds-of-coins 1)
+			  left-child-id)
+		      (cc (- amount
+			     (first-denomination kinds-of-coins))
+			  kinds-of-coins
+			  right-child-id)))))))
+
+
+  (define (first-denomination kinds-of-coins)
+    (cond ((= kinds-of-coins 1) 1)
+	  ((= kinds-of-coins 2) 5)
+	  ((= kinds-of-coins 3) 10)
+	  ((= kinds-of-coins 4) 25)
+	  ((= kinds-of-coins 5) 50)))
+
+  (display &quot;digraph execution_tree {
+node [shape=record];
+&quot; output)
+
+  (count-change 11)
+  (display &quot; } &quot; output)
+  (close-output-port output))
+
+(gen-count-change-graph)
+&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;
+There were a few interesting facets to this experience:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;The execution graph to count the ways to change 11 cents is
+surprisingly large.
+&lt;/li&gt;
+
+&lt;li&gt;The interesting thing is that scripting this solution took
+&lt;b&gt;significantly&lt;/b&gt; less time than creating it manually. I probably
+spent a few hours of working on this before I ended up starting to
+script it, and I was only about half done.
+&lt;/li&gt;
+
+&lt;li&gt;However, if I hadn&#39;t done it manually for so long, I&#39;m not sure I
+would have been able to understand so readily how to generate the
+graph &amp;amp; what the dot syntax would be like. For that matter, the
+graph I had created manually gave me something to spot-check the
+generated graph against. So, I&#39;m not really sure I &lt;i&gt;actually&lt;/i&gt; wasted
+time doing it manually.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;
+I&#39;ve heard people say that they might enjoy some movies, but feel
+inspired by others. This book really inspires me, which is why I think
+I love it so much. The problems are interesting enough that to
+&quot;sink my teeth into&quot; them is rewarding in many ways.
+&lt;/p&gt;
+</description>
+        <pubDate>Sat, 20 Dec 2014 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</guid>
+      </item>
+    
+      <item>
+        <title>Objects Are Like Programs</title>
+        <description>&lt;p&gt;
+Something that has been on my mind for a long time is how similar
+objects are to programs, especially Unix programs.
+I&#39;m &lt;a href=&quot;http://blog.codeclimate.com/blog/2012/11/28/your-objects-the-unix-way/&quot;&gt;not the first&lt;/a&gt; to notice this similarity, but the similarities are
+so numerous I find it striking.
+Here are a bunch of interesting things, in no particular order:
+&lt;/p&gt;
+
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;Executables are like classes. They both contain the code necessary
+to create new instances: for an executable, that would be a running
+program. For a class, that would be an instance.
+&lt;/li&gt;
+
+&lt;li&gt;Programs are best when they are small, focused, and do one thing
+well. Similarly, objects are best when they are small and
+focused. Is your class more like &lt;i&gt;Microsoft Word&lt;/i&gt;, or &lt;code&gt;cat&lt;/code&gt;?
+&lt;/li&gt;
+
+&lt;li&gt;Program reuse comes from this small focus. The same is true of
+objects.
+&lt;/li&gt;
+
+&lt;li&gt;Processes conceptually have a lifecycle. They&#39;re &quot;garbage-collected&quot;
+by the operating system when they finish executing, just like
+objects.
+&lt;/li&gt;
+
+&lt;li&gt;Processes are a combination of code and data, just like
+objects. Processes are independent of each other in a similar way to
+how instance data is independent between instances.
+&lt;/li&gt;
+
+&lt;li&gt;There are many ways processes can interact with one another, but the
+simplest seem very similar to the way objects should interact: via
+sockets. Socket communication is essentially the same as message
+passing between objects.
+&lt;/li&gt;
+
+&lt;li&gt;Long-lived objects seem awfully similar to server processes.
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+In the oo-vs-functional debate, I&#39;m somewhere in the middle. I &lt;i&gt;love&lt;/i&gt;
+functional programming &amp;#x2013; I just don&#39;t think it is somehow &quot;more
+important&quot; than object oriented programming, or that OO is
+misguided. Objects are just too general in concept and powerful in
+modeling ability. They even model functions rather well, and thus they
+can be used rather well for functional programming (when the syntax
+allows it; see Ruby).
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 Dec 2014 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/objects-are-like-programs/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/objects-are-like-programs/</guid>
+      </item>
+    
+      <item>
+        <title>SICP &amp; Getting the Size of the Current &quot;Stack&quot; in Racket</title>
+        <description>&lt;p&gt;
+I&#39;ve been working through &lt;i&gt;SICP&lt;sup&gt;&lt;a id=&quot;fnr.1&quot; name=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/i&gt; again. Its really a great book &amp;#x2013;
+and I need to say more about it on here sometime.
+&lt;/p&gt;
+
+&lt;p&gt;
+I am currently on Exercise 1.11, which centers around writing two
+separate functions that both compute a mathematical function. The
+first function should compute in
+a &lt;i&gt;recursive&lt;/i&gt; way and the second should compute in a
+&lt;i&gt;iterative&lt;/i&gt; way.
+&lt;/p&gt;
+
+&lt;p&gt;
+The point of writing the function in these different ways is to
+highlight the fact that iterative formulations are fast and take
+up significantly less memory; in fact, they can be computed
+in place/in constant space.
+&lt;/p&gt;
+
+&lt;p&gt;
+While I was wrote these, it hit me: It&#39;s interesting to create these
+functions, but it would be even more interesting to show that the
+computations take up the amount of space we have predicted. So, I set
+out to see if I could
+figure out how to get current size of the stack, and then to watch the
+stack change during the course of both executions.
+&lt;/p&gt;
+
+&lt;p&gt;
+As it turns out, it doesn&#39;t seem like Racket has the direct concept of
+a stack. This doesn&#39;t surprise me, because I understand that the
+concept of a stack is a little bit less clear-cut in languages that
+support continuations &amp;amp; tail call optimization.
+&lt;/p&gt;
+
+&lt;p&gt;
+However, I was able to find a method &lt;a href=&quot;http://docs.racket-lang.org/reference/runtime.html#(def._((quote._~23~25kernel)._vector-set-performance-stats!))&quot;&gt;&lt;code&gt;vector-set-performance-stats!&lt;/code&gt;&lt;/a&gt;
+that will provide &quot;the number of bytes currently in use for the
+thread&#39;s continuation&quot;. Since a continuation represents the remaining
+work that a thread needs to perform as part of its computation, it
+seems like this would map fairly directly to the idea of the stack
+size showing how each function grows in space during the
+computation. If the recursive continuation size
+continually grows, and the iterative continuation size stays
+constant, that would be strong evidence that this would be answering
+my question.
+&lt;/p&gt;
+
+&lt;p&gt;
+Measurements of the stack size performed as predicted. During the
+course of the execution, the recursive continuation size kept
+growing. Surprisingly, the iterative version kept &lt;b&gt;precisely the
+same&lt;/b&gt;. I wasn&#39;t certain at the time that this would be the case, but
+to me, this clearly is a success.
+&lt;/p&gt;
+
+&lt;p&gt;
+Ok, so how we measure the size of the continuation? The function  &lt;code&gt;get-continuation-size&lt;/code&gt;
+below finds the information for us.
+&lt;/p&gt;
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+
+&lt;pre class=&quot;src src-scheme&quot;&gt;(define (get-continuation-size)
+  (let ((results (make-vector 20)))
+    (vector-set-performance-stats! results (current-thread))
+    ;; item 3 contains continuation size
+    (vector-ref results 3)))
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+I&#39;m going to keep using this code to show exactly the same thing &amp;#x2013;
+that functions are executing within the space we expect them to.
+&lt;/p&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
+&lt;div id=&quot;text-footnotes&quot;&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; name=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
+: &lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book.html&quot;&gt;http://mitpress.mit.edu/sicp/full-text/book/book.html&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;
+
+
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        <pubDate>Sat, 06 Dec 2014 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</guid>
+      </item>
+    
+      <item>
+        <title>Automated Workstation Setup &amp; Management</title>
+        <description>&lt;p&gt;
+Over the years, I have written lots of scripts to help automate
+something or other. Many of these have broken. Example of the scripts
+that have broken include a
+LastPass data exporter and encrypter in Ruby, Emacs Lisp of various
+kinds that integrate Emacs with other
+processes, a tiny script to toggle my Heroku authentication between
+my personal and work accounts, and others. Typically, I find
+this out about their brokenness at the worst possible time &amp;#x2013; when I
+need to actually use the scripts I rely upon.
+&lt;/p&gt;
+
+&lt;p&gt;
+This has become common enough that I have grown to expect it. Lots of
+things might cause one of these scripts to break: software upgrades,
+making incompatible changes to other pieces of code, accidentally
+removing something that the script relied upon have all played a part
+in things breaking.
+&lt;/p&gt;
+
+&lt;p&gt;
+I really hate this. Taking the time to write something, only to have
+it be broken when you need it, makes you feel like you wasted your
+time writing the scripts in the first place. Because of this
+phenomenon, I tend to write fewer scripts and be more accepting of
+discomfort.
+&lt;/p&gt;
+
+&lt;p&gt;
+I really hate this, too. I believe we &lt;i&gt;should&lt;/i&gt; script things. I believe
+this is a &lt;i&gt;key&lt;/i&gt; to being a productive programmer, and is one way that
+allows us to multiply out abilities as programmers.
+And, I&#39;m not alone in
+thinking this way. It seems that all the best developers think the
+same thing: laziness is a virtue. Script away the things you would
+otherwise have to do manually.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;ve come to believe that an automated setup &amp;amp; configuration
+management system is the key for me to solve these problems. If I could
+safely reproduce the environment wherein my software works, and I
+had tests around the software, then I could write scripts more
+effectively and with greater freedom. I would be able to get back some
+of the effectiveness I am missing out on.
+&lt;/p&gt;
+
+&lt;p&gt;
+Over the past year or so I have been making a concerted effort to
+solve this problem. Some things have worked out really well, others
+have not. At some point, the software to build this site was broken,
+and I didn&#39;t know why, and out of frustration I stopped writing and
+focused intensely on setting things up correctly from first
+principles. I&#39;m nowhere near done, but it is time to start talking
+about what I have discovered.
+&lt;/p&gt;
+</description>
+        <pubDate>Thu, 27 Nov 2014 00:00:00 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/automated-workstation-setup-and-management/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/automated-workstation-setup-and-management/</guid>
+      </item>
+    
+      <item>
+        <title>A Literate Programming Primer</title>
+        <description>&lt;p&gt;
+I love the concept of literate programming. Unfortunately, the
+idea never really caught on in industry. My experiments with it in
+the past have been successful, but there are many things
+that could be done to improve the experience &amp;#x2013; many of which
+prevent me from advocating it to other programmers to practice.
+&lt;/p&gt;
+
+&lt;p&gt;
+Literate programming is a technique invented by Don Knuth many years
+ago. Essentially, the idea is to embed code inside of an expository
+document that describes the code.
+That code makes up the program, and the surrounding documents provide
+insight into how and why the code does what it does.
+&lt;/p&gt;
+
+&lt;p&gt;
+I have only personally used the LP facilities provided by &lt;a href=&quot;http://orgmode.org/&quot;&gt;Org&lt;/a&gt;
+(which are rather good), but I have read Knuth&#39;s paper that introduces
+LP, and have that familiarity with it. I mention this because there
+may be &quot;prior art&quot; that is relevant to some of what I say that I am
+unaware of.
+&lt;/p&gt;
+
+&lt;p&gt;
+A basic LP system lets an author define blocks of code in a
+document. These blocks may be associated with a file: when the
+&quot;tangle&quot; process occurs, these blocks are written to that associated
+file. Thus, the content in the document can may then be executed, etc
+in a traditional manner.
+&lt;/p&gt;
+
+&lt;p&gt;
+Blocks may be named. A block of code may reference another block by
+it&#39;s name. When &quot;file&quot; blocks are written to disk, any name-references they
+contain are replaced by the contents of the blocks they reference.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, here are some ideas I would like to see explored:
+&lt;/p&gt;
+
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;The Wiki as an organizational model. Most (all?) LP systems favor a
+highly hierarchical document organization, such as a white
+paper. This works for well-defined programs that will not change
+over time.
+
+&lt;p&gt;
+However, I have never seen a living, active project that has that
+kind of structure. To me, a &quot;Wiki&quot; feels much more appropriate for
+how an actual project grows.
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;How does literate programming influence the design of code? I fear
+that the structure provided by a LP document may mean that code
+itself is poorly structured.
+
+&lt;p&gt;
+I know from personal experience that, looking at a LP document, it
+is harder to see the underlying code structure
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;One pain point I have felt is that any file that needs to be
+commented on in a literate document &lt;i&gt;also&lt;/i&gt; needs to be maintained by
+that document in its entirety. So, for example, in order to make a
+change to a file that was generated externally requires the
+inclusion of the entire file inside the document.
+
+&lt;p&gt;
+However, if literate programming documents had first class support
+for diffs of files not handled in the current system, this problem
+would go away. Of course, editing diffs by hand is hard, and so some
+deeper thought about diff-generation needs to be applied.
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;What is the relationship between literate programming and other
+forms of code commentary, such as code comments, commit messages,
+and pull request discussions?
+
+&lt;p&gt;
+I certainly don&#39;t know the answer to this one, but it is an
+interesting question. Most developers (myself included,
+interestingly) tend to dislike code comments. However, literate
+programming feels very different 
+from adding comments to code, although from a superficial
+examination they seem very similar. 
+&lt;/p&gt;
+
+&lt;p&gt;
+And, although code comments are frowned upon, many developers have
+strong opinions about commit messages &amp;#x2013; and isn&#39;t a commit message
+very similar to a code comment?
+&lt;/p&gt;
+
+&lt;p&gt;
+Git makes it easy to dig up information in commit
+messages. Accessing the comments from GitHub pull requests is much
+less easy, though. 
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+I&#39;m looking into this now for practical reasons: I am working on a
+literate document, but feel torn: I want to write the document for the
+basis of something I will be using in the future, but also making it
+publishable. For now, I&#39;ll just plug away, because I need to publish.
+&lt;/p&gt;
+</description>
+        <pubDate>Mon, 26 May 2014 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/literate-programming-primer/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/literate-programming-primer/</guid>
+      </item>
+    
+  </channel>
+</rss>
