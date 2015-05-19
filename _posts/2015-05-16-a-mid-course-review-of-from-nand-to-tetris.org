@@ -1,0 +1,26 @@
+---
+title: A Mid-Course Review of "From NAND to Tetris" on Coursera
+layout: post
+---
+
+I've been taking the course "From NAND to Tetris" on Coursera. So far,
+the course has been very interesting, and I recommend it. It provides
+a good taste of how computers work from a low level, starting at the
+most basic logic gates and building up from there. I'm over half way
+through, and have some observations.
+
+1. This course has been a blast! Slowly building up a computer from
+   first principles has been very rewarding. Its an amazing
+   feeling to struggle with designing a chip and then to turn around
+   and use it in another, more advanced chip!
+
+2. The course hasn't been that hard. Now, I had some classes that
+   dealt with this kind of thing at Pitt. I remember working with
+   most of these concepts in the past, so this is not totally foreign
+   to me. However, I also think that the professors did an excellent
+   job simplify things to their essential concepts.
+
+I'm really glad I have invested my time into this course. If you want
+to learn more about how computers work on a low level (or even if you
+would like a refresher into the topic), I highly recommend it.
+
