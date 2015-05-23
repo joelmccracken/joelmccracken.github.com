@@ -95,6 +95,8 @@ end
 
 desc "deploy public directory to github pages"
 multitask :push do
+  puts "## Building"
+  system 'jekyll build'
   puts "## Deploying branch to Github Pages "
   puts "## Pulling any updates from Github Pages "
   cd "#{deploy_dir}" do
