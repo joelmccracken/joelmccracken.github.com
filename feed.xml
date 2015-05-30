@@ -7,6 +7,899 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>A Simple Web App in Rust, Part 2a</title>
+        <description>&lt;div id=&quot;table-of-contents&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-1&quot;&gt;1. Context&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-2&quot;&gt;2. Starting Out&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-3&quot;&gt;3. Remembering &quot;hello world&quot;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-4&quot;&gt;4. A Naive Approach&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-5&quot;&gt;5. Debugging by Expanding Macros&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-6&quot;&gt;6. Fighting with Types&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-7&quot;&gt;7. Writing to a file&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-sec-1&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-1&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;1&lt;/span&gt; Context&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-1&quot;&gt;
+&lt;p&gt;
+If you haven&#39;t checked out part 1 of this series, I would start
+&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1&quot;&gt;there&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+In the first part, we successfully set up the Rust project and built a
+simple &quot;hello world&quot; web app.
+&lt;/p&gt;
+
+&lt;p&gt;
+Originally, in this part, I wanted to write a program that writes
+dates to the filesystem. However, I ended up fighting with the type
+checker so much that this post ended up mostly being about that.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-2&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-2&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;2&lt;/span&gt; Starting Out&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-2&quot;&gt;
+&lt;p&gt;
+The last time wasn&#39;t too bad. When I did some of this earlier, I
+remember this being the hardest part.
+&lt;/p&gt;
+
+&lt;p&gt;
+Let&#39;s start by moving the existing &lt;code&gt;main.rs&lt;/code&gt; out of the way so that we
+can work with a fresh file.
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ pwd
+/Users/joel/Projects/simple-log
+$ cd src/
+$ ls
+main.rs
+$ mv main.rs web_main.rs
+$ touch main.rs
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-3&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-3&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;3&lt;/span&gt; Remembering &quot;hello world&quot;&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-3&quot;&gt;
+&lt;p&gt;
+Can I write a hello world without needing to look?
+&lt;/p&gt;
+
+&lt;p&gt;
+Let me try:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn main() {
+    println!(&quot;Hello, world&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Then:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+Hello, world
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, I guess I remember it OK. I was a little unsure about needing to
+import something for &lt;code&gt;println!&lt;/code&gt;, but it must be unnecessary.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-4&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-4&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;4&lt;/span&gt; A Naive Approach&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-4&quot;&gt;
+&lt;p&gt;
+Ok, moving on. Searching the Internet for &quot;rust create a file&quot; leads
+me to this page on &lt;code&gt;std::fs::File&lt;/code&gt;:
+&lt;a href=&quot;https://doc.rust-lang.org/std/fs/struct.File.html&quot;&gt;https://doc.rust-lang.org/std/fs/struct.File.html&lt;/a&gt;. Let&#39;s try a piece
+from one example:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    let mut f = try!(File::create(&quot;foo.txt&quot;));
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Building:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+&amp;lt;std macros&amp;gt;:5:8: 6:42 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;_, _&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+&amp;lt;std macros&amp;gt;:5 return $ crate:: result:: Result:: Err (
+&amp;lt;std macros&amp;gt;:6 $ crate:: convert:: From:: from ( err ) ) } } )
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:5:17: 5:46 note: expansion site
+error: aborting due to previous error
+Could not compile `simple-log`.
+&lt;/pre&gt;
+
+&lt;p&gt;
+When I wrote the first version of this, this error took
+a &lt;i&gt;really&lt;/i&gt; longtime to figure out. I don&#39;t get on IRC very often
+anymore, so figuring things out like this can be pretty
+rough. Figuring it out left a big impression on me, so I know the
+answer right away.
+&lt;/p&gt;
+
+&lt;p&gt;
+The problem with the above code is that &lt;code&gt;try!&lt;/code&gt; expands to something
+that returns early with an &lt;code&gt;Err&lt;/code&gt; type in case of an error. Since
+&lt;code&gt;main&lt;/code&gt; returns Unit (&quot;&lt;code&gt;()&lt;/code&gt;&quot;)&lt;sup&gt;&lt;a id=&quot;fnr.1&quot; name=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, this causes a type error.
+&lt;/p&gt;
+
+&lt;p&gt;
+I think three things make this complicated:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;At this point, I&#39;m not really sure how to read the error
+message. What does &#39;expected&#39; and &#39;found&#39; refer to? Since I know
+the answer, I can see that &#39;expected&#39; refers to the return value of
+&lt;code&gt;main&lt;/code&gt;, but I could easily see &#39;expected&#39;/&#39;found&#39; going either
+way.
+&lt;/li&gt;
+
+&lt;li&gt;For me, reading &lt;a href=&quot;https://doc.rust-lang.org/std/macro.try!.html&quot;&gt;the documentation&lt;/a&gt; for &lt;code&gt;try!&lt;/code&gt; does not immediately
+indicate to me how &lt;code&gt;try!&lt;/code&gt; impacts the return value of the function it
+is called from. Of course, I should have noticed the &lt;code&gt;return&lt;/code&gt; in
+the macro definition. At any rate, I didn&#39;t figure the problem out
+until I found a remark in &lt;a href=&quot;http://doc.rust-lang.org/stable/book/&quot;&gt;the Rust book&lt;/a&gt; about how &lt;code&gt;try!&lt;/code&gt; can&#39;t be
+called from &lt;code&gt;main&lt;/code&gt; because of this exact problem.
+&lt;/li&gt;
+
+&lt;li&gt;The error actually occurs inside a macro. It didn&#39;t hit me at the
+time, but the rust compiler can output the code after macros have been
+expanded. That makes this kind of thing much easier to debug.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+In number 3, expanding macros is alluded to. Viewing expanded macro is
+such a useful way to debug these kinds of issues that its worth
+discussing in more depth.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-5&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-5&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;5&lt;/span&gt; Debugging by Expanding Macros&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-5&quot;&gt;
+&lt;p&gt;
+First off, I figured this out by searching for &quot;rust expand
+macros&quot;. Given this code:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    let mut f = try!(File::create(&quot;foo.txt&quot;));
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; we can run the compiler to show us the expanded macro output this way:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rustc src/main.rs --pretty=expanded -Z unstable-options
+#![feature(no_std)]
+#![no_std]
+#[prelude_import]
+use std::prelude::v1::*;
+#[macro_use]
+extern crate std as std;
+use std::fs::File;
+
+fn main() {
+    let mut f =
+        match File::create(&quot;foo.txt&quot;) {
+            ::std::result::Result::Ok(val) =&amp;gt; val,
+            ::std::result::Result::Err(err) =&amp;gt; {
+                return ::std::result::Result::Err(::std::convert::From::from(err))
+            }
+        };
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+This is &lt;i&gt;way&lt;/i&gt; easier to debug. Macros are a very powerful tool, but
+like any tool you need to know when and how to use them.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, see that &lt;code&gt;return&lt;/code&gt; statement in the above output? That&#39;s the
+problem. Its trying to return an &lt;code&gt;Err&lt;/code&gt; result from &lt;code&gt;main&lt;/code&gt;, which again
+has the return type Unit.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-6&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-6&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;6&lt;/span&gt; Fighting with Types&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-6&quot;&gt;
+&lt;p&gt;
+I need to know how to resolve this type problem. I&#39;m going to start by imitating the
+&lt;code&gt;try!&lt;/code&gt; macro, but this time only returning Unit:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    match File::create(&quot;foo.txt&quot;) {
+        Ok(val) =&amp;gt; val,
+        Err(err) =&amp;gt; ()
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Running:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:5:5: 8:6 error: match arms have incompatible types:
+ expected `std::fs::File`,
+    found `()`
+(expected struct `std::fs::File`,
+    found ()) [E0308]
+src/main.rs:5     match File::create(&quot;foo.txt&quot;) {
+src/main.rs:6         Ok(val) =&amp;gt; val,
+src/main.rs:7         Err(err) =&amp;gt; ()
+src/main.rs:8     }
+src/main.rs:7:21: 7:23 note: match arm with an incompatible type
+src/main.rs:7         Err(err) =&amp;gt; ()
+                                  ^~
+error: aborting due to previous error
+Could not compile `simple-log`.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Huh. So, I&#39;m not really sure how to say &quot;don&#39;t do anything, here&quot;. I
+guess the type &#39;val&#39; must be &#39;std::fs::File&#39;, and so its assuming that &lt;i&gt;any&lt;/i&gt;
+match return value must be that. Can I make the &lt;code&gt;Ok&lt;/code&gt; branch not return
+anything, either?
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    match File::create(&quot;foo.txt&quot;) {
+        Ok(val) =&amp;gt; (),
+        Err(err) =&amp;gt; ()
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Running:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:6:12: 6:15 warning: unused variable: `val`, #[warn(unused_variables)] on by default
+src/main.rs:6         Ok(val) =&amp;gt; (),
+                         ^~~
+src/main.rs:7:13: 7:16 warning: unused variable: `err`, #[warn(unused_variables)] on by default
+src/main.rs:7         Err(err) =&amp;gt; ()
+                          ^~~
+     Running `target/debug/simple-log`
+$ ls
+Cargo.lock      Cargo.toml      foo.txt         src             target
+&lt;/pre&gt;
+
+&lt;p&gt;
+It created &lt;code&gt;foo.txt&lt;/code&gt;! Of course, the code could be cleaner, but thats
+fine for now. Let me try something else:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    File::create(&quot;foo.txt&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm foo.txt
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:5:5: 5:28 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;std::fs::File, std::io::error::Error&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+src/main.rs:5     File::create(&quot;foo.txt&quot;)
+                  ^~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+I&#39;ve seen this before. This must mean &lt;code&gt;main&lt;/code&gt; is returning the result of
+&lt;code&gt;File::create&lt;/code&gt;. I was thinking it would return nothing, but I guess I
+didn&#39;t really think that through. What if I add a semicolon?
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    File::create(&quot;foo.txt&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm foo.txt
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:5:5: 5:29 warning: unused result which must be used, #[warn(unused_must_use)] on by def
+ault
+src/main.rs:5     File::create(&quot;foo.txt&quot;);
+                  ^~~~~~~~~~~~~~~~~~~~~~~~
+     Running `target/debug/simple-log`
+$ ls
+Cargo.lock      Cargo.toml      foo.txt         src             target
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, we now get an &quot;unused result&quot; warning, although it still runs and creates the
+file. Let&#39;s go back and try doing something that handles the results:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    match File::create(&quot;foo.txt&quot;) {
+        Ok(val) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(err) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm foo.txt
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:6:12: 6:15 warning: unused variable: `val`, #[warn(unused_variables)] on by default
+src/main.rs:6         Ok(val) =&amp;gt; println!(&quot;File created!&quot;),
+                         ^~~
+src/main.rs:7:13: 7:16 warning: unused variable: `err`, #[warn(unused_variables)] on by default
+src/main.rs:7         Err(err) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+                          ^~~
+     Running `target/debug/simple-log`
+File created!
+&lt;/pre&gt;
+
+&lt;p&gt;
+Now there are unused variables. My hunch is that either ellipses
+or removing the variable name will fix this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn main() {
+    match File::create(&quot;foo.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+File created!
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, ellipses worked. What happens when I instead remove the ellipses?
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:6:12: 6:13 error: nullary enum variants are written with no trailing `( )`
+src/main.rs:6         Ok() =&amp;gt; println!(&quot;File created!&quot;),
+                         ^
+src/main.rs:7:13: 7:14 error: nullary enum variants are written with no trailing `( )`
+src/main.rs:7         Err() =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+                          ^
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+&lt;/pre&gt;
+
+&lt;p&gt;
+It didn&#39;t like that. I&#39;m guessing that &quot;nullary&quot; means
+&quot;zero-arity&quot;, and it needs those removed. If I remove the parentheses totally:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:6:9: 6:11 error: this pattern has 0 fields, but the corresponding variant has 1 field [
+E0023]
+src/main.rs:6         Ok =&amp;gt; println!(&quot;File created!&quot;),
+                      ^~
+src/main.rs:7:9: 7:12 error: this pattern has 0 fields, but the corresponding variant has 1 field [
+E0023]
+src/main.rs:7         Err =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+                      ^~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+This makes sense, and is basically what I expected. My mental
+model is starting to form!
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-7&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-7&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;7&lt;/span&gt; Writing to a file&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-7&quot;&gt;
+&lt;p&gt;
+Let&#39;s try something a little harder. How about this:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;Try to create the log file. If it exists, great; if not, boo.
+&lt;/li&gt;
+
+&lt;li&gt;Try to write a string to the log file.
+&lt;/li&gt;
+
+&lt;li&gt;Clean everything up.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+This first example doesn&#39;t even attempt half of that, but we&#39;ll go
+with it:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn log_something(filename, string) {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, &quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:3:26: 3:27 error: expected one of `:` or `@`, found `,`
+src/main.rs:3 fn log_something(filename, string) {
+                                       ^
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+$
+&lt;/pre&gt;
+
+&lt;p&gt;
+So I guess function arguments need must have type annotations:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::fs::File;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static str) {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, &quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+&amp;lt;std macros&amp;gt;:5:8: 6:42 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;_, _&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+&amp;lt;std macros&amp;gt;:5 return $ crate:: result:: Result:: Err (
+&amp;lt;std macros&amp;gt;:6 $ crate:: convert:: From:: from ( err ) ) } } )
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:4:17: 4:45 note: expansion site
+src/main.rs:5:12: 5:29 error: type `std::fs::File` does not implement any method in scope named `wr
+ite_all`
+src/main.rs:5     try!(f.write_all(string));
+                         ^~~~~~~~~~~~~~~~~
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:5:5: 5:31 note: expansion site
+src/main.rs:5:12: 5:29 help: methods from traits can only be called if the trait is in scope; the f
+ollowing trait is implemented but not in scope, perhaps add a `use` for it:
+src/main.rs:5:12: 5:29 help: candidate #1: use `std::io::Write`
+&amp;lt;std macros&amp;gt;:5:8: 6:42 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;_, _&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+&amp;lt;std macros&amp;gt;:5 return $ crate:: result:: Result:: Err (
+&amp;lt;std macros&amp;gt;:6 $ crate:: convert:: From:: from ( err ) ) } } )
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:5:5: 5:31 note: expansion site
+src/main.rs:10:9: 10:15 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;_, _&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+src/main.rs:10         Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+                       ^~~~~~
+src/main.rs:11:9: 11:16 error: mismatched types:
+ expected `()`,
+    found `core::result::Result&amp;lt;_, _&amp;gt;`
+(expected (),
+    found enum `core::result::Result`) [E0308]
+src/main.rs:11         Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+                       ^~~~~~~
+error: aborting due to 5 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+That&#39;s a lot of errors. Looking at the first error, I&#39;m guessing
+that &lt;code&gt;log_something&lt;/code&gt; needs to have a return value specified. I&#39;ve
+tried a few things, but right now I&#39;m stuck. To the search engines!
+&lt;/p&gt;
+
+&lt;p&gt;
+A few minutes have passed, and I finally have &lt;i&gt;an&lt;/i&gt; answer. I did
+&lt;a href=&quot;https://github.com/search?p=15&amp;q=Result+language:rust&amp;ref=simplesearch&amp;type=Code&amp;utf8=%E2%9C%93&quot;&gt;some searching on GitHub&lt;/a&gt;,
+but it wasn&#39;t fruitful. I tried about 50 different things, but got
+this to work:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::File;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static str) -&amp;gt; Result&amp;lt;File,std::io::error::Error&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, &quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+I&#39;m not really sure &lt;i&gt;why&lt;/i&gt; it works. If I understand correctly, the
+return value is of &lt;code&gt;Result&lt;/code&gt; type that&#39;s parameterized with the types
+&lt;code&gt;File&lt;/code&gt; and &lt;code&gt;std::io::error::Error&lt;/code&gt;. What does this mean, exactly? It
+seems strange to me that of the two types, one type is the
+actual result (a file), yet the second is an &lt;code&gt;Error&lt;/code&gt; type. Why? I&#39;m
+thinking that once I fix the remaining error(s), this will need fixing
+again.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, now when I try to run it, I get:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:8:22: 8:28 error: mismatched types:
+ expected `&amp;amp;[u8]`,
+    found `&amp;amp;&#39;static str`
+(expected slice,
+    found str) [E0308]
+src/main.rs:8     try!(f.write_all(string));
+                                   ^~~~~~
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:8:5: 8:31 note: expansion site
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ok, so I saw in the example that they prefixed the string with a &lt;code&gt;b&lt;/code&gt;,
+which I neglected to do just to see what would happen. Fixing the
+parameters:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::File;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; Result&amp;lt;File,std::io::error::Error&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, &quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:4:85: 4:106 error: struct `Error` is private
+src/main.rs:4 fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; Result&amp;lt;File, std::io::error::Error&amp;gt; {
+                                                                                                  ^~~~~~~~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ugh &amp;#x2013; I knew this was going to be a problem. Time to do some
+searching and reading.
+&lt;/p&gt;
+
+&lt;p&gt;
+The Rust book has &lt;a href=&quot;https://doc.rust-lang.org/book/error-handling.html&quot;&gt;a section&lt;/a&gt; on &lt;code&gt;Result&lt;/code&gt;. Hmm. It seems like what I&#39;m
+doing may not be idiomatic? I&#39;d say that it seems like the &quot;best&quot; way
+to handle what is going on, but I &lt;i&gt;am&lt;/i&gt; confused. I&#39;ve seen this
+&lt;code&gt;unwrap&lt;/code&gt; thing a few times, and it seems like it could be what I
+want. If I try unwrap, things might be different:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) {
+    let mut f = File::create(filename).unwrap();
+    f.write_all(string);
+}
+
+fn main() {
+    log_something(&quot;log.txt&quot;, b&quot;ITS ALIVE!!!&quot;)
+}
+&lt;/pre&gt;
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:6:5: 6:25 warning: unused result which must be used, #[warn(unused_must_use)] on by def
+ault
+src/main.rs:6     f.write_all(string);
+                  ^~~~~~~~~~~~~~~~~~~~
+     Running `target/debug/simple-log`
+$ ls
+Cargo.lock      Cargo.toml      foo.txt         log.txt         src             target
+$ cat log.txt
+ITS ALIVE!!!
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, that worked, although there is a warning. I think this is not &quot;the
+Rust way&quot;, since its failing early/throwing errors away.
+&lt;/p&gt;
+
+&lt;p&gt;
+The real problem with &lt;code&gt;try!&lt;/code&gt; and returning a &lt;code&gt;Result&lt;/code&gt; is that there&#39;s
+this weirdness dealing with this line in the &lt;code&gt;try!&lt;/code&gt; macro:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+return $crate::result::Result::Err($crate::convert::From::from(err))
+&lt;/pre&gt;
+&lt;p&gt;
+This means that whatever I pass in has to have a &lt;code&gt;From::from&lt;/code&gt; trait
+implemented on an enum, but I really have no idea how traits or enums
+work, and I think the whole thing is overkill anyway for what I&#39;m
+trying to do.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;ve gone to the documentation for &lt;code&gt;Result&lt;/code&gt;, and it looks like I may
+be going in the wrong direction:
+&lt;a href=&quot;https://doc.rust-lang.org/std/result/&quot;&gt;https://doc.rust-lang.org/std/result/&lt;/a&gt;. This &lt;code&gt;io::Result&lt;/code&gt; example seems
+to be similar enough to what I&#39;m doing, so let me see if I can fix
+that up:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, b&quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:5:1: 8:2 error: not all control paths return a value [E0269]
+src/main.rs:5 fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; io::Result&amp;lt;()&amp;gt;
+ {
+src/main.rs:6     let mut f = try!(File::create(filename));
+src/main.rs:7     try!(f.write_all(string));
+src/main.rs:8 }
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+After some time thinking, I see the problem:
+an &lt;code&gt;Ok(())&lt;/code&gt; statement must be added as the final statement in
+&lt;code&gt;log_something&lt;/code&gt;. I realized this because I saw that this is how things
+happen in the &lt;code&gt;Result&lt;/code&gt; documentation.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;ve been used to the idea that not having something after the final
+semicolon means &lt;code&gt;return ()&lt;/code&gt;; however, the message &quot;not all control
+paths return a value&quot; doesn&#39;t make sense &amp;#x2013; to me, this is a type
+mismatch. Unless, of course, &lt;code&gt;()&lt;/code&gt; is not a value, which it might not
+be, but I still think that&#39;s confusing.
+&lt;/p&gt;
+
+&lt;p&gt;
+Our final result (for this post):
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+    Ok(())
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, b&quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+$ rm log.txt
+$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+ITS ALIVE!!!
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ok, it works. Great. I&#39;m going to end here because this has been pretty
+challenging. I&#39;m sure improvements could be made on this code, but
+this is a good stopping point and a good time to research dates and
+times in Rust, which will be the next post.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
+&lt;div id=&quot;text-footnotes&quot;&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; name=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
+lol.
+&lt;/p&gt;&lt;/div&gt;
+
+
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        <pubDate>Sat, 30 May 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2a/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2a/</guid>
+      </item>
+    
+      <item>
         <title>A Simple Web App in Rust, Part 1</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -1281,70 +2174,6 @@ that functions are executing within the space we expect them to.
         <pubDate>Sat, 06 Dec 2014 00:00:00 -0500</pubDate>
         <link>http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</guid>
-      </item>
-    
-      <item>
-        <title>Automated Workstation Setup &amp; Management</title>
-        <description>&lt;p&gt;
-Over the years, I have written lots of scripts to help automate
-something or other. Many of these have broken. Example of the scripts
-that have broken include a
-LastPass data exporter and encrypter in Ruby, Emacs Lisp of various
-kinds that integrate Emacs with other
-processes, a tiny script to toggle my Heroku authentication between
-my personal and work accounts, and others. Typically, I find
-this out about their brokenness at the worst possible time &amp;#x2013; when I
-need to actually use the scripts I rely upon.
-&lt;/p&gt;
-
-&lt;p&gt;
-This has become common enough that I have grown to expect it. Lots of
-things might cause one of these scripts to break: software upgrades,
-making incompatible changes to other pieces of code, accidentally
-removing something that the script relied upon have all played a part
-in things breaking.
-&lt;/p&gt;
-
-&lt;p&gt;
-I really hate this. Taking the time to write something, only to have
-it be broken when you need it, makes you feel like you wasted your
-time writing the scripts in the first place. Because of this
-phenomenon, I tend to write fewer scripts and be more accepting of
-discomfort.
-&lt;/p&gt;
-
-&lt;p&gt;
-I really hate this, too. I believe we &lt;i&gt;should&lt;/i&gt; script things. I believe
-this is a &lt;i&gt;key&lt;/i&gt; to being a productive programmer, and is one way that
-allows us to multiply out abilities as programmers.
-And, I&#39;m not alone in
-thinking this way. It seems that all the best developers think the
-same thing: laziness is a virtue. Script away the things you would
-otherwise have to do manually.
-&lt;/p&gt;
-
-&lt;p&gt;
-I&#39;ve come to believe that an automated setup &amp;amp; configuration
-management system is the key for me to solve these problems. If I could
-safely reproduce the environment wherein my software works, and I
-had tests around the software, then I could write scripts more
-effectively and with greater freedom. I would be able to get back some
-of the effectiveness I am missing out on.
-&lt;/p&gt;
-
-&lt;p&gt;
-Over the past year or so I have been making a concerted effort to
-solve this problem. Some things have worked out really well, others
-have not. At some point, the software to build this site was broken,
-and I didn&#39;t know why, and out of frustration I stopped writing and
-focused intensely on setting things up correctly from first
-principles. I&#39;m nowhere near done, but it is time to start talking
-about what I have discovered.
-&lt;/p&gt;
-</description>
-        <pubDate>Thu, 27 Nov 2014 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/automated-workstation-setup-and-management/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/automated-workstation-setup-and-management/</guid>
       </item>
     
   </channel>
