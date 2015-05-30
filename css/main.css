@@ -142,6 +142,15 @@ a:visited { color: #205caa; }
 }
 
 
+.footdef > sup {
+  display: inline;
+}
+
+.footdef > .footpara {
+  display: inline;
+}
+
+
 /* Home styles */
 /* ----------------------------------------------------------*/
 
