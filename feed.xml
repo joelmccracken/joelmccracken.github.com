@@ -19,6 +19,7 @@
 &lt;li&gt;&lt;a href=&quot;#sec-5&quot;&gt;5. Debugging by Expanding Macros&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#sec-6&quot;&gt;6. Fighting with Types&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;#sec-7&quot;&gt;7. Writing to a file&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-8&quot;&gt;8. Updates&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -330,7 +331,7 @@ fine for now. Let me try something else:
 use std::fs::File;
 
 fn main() {
-    File::create(&quot;foo.txt&quot;);
+    File::create(&quot;foo.txt&quot;)
 }
 &lt;/pre&gt;
 
@@ -881,6 +882,18 @@ challenging. I&#39;m sure improvements could be made on this code, but
 this is a good stopping point and a good time to research dates and
 times in Rust, which will be the next post.
 &lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-8&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-8&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;8&lt;/span&gt; Updates&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-8&quot;&gt;
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;NMSpaz pointed out
+&lt;a href=&quot;https://www.reddit.com/r/rust/comments/38ahgr/a_simple_web_app_in_rust_part_2a/crvvhkf&quot;&gt;on Reddit&lt;/a&gt;
+that one of my examples had an error in it.
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&quot;footnotes&quot;&gt;
