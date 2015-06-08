@@ -125,6 +125,8 @@ In number 3, expanding macros is alluded to. Viewing expanded macro is
 such a useful way to debug these kinds of issues that its worth
 discussing in more depth.
 
+[fn:lol] lol.
+
 * Debugging by Expanding Macros
 
 First off, I figured this out by searching for "rust expand
@@ -245,7 +247,7 @@ fine for now. Let me try something else:
 use std::fs::File;
 
 fn main() {
-    File::create("foo.txt");
+    File::create("foo.txt")
 }
 #+END_SRC
 
@@ -727,5 +729,7 @@ challenging. I'm sure improvements could be made on this code, but
 this is a good stopping point and a good time to research dates and
 times in Rust, which will be the next post.
 
-[fn:lol] lol.
-
+* Updates
+  1. NMSpaz pointed out
+     [[https://www.reddit.com/r/rust/comments/38ahgr/a_simple_web_app_in_rust_part_2a/crvvhkf][on Reddit]]
+     that one of my examples had an error in it.
