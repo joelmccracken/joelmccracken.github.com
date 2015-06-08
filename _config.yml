@@ -5,3 +5,16 @@ description: "My personal place to write about the things I find interesting. Pr
 url: http://joelmccracken.github.io
 permalink: /entries/:title/
 excerpt_separator: ""
+
+collections:
+  entries:
+    output: true
+    permalink: /awesome/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: entries
+    values:
+      layout: post
+

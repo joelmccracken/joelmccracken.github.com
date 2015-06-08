@@ -34,6 +34,8 @@ module Jekyll
     def convert(content)
       require 'socket'
       ensure_server!
+      require 'pry'
+      binding.pry
       TCPSocket.open 'localhost', 9876 do |socket|
         socket.puts "Length: #{content.bytesize}"
         socket.write content
