@@ -7,6 +7,1129 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>A Simple Web App in Rust, Part 2b</title>
+        <description>&lt;div id=&quot;table-of-contents&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-1&quot;&gt;1. The Series&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-2&quot;&gt;2. Using Chrono&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-3&quot;&gt;3. Writing the Date/Time to a File&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-4&quot;&gt;4. Building a File Logger&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-4-1&quot;&gt;4.1. Misunderstanding &lt;code&gt;u8&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-4-2&quot;&gt;4.2. Filling in Missing Pieces&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-5&quot;&gt;5. Conclusion &amp;amp; Next Steps&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-sec-1&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-1&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;1&lt;/span&gt; The Series&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-1&quot;&gt;
+&lt;p&gt;
+This is a post in a series of me writing down my experience as I try to
+build a simple web app in Rust.
+&lt;/p&gt;
+
+&lt;p&gt;
+So far, we have:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Defined the goal &amp;amp; Written a &quot;Hello World&quot; web server&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Figured out how to write to a file&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+The last part was especially harrowing. This piece will be to
+investigate date/time formatting in Rust, with a focus on writing
+visiting time in a nice format.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-2&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-2&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;2&lt;/span&gt; Using Chrono&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-2&quot;&gt;
+&lt;p&gt;
+So, searching for &quot;date&quot; on crates.io shows
+&lt;a href=&quot;https://crates.io/search?q=date&quot;&gt;one prominent result&lt;/a&gt;,
+namely the crate &quot;chrono&quot;. This looks very popular, and was updated
+very recently, so it looks like a good candidate. A look through the
+README seems to show that it has decent date/time pretty printing functionality.
+&lt;/p&gt;
+
+&lt;p&gt;
+The first thing would be to add the Chrono requirement line to
+&lt;code&gt;Cargo.toml&lt;/code&gt;, but first let&#39;s move the old &lt;code&gt;main.rs&lt;/code&gt; out of the way so
+that there is a new place to experiment:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+$ ls
+Cargo.lock Cargo.toml log.txt    src        target
+$ cd src/
+$ ls
+main.rs     web_main.rs
+$ git mv main.rs main_file_writing.rs
+$ touch main.rs
+$ git add main.rs
+$ git status
+On branch master
+Your branch is up-to-date with &#39;origin/master&#39;.
+Changes to be committed:
+  (use &quot;git reset HEAD &amp;lt;file&amp;gt;...&quot; to unstage)
+
+        modified:   main.rs
+        copied:     main.rs -&amp;gt; main_file_writing.rs
+
+Untracked files:
+  (use &quot;git add &amp;lt;file&amp;gt;...&quot; to include in what will be committed)
+
+        ../log.txt
+
+$ git commit -m &#39;move file writing out of the way for working with dates&#39;
+[master 4cd2b0e] move file writing out of the way for working with dates
+ 2 files changed, 16 deletions(-)
+ rewrite src/main.rs (100%)
+ copy src/{main.rs =&amp;gt; main_file_writing.rs} (100%)
+&lt;/pre&gt;
+
+&lt;p&gt;
+Adding the dependency on Chrono to &lt;code&gt;Cargo.toml&lt;/code&gt;:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+[package]
+name = &quot;simple-log&quot;
+version = &quot;0.1.0&quot;
+authors = [&quot;Joel McCracken &amp;lt;mccracken.joel@gmail.com&amp;gt;&quot;]
+
+[dependencies]
+
+chrono = &quot;0.2&quot;
+
+[dependencies.nickel]
+
+git = &quot;https://github.com/nickel-org/nickel.rs.git&quot;
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+The readme says this next:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+And put this in your crate root:
+
+    extern crate chrono;
+&lt;/pre&gt;
+
+&lt;p&gt;
+I don&#39;t know what this means, but I&#39;m just going to try to put it on
+top of &lt;code&gt;main.rs&lt;/code&gt; because it looks like Rust code:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+fn main() { }
+&lt;/pre&gt;
+
+&lt;p&gt;
+compiling:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading num v0.1.25
+ Downloading rand v0.3.8
+ Downloading chrono v0.2.14
+   Compiling rand v0.3.8
+   Compiling num v0.1.25
+   Compiling chrono v0.2.14
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `/Users/joel/Projects/simple-log/target/debug/simple-log`
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, it looks like it downloaded Chrono, compiled successfully, and
+exited. Rad. I think the next step would be to try to use it. Based
+upon the first example listed, I have this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+use chrono::*;
+
+fn main() {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    println!(&#39;{}&#39;, local);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+main.rs:6:14: 6:16 error: unterminated character constant: &#39;{
+main.rs:6     println!(&#39;{}&#39;, local);
+                       ^~
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026;? After I look at this for a second, I think its telling me that I
+need to use double quotes, not single quotes. which makes some sense,
+since single quotes are used in lifetime specifications.
+&lt;/p&gt;
+
+&lt;p&gt;
+After switching from single to double quotes:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `/Users/joel/Projects/simple-log/target/debug/simple-log`
+2015-06-05 16:54:47.483088 -04:00
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; &lt;i&gt;whoa&lt;/i&gt;. That was easy. It looks like &lt;code&gt;println!&lt;/code&gt; has some kind of
+interface for whatever is being printed and can print many different
+things.
+&lt;/p&gt;
+
+&lt;p&gt;
+There is some irony here. So far, I was able to generate a simple
+hello world web application and print a well-formatted date and time
+with really very little effort, but writing to a file cost me dearly
+in time. I&#39;m not sure what the lesson is, here. I think it is clear
+that the rust community has gone through great effort to make their
+packages nice to work with, even if the language is still hard to use
+(for me).
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-3&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-3&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;3&lt;/span&gt; Writing the Date/Time to a File&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-3&quot;&gt;
+&lt;p&gt;
+I think the next sensible task would be to actually write this string
+to a file, and for this, I want to look at what I ended up with in the
+last entry:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cat main_file_writing.rs
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+    Ok(())
+}
+
+fn main() {
+    match log_something(&quot;log.txt&quot;, b&quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+I&#39;ll just do a real quick merge of the above example with this one:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn log_something(filename: &amp;amp;&#39;static str, string: &amp;amp;&#39;static [u8; 12]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(string));
+    Ok(())
+}
+
+fn main() {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    println!(&#39;{}&#39;, local);
+    match log_something(&quot;log.txt&quot;, b&quot;ITS ALIVE!!!&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+compiling:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+$ pwd
+/Users/joel/Projects/simple-log
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+$ rm log.txt
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+2015-06-05 17:08:57.814176 -04:00
+File created!
+$ cat log.txt
+ITS ALIVE!!!$
+&lt;/pre&gt;
+
+&lt;p&gt;
+That all worked! It feels really good to go from struggling with a
+language, to being able to put things together with much less
+frustration.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-4&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-4&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;4&lt;/span&gt; Building a File Logger&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-4&quot;&gt;
+&lt;p&gt;
+We&#39;re getting closer to writing a real, bona fide piece of the final
+system. It hits me that I might like to write some tests for this
+code, but I&#39;ll add those in later.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+Here&#39;s what this function should do:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;Given a file name,
+&lt;/li&gt;
+&lt;li&gt;Create it first if doesn&#39;t exist, and open the file.
+&lt;/li&gt;
+&lt;li&gt;Create a time/date string,
+&lt;/li&gt;
+&lt;li&gt;Write that string to the file, and close the file.
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+
+
+&lt;div id=&quot;outline-container-sec-4-1&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;sec-4-1&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.1&lt;/span&gt; Misunderstanding &lt;code&gt;u8&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-1&quot;&gt;
+&lt;p&gt;
+My first attempt:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let time_str = local.format(&quot;%Y&quot;).to_string();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(time_str));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:13:22: 13:30 error: mismatched types:
+ expected `&amp;amp;[u8]`,
+    found `collections::string::String`
+(expected &amp;amp;-ptr,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:13     try!(f.write_all(time_str));
+                                    ^~~~~~~~
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:13:5: 13:33 note: expansion site
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ugh. So, I know that there are many types of strings in
+Rust&lt;sup&gt;&lt;a id=&quot;fnr.1&quot; name=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, and it
+looks like I need a different one, here. Thing is, I don&#39;t know how to
+do this, so I&#39;ll have to do some searching.
+&lt;/p&gt;
+
+&lt;p&gt;
+I remember seeing &lt;a href=&quot;http://doc.rust-lang.org/book/strings.html&quot;&gt;a section in the Rust&lt;/a&gt; book specifically about
+strings. Looking into it, it says that a can be converted from
+&lt;code&gt;String&lt;/code&gt; to &lt;code&gt;&amp;amp;str&lt;/code&gt; with an ampersand (&lt;code&gt;&amp;amp;&lt;/code&gt;). I don&#39;t think this is
+quite right, because it looks like it&#39;s expecting a &lt;code&gt;[u8]&lt;/code&gt; and &lt;i&gt;not&lt;/i&gt;
+a &lt;code&gt;&amp;amp;str&lt;/code&gt; &lt;sup&gt;&lt;a id=&quot;fnr.2&quot; name=&quot;fnr.2&quot; class=&quot;footref&quot; href=&quot;#fn.2&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; Lemmie try that:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let time_str = local.format(&quot;%Y&quot;).to_string();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(&amp;amp;time_str));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:13:22: 13:31 error: mismatched types:
+ expected `&amp;amp;[u8]`,
+    found `&amp;amp;collections::string::String`
+(expected slice,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:13     try!(f.write_all(&amp;amp;time_str));
+                                    ^~~~~~~~~
+&amp;lt;std macros&amp;gt;:1:1: 6:48 note: in expansion of try!
+src/main.rs:13:5: 13:34 note: expansion site
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+Well. Apparently, adding the ampersand just converted a &lt;code&gt;String&lt;/code&gt; to an
+&lt;code&gt;&amp;amp;String&lt;/code&gt;. That seems to directly contradict what the Rust book is
+saying, but I also probably don&#39;t know what is going on.
+&lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2026;And I just reached the end of the chapter on strings. Harumph. As
+far as I can tell, there isn&#39;t anything in here.
+&lt;/p&gt;
+
+&lt;p&gt;
+I walked away from this for a while (because, you know, life), and
+while I was gone it hit me. All this time, I have been reading &lt;code&gt;u8&lt;/code&gt; as
+a short form of &lt;code&gt;UTF-8&lt;/code&gt;, but now that I think about it, it almost
+certainly actually means &quot;unsigned 8-bit integer&quot;. And, I remember
+seeing an &lt;code&gt;as_bytes&lt;/code&gt; method, so let me try that instead:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let bytes = local.format(&quot;%Y&quot;).to_string().as_bytes();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+main.rs:10:17: 10:47 error: borrowed value does not live long enough
+main.rs:10     let bytes = local.format(&quot;%Y&quot;).to_string().as_bytes();
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.rs:10:59: 14:2 note: reference must be valid for the block suffix following statement 1 at 10:
+58...
+main.rs:10     let bytes = local.format(&quot;%Y&quot;).to_string().as_bytes();
+main.rs:11     let mut f = try!(File::create(filename));
+main.rs:12     try!(f.write_all(bytes));
+main.rs:13     Ok(())
+main.rs:14 }
+main.rs:10:5: 10:59 note: ...but borrowed value is only valid for the statement at 10:4
+main.rs:10     let bytes = local.format(&quot;%Y&quot;).to_string().as_bytes();
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main.rs:10:5: 10:59 help: consider using a `let` binding to increase its lifetime
+main.rs:10     let bytes = local.format(&quot;%Y&quot;).to_string().as_bytes();
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Well, I &lt;i&gt;hope&lt;/i&gt; this is progress. Does this error mean I fixed
+something, and there was something else wrong that was obscuring this
+problem? Did I introduce a whole new problem?
+&lt;/p&gt;
+
+&lt;p&gt;
+The strange thing about this error message is that it seems to be
+talking about error messages on the same line. I don&#39;t really
+understand most of it, but I&#39;m thinking it is saying that I need to
+add a let in the middle of the sequence of method calls. Lets try:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%Y&quot;).to_string();
+    let bytes = formatted.as_bytes();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+2015$
+&lt;/pre&gt;
+
+&lt;p&gt;
+Great! All the pieces are here. Before I move on, I want to reflect
+that I find this a little disappointing. It seems like Rust should be
+able to infer the correct behavior in the previous snippet without my
+guidance.
+&lt;/p&gt;
+
+&lt;p&gt;
+Testing the script:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+$ rm log.txt
+$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+2015$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+2015$
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-4-2&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;sec-4-2&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.2&lt;/span&gt; Filling in Missing Pieces&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-2&quot;&gt;
+&lt;p&gt;
+A few problems:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;No newline. This is really gross.
+&lt;/li&gt;
+
+&lt;li&gt;The format needs some work.
+&lt;/li&gt;
+
+&lt;li&gt;It appears that the old value is being erased by the new value.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+Let&#39;s verify #3 by fixing the format. If the time changes between
+runs, then we will know that&#39;s what is happening.
+&lt;/p&gt;
+
+&lt;p&gt;
+The &lt;code&gt;format&lt;/code&gt; method of &lt;code&gt;DateTime&lt;/code&gt; uses the standard strftime
+formatting conventions. Ideally, I would like times to be something
+like:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+Sat, Jun 6 2015 05:32:00 PM
+Sun, Jun 7 2015 08:35:00 AM
+&lt;/pre&gt;
+&lt;p&gt;
+&amp;#x2026;etc. This should be readable enough for me to use. After reading
+&lt;a href=&quot;https://lifthrasiir.github.io/rust-chrono/chrono/format/strftime/index.html&quot;&gt;the documentation&lt;/a&gt; for a while, I&#39;ve come up with this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    let bytes = formatted.as_bytes();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Testing it:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm log.txt
+$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+Sun, Jun 07 2015 06:37:21 PM
+$ sleep 5; cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+Sun, Jun 07 2015 06:37:41 PM
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, clearly the program is overwriting the log entries, which tbqh is
+what I expect, as I remember the documentation for &lt;code&gt;File::create&lt;/code&gt;
+specifying that this is what would happen. So, I need to look at the
+documentation for manipulating files again.
+&lt;/p&gt;
+
+&lt;p&gt;
+I did some searching around, and basically finding the answer to this
+isn&#39;t trivial. After a while I found the documentation for
+&lt;a href=&quot;https://doc.rust-lang.org/std/path/struct.Path.html&quot;&gt;std::path::Path&lt;/a&gt;, which has an &lt;code&gt;exists&lt;/code&gt; method.
+&lt;/p&gt;
+
+&lt;p&gt;
+At this point, the interactions between types in my application is
+becoming increasingly hard to manage. I feel nervous, so I will commit
+before continuing.
+&lt;/p&gt;
+
+&lt;p&gt;
+I want to pull the time entry string generation out of the &lt;code&gt;log_time&lt;/code&gt;
+function because it seems like the entry formatting/creation is
+distinct from the file manipulation code. So, trying this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+
+fn log_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let bytes = log_time_entry().as_bytes();
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:16:17: 16:33 error: borrowed value does not live long enough
+src/main.rs:16     let bytes = log_time_entry().as_bytes();
+                               ^~~~~~~~~~~~~~~~
+src/main.rs:16:45: 20:2 note: reference must be valid for the block suffix following statement 0 at
+ 16:44...
+src/main.rs:16     let bytes = log_time_entry().as_bytes();
+src/main.rs:17     let mut f = try!(File::create(filename));
+src/main.rs:18     try!(f.write_all(bytes));
+src/main.rs:19     Ok(())
+src/main.rs:20 }
+src/main.rs:16:5: 16:45 note: ...but borrowed value is only valid for the statement at 16:4
+src/main.rs:16     let bytes = log_time_entry().as_bytes();
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:16:5: 16:45 help: consider using a `let` binding to increase its lifetime
+src/main.rs:16     let bytes = log_time_entry().as_bytes();
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, this looks just like the problem I had earlier. Does
+borrowing/ownership require that a function have an explicit reference
+to resources? That seems a little strange. I will try to fix it again:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+File created!
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, adding an explicit reference seems to be the
+solution. Whatever. It is an easy rule to learn and follow.
+&lt;/p&gt;
+
+&lt;p&gt;
+Next I want to extract the file manipulation code to its own function:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::File;
+use std::io;
+use chrono::*;
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut f = try!(File::create(filename));
+    try!(f.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+And this works. I made some initial errors, but they were quickly
+corrected and was all stuff that has been covered here before.
+&lt;/p&gt;
+
+&lt;p&gt;
+Looking into the documentation for
+&lt;a href=&quot;https://doc.rust-lang.org/std/fs/struct.File.html&quot;&gt;std::fs::File&lt;/a&gt;, I notice a reference to
+&lt;a href=&quot;https://doc.rust-lang.org/std/fs/struct.OpenOptions.html&quot;&gt;std::fs::OpenOptions&lt;/a&gt;, which is &lt;i&gt;exactly&lt;/i&gt; what I have been looking
+for. It would definitely be better than using &lt;code&gt;std::path&lt;/code&gt;.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+My first attempt:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(..) =&amp;gt; println!(&quot;Error: could not create file.&quot;)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:4:15: 4:19 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:4 use std::fs::{File,OpenOptions};
+                            ^~~~
+     Running `target/debug/simple-log`
+Error: could not create file.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Interesting. I see that it &lt;i&gt;is&lt;/i&gt; actually creating the file, after
+which I notice this is the message I&#39;ve hard-coded into &lt;code&gt;main&lt;/code&gt;. Ugh; I
+think this will work:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:4:15: 4:19 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:4 use std::fs::{File,OpenOptions};
+                            ^~~~
+     Running `target/debug/simple-log`
+Error: Bad file descriptor (os error 9)
+&lt;/pre&gt;
+
+&lt;p&gt;
+Weird. Searching for this &quot;bad file descriptor&quot; error message seems to
+indicate that this happens when a file descriptor is used has been
+closed. what happens if I comment out the &lt;code&gt;file.write_all&lt;/code&gt; call?
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm log.txt
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:3:5: 3:25 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:3 use std::io::prelude::*;
+                  ^~~~~~~~~~~~~~~~~~~~
+src/main.rs:4:15: 4:19 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:4 use std::fs::{File,OpenOptions};
+                            ^~~~
+src/main.rs:15:40: 15:45 warning: unused variable: `bytes`, #[warn(unused_variables)] on by default
+src/main.rs:15 fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+                                                      ^~~~~
+src/main.rs:16:9: 16:17 warning: unused variable: `file`, #[warn(unused_variables)] on by default
+src/main.rs:16     let mut file = try!(OpenOptions::new().
+                       ^~~~~~~~
+src/main.rs:16:9: 16:17 warning: variable does not need to be mutable, #[warn(unused_mut)] on by de
+fault
+src/main.rs:16     let mut file = try!(OpenOptions::new().
+                       ^~~~~~~~
+     Running `target/debug/simple-log`
+File created!
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+&lt;/pre&gt;
+
+&lt;p&gt;
+Unsurprisingly, there are a bunch unused messages, but aside from
+that the file is indeed created.
+&lt;/p&gt;
+
+&lt;p&gt;
+It seems a little silly, but I tried adding &lt;code&gt;.write(true)&lt;/code&gt; to the
+chain of functions, and it worked. It seems like &lt;code&gt;.append(true)&lt;/code&gt;
+should imply &lt;code&gt;.write(true)&lt;/code&gt;, but I guess it doesn&#39;t.
+&lt;/p&gt;
+
+&lt;p&gt;
+And with that, its working! The final version:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ ls
+Cargo.lock      Cargo.toml      src             target
+$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cargo run
+     Running `target/debug/simple-log`
+File created!
+$ cat log.txt
+Sun, Jun 07 2015 10:40:01 PM
+Sun, Jun 07 2015 10:40:05 PM
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-5&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-5&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;5&lt;/span&gt; Conclusion &amp;amp; Next Steps&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-5&quot;&gt;
+&lt;p&gt;
+Rust is getting easier for me. I now have some reasonably factored
+code to work with, and I feel fairly confident about starting on the
+next part of the application.
+&lt;/p&gt;
+
+&lt;p&gt;
+When I was first planning this series, I expected the next task to be
+integrating the logging code with the &lt;code&gt;nickel.rs&lt;/code&gt; code, but at this
+point I think it is going to be pretty simple. I suspect that the next
+difficult part will be handling &lt;a href=&quot;http://doc.rust-lang.org/getopts/getopts/index.html&quot;&gt;option parsing&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;footnotes&quot;&gt;
+&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
+&lt;div id=&quot;text-footnotes&quot;&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; name=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
+Having many types of strings is a completely reasonable
+thing. Strings are a
+complicated subject and hard to get right.
+Unfortunately, at first glance strings seem very simple, and this kind
+of things seems like needless complication
+&lt;/p&gt;&lt;/div&gt;
+
+&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.2&quot; name=&quot;fn.2&quot; class=&quot;footnum&quot; href=&quot;#fnr.2&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
+I basically have no idea what I&#39;m talking about
+here. These are just things I&#39;ve seen that I&#39;m to make sense of.
+&lt;/p&gt;&lt;/div&gt;
+
+
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        <pubDate>Sun, 07 Jun 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2b/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2b/</guid>
+      </item>
+    
+      <item>
         <title>A Simple Web App in Rust, Part 2a</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -2093,100 +3216,6 @@ allows it; see Ruby).
         <pubDate>Wed, 10 Dec 2014 00:00:00 -0500</pubDate>
         <link>http://joelmccracken.github.io//entries/objects-are-like-programs/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/objects-are-like-programs/</guid>
-      </item>
-    
-      <item>
-        <title>SICP &amp; Getting the Size of the Current &quot;Stack&quot; in Racket</title>
-        <description>&lt;p&gt;
-I&#39;ve been working through &lt;i&gt;SICP&lt;sup&gt;&lt;a id=&quot;fnr.1&quot; name=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/i&gt; again. Its really a great book &amp;#x2013;
-and I need to say more about it on here sometime.
-&lt;/p&gt;
-
-&lt;p&gt;
-I am currently on Exercise 1.11, which centers around writing two
-separate functions that both compute a mathematical function. The
-first function should compute in
-a &lt;i&gt;recursive&lt;/i&gt; way and the second should compute in a
-&lt;i&gt;iterative&lt;/i&gt; way.
-&lt;/p&gt;
-
-&lt;p&gt;
-The point of writing the function in these different ways is to
-highlight the fact that iterative formulations are fast and take
-up significantly less memory; in fact, they can be computed
-in place/in constant space.
-&lt;/p&gt;
-
-&lt;p&gt;
-While I was wrote these, it hit me: It&#39;s interesting to create these
-functions, but it would be even more interesting to show that the
-computations take up the amount of space we have predicted. So, I set
-out to see if I could
-figure out how to get current size of the stack, and then to watch the
-stack change during the course of both executions.
-&lt;/p&gt;
-
-&lt;p&gt;
-As it turns out, it doesn&#39;t seem like Racket has the direct concept of
-a stack. This doesn&#39;t surprise me, because I understand that the
-concept of a stack is a little bit less clear-cut in languages that
-support continuations &amp;amp; tail call optimization.
-&lt;/p&gt;
-
-&lt;p&gt;
-However, I was able to find a method &lt;a href=&quot;http://docs.racket-lang.org/reference/runtime.html#(def._((quote._~23~25kernel)._vector-set-performance-stats!))&quot;&gt;&lt;code&gt;vector-set-performance-stats!&lt;/code&gt;&lt;/a&gt;
-that will provide &quot;the number of bytes currently in use for the
-thread&#39;s continuation&quot;. Since a continuation represents the remaining
-work that a thread needs to perform as part of its computation, it
-seems like this would map fairly directly to the idea of the stack
-size showing how each function grows in space during the
-computation. If the recursive continuation size
-continually grows, and the iterative continuation size stays
-constant, that would be strong evidence that this would be answering
-my question.
-&lt;/p&gt;
-
-&lt;p&gt;
-Measurements of the stack size performed as predicted. During the
-course of the execution, the recursive continuation size kept
-growing. Surprisingly, the iterative version kept &lt;b&gt;precisely the
-same&lt;/b&gt;. I wasn&#39;t certain at the time that this would be the case, but
-to me, this clearly is a success.
-&lt;/p&gt;
-
-&lt;p&gt;
-Ok, so how we measure the size of the continuation? The function  &lt;code&gt;get-continuation-size&lt;/code&gt;
-below finds the information for us.
-&lt;/p&gt;
-
-&lt;div class=&quot;org-src-container&quot;&gt;
-
-&lt;pre class=&quot;src src-scheme&quot;&gt;(define (get-continuation-size)
-  (let ((results (make-vector 20)))
-    (vector-set-performance-stats! results (current-thread))
-    ;; item 3 contains continuation size
-    (vector-ref results 3)))
-&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;
-I&#39;m going to keep using this code to show exactly the same thing &amp;#x2013;
-that functions are executing within the space we expect them to.
-&lt;/p&gt;
-&lt;div id=&quot;footnotes&quot;&gt;
-&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
-&lt;div id=&quot;text-footnotes&quot;&gt;
-
-&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; name=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
-: &lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book.html&quot;&gt;http://mitpress.mit.edu/sicp/full-text/book/book.html&lt;/a&gt;
-&lt;/p&gt;&lt;/div&gt;
-
-
-&lt;/div&gt;
-&lt;/div&gt;</description>
-        <pubDate>Sat, 06 Dec 2014 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/get-current-stack-size-in-racket/</guid>
       </item>
     
   </channel>
