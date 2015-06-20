@@ -39,7 +39,8 @@ and now it comes naturally!"
 Paul Graham mentions in [[http://www.paulgraham.com/avg.html][one of his essays]] that a programmer who
 doesn't understand how to 
 think with a certain feature also won't see its value, and will think
-it isn't useful. I think this is quite true. I not understanding the
+it isn't useful. I think this is quite true. I once could not
+understand the
 value of anonymous functions and closures, but now I can't program
 without them.
 
