@@ -7,6 +7,87 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Dealing With the Rust Shift in Perspective</title>
+        <description>&lt;p&gt;
+There is a famous quote by Alan Kay:
+&lt;/p&gt;
+
+&lt;p&gt;
+&quot;Perspective is worth 80 IQ points.&quot;
+&lt;/p&gt;
+
+&lt;p&gt;
+I have seen this happen over and over again. A change in perspective
+becomes popular, and the industry begins to adopt it.
+&lt;/p&gt;
+
+&lt;p&gt;
+I have witnessed the following shifts:
+&lt;/p&gt;
+
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;The shift from object-oriented to functional programming. We may be
+seeing another shift towards relational/logic programming, but that is
+still a long way off.
+&lt;/li&gt;
+
+&lt;li&gt;Reactive programming is becoming more popular. This may be seen
+in functional reactive programming and evented programming.
+&lt;/li&gt;
+
+&lt;li&gt;Memory management: Should memory allocation/deallocation be managed
+by the programmer? By a run-time analyzer that determines when
+memory is safe to be reclaimed? Or can memory usage be understood at
+compile-time, and 
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+This last point is what Rust specifically is addressing. By making
+memory usage something that is statically analyzable,
+an entire class of memory issues disappear. 
+&lt;/p&gt;
+
+&lt;p&gt;
+You can always tell when a perspective shift is happening. It requires
+you to change how you think about problems, often in a way that is
+uncomfortable and frustrating. Tasks that used to be easy may now
+require a lot of effort, at least until you learn how to think in a
+new way. Also, the story of people who learn this new way of thinking
+is always the same: &quot;It was hard for a while, but eventually I got it,
+and now it comes naturally!&quot; 
+&lt;/p&gt;
+
+&lt;p&gt;
+Paul Graham mentions in &lt;a href=&quot;http://www.paulgraham.com/avg.html&quot;&gt;one of his essays&lt;/a&gt; that a programmer who
+doesn&#39;t understand how to 
+think with a certain feature also won&#39;t see its value, and will think
+it isn&#39;t useful. I think this is quite true. I not understanding the
+value of anonymous functions and closures, but now I can&#39;t program
+without them.
+&lt;/p&gt;
+
+&lt;p&gt;
+The key is to push through this hard time. I think reading the
+experiences of others who have already worked through the pain may be
+enough motivation to get you through. 
+&lt;/p&gt;
+
+&lt;p&gt;
+Ultimately, I don&#39;t know if I will like dealing with memory in the
+Rust way. It may be that I don&#39;t. But I do know that I can&#39;t judge it
+properly until I&#39;ve come through to the other side and gained the
+understanding of how to use it well. I &lt;i&gt;bet&lt;/i&gt; that I will want to keep
+using garbage collection, but Rust will be my choice when this GC
+isn&#39;t feasible or possible.
+&lt;/p&gt;
+</description>
+        <pubDate>Sat, 20 Jun 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/dealing-with-the-rust-shift-in-perspective/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/dealing-with-the-rust-shift-in-perspective/</guid>
+      </item>
+    
+      <item>
         <title>A Simple Web App in Rust, Part 2b</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -3156,66 +3237,6 @@ I love it so much. The problems are interesting enough that to
         <pubDate>Sat, 20 Dec 2014 00:00:00 -0500</pubDate>
         <link>http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</guid>
-      </item>
-    
-      <item>
-        <title>Objects Are Like Programs</title>
-        <description>&lt;p&gt;
-Something that has been on my mind for a long time is how similar
-objects are to programs, especially Unix programs.
-I&#39;m &lt;a href=&quot;http://blog.codeclimate.com/blog/2012/11/28/your-objects-the-unix-way/&quot;&gt;not the first&lt;/a&gt; to notice this similarity, but the similarities are
-so numerous I find it striking.
-Here are a bunch of interesting things, in no particular order:
-&lt;/p&gt;
-
-&lt;ul class=&quot;org-ul&quot;&gt;
-&lt;li&gt;Executables are like classes. They both contain the code necessary
-to create new instances: for an executable, that would be a running
-program. For a class, that would be an instance.
-&lt;/li&gt;
-
-&lt;li&gt;Programs are best when they are small, focused, and do one thing
-well. Similarly, objects are best when they are small and
-focused. Is your class more like &lt;i&gt;Microsoft Word&lt;/i&gt;, or &lt;code&gt;cat&lt;/code&gt;?
-&lt;/li&gt;
-
-&lt;li&gt;Program reuse comes from this small focus. The same is true of
-objects.
-&lt;/li&gt;
-
-&lt;li&gt;Processes conceptually have a lifecycle. They&#39;re &quot;garbage-collected&quot;
-by the operating system when they finish executing, just like
-objects.
-&lt;/li&gt;
-
-&lt;li&gt;Processes are a combination of code and data, just like
-objects. Processes are independent of each other in a similar way to
-how instance data is independent between instances.
-&lt;/li&gt;
-
-&lt;li&gt;There are many ways processes can interact with one another, but the
-simplest seem very similar to the way objects should interact: via
-sockets. Socket communication is essentially the same as message
-passing between objects.
-&lt;/li&gt;
-
-&lt;li&gt;Long-lived objects seem awfully similar to server processes.
-&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;
-In the oo-vs-functional debate, I&#39;m somewhere in the middle. I &lt;i&gt;love&lt;/i&gt;
-functional programming &amp;#x2013; I just don&#39;t think it is somehow &quot;more
-important&quot; than object oriented programming, or that OO is
-misguided. Objects are just too general in concept and powerful in
-modeling ability. They even model functions rather well, and thus they
-can be used rather well for functional programming (when the syntax
-allows it; see Ruby).
-&lt;/p&gt;
-</description>
-        <pubDate>Wed, 10 Dec 2014 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/objects-are-like-programs/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/objects-are-like-programs/</guid>
       </item>
     
   </channel>
