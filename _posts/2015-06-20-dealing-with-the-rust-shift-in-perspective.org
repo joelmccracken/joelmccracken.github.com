@@ -22,11 +22,11 @@ I have witnessed the following shifts:
 - Memory management: Should memory allocation/deallocation be managed
   by the programmer? By a run-time analyzer that determines when
   memory is safe to be reclaimed? Or can memory usage be understood at
-  compile-time, and 
+  compile-time, and managed safely?
 
 This last point is what Rust specifically is addressing. By making
 memory usage something that is statically analyzable,
-an entire class of memory issues disappear. 
+an entire class of memory issues disappear.
 
 You can always tell when a perspective shift is happening. It requires
 you to change how you think about problems, often in a way that is
@@ -34,10 +34,10 @@ uncomfortable and frustrating. Tasks that used to be easy may now
 require a lot of effort, at least until you learn how to think in a
 new way. Also, the story of people who learn this new way of thinking
 is always the same: "It was hard for a while, but eventually I got it,
-and now it comes naturally!" 
+and now it comes naturally!"
 
 Paul Graham mentions in [[http://www.paulgraham.com/avg.html][one of his essays]] that a programmer who
-doesn't understand how to 
+doesn't understand how to
 think with a certain feature also won't see its value, and will think
 it isn't useful. I think this is quite true. I once could not
 understand the
@@ -46,7 +46,7 @@ without them.
 
 The key is to push through this hard time. I think reading the
 experiences of others who have already worked through the pain may be
-enough motivation to get you through. 
+enough motivation to get you through.
 
 Ultimately, I don't know if I will like dealing with memory in the
 Rust way. It may be that I don't. But I do know that I can't judge it
