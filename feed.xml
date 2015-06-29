@@ -7,6 +7,85 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Rust, the Language for Growth</title>
+        <description>&lt;p&gt;
+The most important feature that attracts me to Rust is its focus
+on allowing the language to &lt;i&gt;grow&lt;/i&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+If Rust was going to remain static as it currently exists, I would
+probably have avoided it and chosen a different language to spend my
+time with, such as OCaml, Haskell, or Racket.
+&lt;/p&gt;
+
+&lt;p&gt;
+My two main concerns regarding code, and what influences the things I
+study, are:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;How fast will I be able to go from idea to implementation?
+&lt;/li&gt;
+
+&lt;li&gt;How maintainable will the code be? Will I be able to make changes
+easily?
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+However, Rust brings me the following benefits:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;Control of the hardware. While I learned C
+as a student ages ago by reading K&amp;amp;R, I know that for me to write
+production-quality C would require lots of ramp up time.
+&lt;/li&gt;
+
+&lt;li&gt;Speed. Even if my naive code isn&#39;t as fast as it could be, I feel
+reasonably sure that I can make whatever speed improvements I need
+without making the code unreasonably eldritch.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+These sets of benefits don&#39;t intersect. So, why am I interested in Rust?
+&lt;/p&gt;
+
+&lt;p&gt;
+I see Rust as a starting point, a point from which other,
+higher level abstractions can be added. I have heard numerous times
+that features like garbage collection will be added after the fact, and
+that this is can be implemented as user-land libraries. Indeed, much
+of what would normally be in the standard library is being put into crates,
+allowing libraries to grow independent of Rust itself.
+&lt;/p&gt;
+
+&lt;p&gt;
+Racket, as an example in contrast, is an amazing system for
+exploring and implementing new ideas in syntax, semantics,
+and abstraction. However, its runtime and base system mean that it is
+suitable for a relatively select domain of problems. These domains
+have large, established language communities (Ruby, Python) that are
+losing mind share &lt;i&gt;because of these limitations, not because of a lack
+of expressiveness&lt;/i&gt; in those languages.
+&lt;/p&gt;
+
+&lt;p&gt;
+Because of these considerations, Rust is a good base language that can
+grow into the future. Its focus on not making trade-offs that preclude
+certain programming domains means that we can use it to starting
+building &lt;i&gt;better&lt;/i&gt; systems, be they applications, operating systems, or
+new programming languages with a restricted domain of applicability.
+&lt;/p&gt;
+</description>
+        <pubDate>Sun, 28 Jun 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/rust-the-language-for-growth/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/rust-the-language-for-growth/</guid>
+      </item>
+    
+      <item>
         <title>Dealing With the Rust Shift in Perspective</title>
         <description>&lt;p&gt;
 There is a famous quote by Alan Kay:
@@ -3060,184 +3139,6 @@ than we know now.
         <pubDate>Wed, 07 Jan 2015 00:00:00 -0500</pubDate>
         <link>http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</guid>
-      </item>
-    
-      <item>
-        <title>I should&#39;a scripted it.</title>
-        <description>&lt;p&gt;
-I was just working on SICP exercise 1.14 and had an interesting
-experience.
-&lt;/p&gt;
-
-&lt;p&gt;
-The exercise is pretty simple. Draw a tree-graph of the
-execution of the ways-to-make-change-counting algorithm from earlier
-in the chapter. There is a similar graph of the execution of the
-Fibonacci function, so the pieces were all there.
-&lt;/p&gt;
-
-&lt;p&gt;
-Instead of drawing on paper, I thought, why not create the graph
-using a program? That would
-certainly make the exercise more interesting.
-I&#39;ve been wanting to do something interesting with graphviz, and
-drawing the execution tree seemed to be the perfect thing.
-&lt;/p&gt;
-
-&lt;p&gt;
-I looked at this &lt;a href=&quot;http://www.graphviz.org/pdf/dotguide.pdf&quot;&gt;graphviz tutorial&lt;/a&gt; (warning; PDF) and I
-learned how to construct the graph how I wanted pretty quickly. I
-spent some time on it, and it worked out well.
-&lt;/p&gt;
-
-&lt;p&gt;
-Now, if you notice, the SICP exercise specifies drawing the tree for
-counting the ways to change 11 cents. In my mind, this seemed like it
-should be pretty easy to do &amp;#x2013; it is a very small number, after
-all.
-&lt;/p&gt;
-
-&lt;p&gt;
-In actuality, creating this structure was a huge pain.
-Editing the nodes, doing calculations, and keeping things in order
-ended up taking much longer and was harder than I expectd.
-I made mistakes and got confused. Harumph!
-&lt;/p&gt;
-
-&lt;p&gt;
-I wondered, can I somehow &lt;i&gt;script&lt;/i&gt; the creation of this file? Do I
-actually need to do this manually? I mean, all I would need to do is
-write some strings out to a file&amp;#x2026; it shouldn&#39;t be &lt;i&gt;that&lt;/i&gt; hard.
-&lt;/p&gt;
-
-&lt;p&gt;
-So, I sprinkled some logging-style statements in the code that the
-book provides as the definition of the change counting algorithm.
-About half an hour later, I had a working, complete graph. Awesome.
-&lt;/p&gt;
-
-&lt;p&gt;
-Here&#39;s the complete code:
-&lt;/p&gt;
-
-&lt;div class=&quot;org-src-container&quot;&gt;
-
-&lt;pre class=&quot;src src-racket&quot;&gt;#lang racket
-
-(define (gen-count-change-graph)
-
-  (define output-filename &quot;ex1-14.dot&quot;)
-  (when (file-exists? output-filename)
-      (delete-file output-filename))
-  (define output (open-output-file output-filename))
-  (define counter 0)
-  (define (++counter)
-    (let ([ncounter (add1 counter)])
-      (set! counter ncounter)
-      ncounter))
-
-  (define (record-cc amount kinds-of-coins my-id)
-    (fprintf output
-	     &quot;\texec~s [label=\&quot;&amp;lt;f0&amp;gt;cc|&amp;lt;f1&amp;gt;~s|&amp;lt;f2&amp;gt;~s\&quot;];\n&quot;
-	     my-id amount kinds-of-coins))
-
-  (define (record-1 id parent-id)
-    (fprintf output &quot;\toneval~s [label=\&quot;1\&quot;];\n&quot; id)
-    (fprintf output &quot;\texec~s -&amp;gt; oneval~s;\n&quot; parent-id id))
-
-
-  (define (record-0 id parent-id)
-    (fprintf output &quot;\tzedval~s [label=\&quot;0\&quot;];\n&quot; id)
-    (fprintf output &quot;\texec~s -&amp;gt; zedval~s;\n&quot; parent-id id))
-
-  (define (record-branching left-child-id right-child-id parent-id)
-    (fprintf output
-	     &quot;\texec~s -&amp;gt; {exec~s; exec~s}\n&quot;
-	     parent-id
-	     left-child-id
-	     right-child-id))
-
-  (define (count-change amount)
-    (cc amount 5 counter))
-
-  (define (cc amount kinds-of-coins my-id)
-    (record-cc amount kinds-of-coins my-id)
-    (let ([left-child-id (++counter)]
-	  [right-child-id (++counter)])
-      (cond ((= amount 0)
-	     (begin
-	       (record-1 left-child-id my-id)
-	       1))
-	    ((or (&amp;lt; amount 0) (= kinds-of-coins 0))
-	     (begin
-	       (record-0 left-child-id my-id)
-	       0))
-	     (else (begin
-		     (record-branching left-child-id right-child-id my-id)
-		     (+ (cc amount
-			  (- kinds-of-coins 1)
-			  left-child-id)
-		      (cc (- amount
-			     (first-denomination kinds-of-coins))
-			  kinds-of-coins
-			  right-child-id)))))))
-
-
-  (define (first-denomination kinds-of-coins)
-    (cond ((= kinds-of-coins 1) 1)
-	  ((= kinds-of-coins 2) 5)
-	  ((= kinds-of-coins 3) 10)
-	  ((= kinds-of-coins 4) 25)
-	  ((= kinds-of-coins 5) 50)))
-
-  (display &quot;digraph execution_tree {
-node [shape=record];
-&quot; output)
-
-  (count-change 11)
-  (display &quot; } &quot; output)
-  (close-output-port output))
-
-(gen-count-change-graph)
-&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;
-There were a few interesting facets to this experience:
-&lt;/p&gt;
-
-&lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;The execution graph to count the ways to change 11 cents is
-surprisingly large.
-&lt;/li&gt;
-
-&lt;li&gt;The interesting thing is that scripting this solution took
-&lt;b&gt;significantly&lt;/b&gt; less time than creating it manually. I probably
-spent a few hours of working on this before I ended up starting to
-script it, and I was only about half done.
-&lt;/li&gt;
-
-&lt;li&gt;However, if I hadn&#39;t done it manually for so long, I&#39;m not sure I
-would have been able to understand so readily how to generate the
-graph &amp;amp; what the dot syntax would be like. For that matter, the
-graph I had created manually gave me something to spot-check the
-generated graph against. So, I&#39;m not really sure I &lt;i&gt;actually&lt;/i&gt; wasted
-time doing it manually.
-&lt;/li&gt;
-&lt;/ol&gt;
-
-
-&lt;p&gt;
-I&#39;ve heard people say that they might enjoy some movies, but feel
-inspired by others. This book really inspires me, which is why I think
-I love it so much. The problems are interesting enough that to
-&quot;sink my teeth into&quot; them is rewarding in many ways.
-&lt;/p&gt;
-</description>
-        <pubDate>Sat, 20 Dec 2014 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/i-shoulda-scripted-it/</guid>
       </item>
     
   </channel>
