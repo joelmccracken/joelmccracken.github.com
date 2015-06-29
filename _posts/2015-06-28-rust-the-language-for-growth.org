@@ -20,8 +20,8 @@ study, are:
 
 However, Rust brings me the following benefits:
 
-1. Control of the hardware. While I learned C
-   as a student ages ago by reading K&R, I know that for me to write
+1. Control of the hardware. I learned C
+   as a student ages ago by reading K&R, and I know that for me to write
    production-quality C would require lots of ramp up time.
 
 2. Speed. Even if my naive code isn't as fast as it could be, I feel
@@ -37,7 +37,7 @@ that this is can be implemented as user-land libraries. Indeed, much
 of what would normally be in the standard library is being put into crates,
 allowing libraries to grow independent of Rust itself.
 
-Racket, as an example in contrast, is an amazing system for
+Racket, in contrast, is an amazing system for
 exploring and implementing new ideas in syntax, semantics,
 and abstraction. However, its runtime and base system mean that it is
 suitable for a relatively select domain of problems. These domains
