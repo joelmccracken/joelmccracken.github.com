@@ -1,0 +1,52 @@
+---
+title: Rust, the Language for Growth
+layout: post
+---
+
+The most important feature that attracts me to Rust is its focus
+on allowing the language to /grow/.
+
+If Rust was going to remain static as it currently exists, I would
+probably have avoided it and chosen a different language to spend my
+time with, such as OCaml, Haskell, or Racket.
+
+My two main concerns regarding code, and what influences the things I
+study, are:
+
+1. How fast will I be able to go from idea to implementation?
+
+2. How maintainable will the code be? Will I be able to make changes
+   easily?
+
+However, Rust brings me the following benefits:
+
+1. Control of the hardware. While I learned C
+   as a student ages ago by reading K&R, I know that for me to write
+   production-quality C would require lots of ramp up time.
+
+2. Speed. Even if my naive code isn't as fast as it could be, I feel
+   reasonably sure that I can make whatever speed improvements I need
+   without making the code unreasonably eldritch.
+
+These sets of benefits don't intersect. So, why am I interested in Rust?
+
+I see Rust as a starting point, a point from which other,
+higher level abstractions can be added. I have heard numerous times
+that features like garbage collection will be added after the fact, and
+that this is can be implemented as user-land libraries. Indeed, much
+of what would normally be in the standard library is being put into crates,
+allowing libraries to grow independent of Rust itself.
+
+Racket, as an example in contrast, is an amazing system for
+exploring and implementing new ideas in syntax, semantics,
+and abstraction. However, its runtime and base system mean that it is
+suitable for a relatively select domain of problems. These domains
+have large, established language communities (Ruby, Python) that are
+losing mind share /because of these limitations, not because of a lack
+of expressiveness/ in those languages.
+
+Because of these considerations, Rust is a good base language that can
+grow into the future. Its focus on not making trade-offs that preclude
+certain programming domains means that we can use it to starting
+building /better/ systems, be they applications, operating systems, or
+new programming languages with a restricted domain of applicability.
