@@ -38,8 +38,8 @@ However, Rust brings me the following benefits:
 &lt;/p&gt;
 
 &lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;Control of the hardware. While I learned C
-as a student ages ago by reading K&amp;amp;R, I know that for me to write
+&lt;li&gt;Control of the hardware. I learned C
+as a student ages ago by reading K&amp;amp;R, and I know that for me to write
 production-quality C would require lots of ramp up time.
 &lt;/li&gt;
 
@@ -63,7 +63,7 @@ allowing libraries to grow independent of Rust itself.
 &lt;/p&gt;
 
 &lt;p&gt;
-Racket, as an example in contrast, is an amazing system for
+Racket, in contrast, is an amazing system for
 exploring and implementing new ideas in syntax, semantics,
 and abstraction. However, its runtime and base system mean that it is
 suitable for a relatively select domain of problems. These domains
