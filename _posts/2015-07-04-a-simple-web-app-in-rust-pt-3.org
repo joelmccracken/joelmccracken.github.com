@@ -83,9 +83,10 @@ fn main() {
 }
 #+END_SRC
 
-* Combining the Code
+* Combining the Code: Fisticuffing with the Type System
 
-So, I want to combine these. First, I'll put them both into the same
+So, I want to combine these two programs.
+First, I'll put them both into the same
 file (and change the name of one of the ~main~ functions, of course)
 to see if they all compile together.
 
@@ -193,7 +194,7 @@ Listening on http://127.0.0.1:6767
 Ctrl-C to shutdown server
 #+END_SRC
 
-Cool. I totally expected those warning messages, and visiting
+Cool. I totally expected those dead-code warning messages, and visiting
 ~localhost:6767~ in my browser still renders a "hello, world" page.
 
 Here's an attempt to integrate them:
@@ -278,11 +279,11 @@ Could not compile `simple-log`.
 To learn more, run the command again with --verbose.
 #+END_SRC
 
-~println!~ here is writing to standard out, but what I want is
+The macro ~println!~ here is writing to standard out, but what I want is
 something that will be returning a string. Is there a ~sprintln!~, or
 something equivalent?
 
-Doing a quick search, it looks like the answer is ~format!~. Lets try:
+Doing a quick search, it looks like the answer is ~format!~:
 
 #+BEGIN_SRC
 #[macro_use] extern crate nickel;
@@ -517,7 +518,6 @@ learn more of how this ownership/lifetime stuff works.
 
 I just read a bit of the Rust book, and I notice this note:
 
-
 #+BEGIN_QUOTE
 We choose the ~String~ type for the name, rather than
 ~&str~. Generally speaking, working with a type which owns its data is
@@ -554,18 +554,34 @@ I'm not really surprised that this works -- I kinda figured the
 solution would be to return a ~String~ instead of an ~&str~, but I
 wanted to take it as a challenge to figure out.
 
-Now that I think about it, I think this makes sense. I'm trying to
+Now that I think about it, this makes sense. I'm trying to
 return a borrowed reference, but I also own it, so returning it
 wouldn't make any sense. How would I return an ~&str~ that I created
-in my own function? I haven't seen anything using a plain ~str~
+in my own function? I haven't seen anything using a plain, not-borrowed "~str~"
 anywhere.
 
+I this absence of not-borrowed ~&str~s has to do with it representing being a plain
+c string pointer. This
+must have some complications that I'm not aware of, and for it to
+play nicely with Rust it must interface with rust the normal
+Rust rules sharing ownership must apply.
+
+If some other part of the program has knowledge of an array of bytes,
+and provides me with a reference to that array, what does that mean?
+Are ~&str~ types basically just so that C strings can be referenced
+without some additional metadata associated with them?
+
 The Rust book says ~&str~ -> ~String~ has some cost. I wonder if this
-always true, or only for static program strings.
+always true, or only for static program strings. Would a
+heap-allocated ~&str~ require copying for a ~String~? Now that I
+think about it, I bet the answer is yes; if you want to convert
+a borrowed value into something that is owned, the only
+reasonable solution would be to copy it.
 
 Anyway, I think I just want to move on. I think the answer is that
 what I was trying to do just didn't make sense, and Rust correctly
-stopped me.
+stopped me. I do wish I understood why every ~str~ is borrowed,
+though.
 
 I'm going to try to return the logged time string from ~log_time~ and
 have that displayed to the user. My first attempt:
@@ -609,7 +625,7 @@ Hmm. So I guess that makes sense... ~bytes~ "borrows" the contents of
 ~entry~. And, since this value is still borrowed by the time
 ~OK(entry)~ is called, this causes the error.
 
-I just tried this, and it worked:
+This works:
 
 #+BEGIN_SRC
 fn log_time(filename: &'static str) -> io::Result<String> {
@@ -636,7 +652,7 @@ $ curl localhost:6767
 Entry Logged: Tue, Jun 23 2015 12:34:19 AM
 #+END_SRC
 
-This isn't the first time I've used that rust "insert a new block
+This isn't the first time I've used the "stick a new block
 here" feature, but it does seem to work for this, and it seems like a
 reasonably elegant way to handle this. My first thought though was
 that I needed to call another function to somehow "convert" bytes back
@@ -644,8 +660,8 @@ into a ~String~, but then I realized that this didn't actually make
 sense, and I needed to "deallocate" the borrow, somehow.
 
 I don't understand what "move out of `entry`" means in that error message
-though. I'm thinking that you can't work with an owned reference as
-long as there is a borrowed reference to it around, too. But maybe
+though. I'm thinking that you can't transfer ownership of a value as
+long as there is a borrowed reference to it, too. But maybe
 that isn't actually true. Is sending it to ~Ok()~ changing it? I'm
 pretty confused by this, and the Rust book doesn't seem to address
 this specific issue, but I think this must be it -- ownership can't be
@@ -655,42 +671,16 @@ Its nice to see that as I've been browsing through the Rust book
 section on borrowing, using a block is the cited solution to this
 problem.
 
-Wow! So, integrating this was harder than I
-expected. Borrowing/ownership got me a few times in this exercise. I'm
-going to briefly attempt to do some command parsing. First, I'm going
-to move this file out of the way to do some CLI parsing
-experimentation. But, before that, lets just clean things up a bit:
+* Fin
 
-#+BEGIN_SRC
-$ ls
-Cargo.lock      Cargo.toml      log.txt         src             target
-$ cd src/
-$ ls
-main.rs                 main_file_writing.rs    web_main.rs
-#+END_SRC
+Integrating this was much harder than I
+expected. Borrowing/ownership got me a few times here, so I'm going to
+cut it at this point, since this has gotten pretty long.
 
-~main_file_writing.rs~ and ~web_main.rs~ are both old, so I can remove
-them. After that I'll move ~main.rs~ to, say, ~main_logging_server.rs~
-and create a new ~main.rs~.
-
-#+BEGIN_SRC
-$ git rm main_file_writing.rs web_main.rs
-rm 'src/main_file_writing.rs'
-rm 'src/web_main.rs'
-$ git commit -m 'remove old files'
-[master 771380b] remove old files
- 2 files changed, 35 deletions(-)
- delete mode 100644 src/main_file_writing.rs
- delete mode 100644 src/web_main.rs
-$ git mv main.rs main_logging_server.rs
-$ git commit -m 'move main out of the way for cli parsing experiment'
-[master 4d24206] move main out of the way for cli parsing experiment
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename src/{main.rs => main_logging_server.rs} (100%)
-$ touch main.rs
-#+END_SRC
+Fortunately, I think I am slowly understanding how Rust works, and
+especially its borrowing functionality. This gives me hope for the
+future.
 
 
-On to parameter parsing. In an earlier post,
-[[http://blog.ssokolow.com/][Stephan Sokolow]] asked if I had considered using the package [[https://github.com/kbknapp/clap-rs][clap]] for
-command line parsing. I was going to use
+
+
