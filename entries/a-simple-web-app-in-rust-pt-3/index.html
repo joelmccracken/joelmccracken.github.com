@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>A Simple Web App in Rust, Part 3 -- Integration</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="My personal place to write about the things I find interesting. Programming, Lisp, Ruby, Emacs, etc.">
+    <link rel="canonical" href="http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+</head>
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/">Joel's Journal</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/about">About</a>
+        <a class="page-link" href="/projects">Projects</a>
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>A Simple Web App in Rust, Part 3 -- Integration</h1>
+    <p class="meta">Jul 4, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Previously</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Review</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Combining the Code: Fisticuffing with the Type System</a></li>
+<li><a href="#sec-3">3. Fin</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Previously</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This is the third part in a series on writing a very simple web
+application in Rust.
+</p>
+
+<p>
+So far, we have the the pieces for an MVP in separate rust
+files. Here, we want to put them together into a single app.
+</p>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Review</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+We have the following two pieces to put together: the file
+writing/logging
+code, and the serving code. Lets review each of them.
+</p>
+
+<p>
+First, the logging code:
+</p>
+<pre class="example">
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+
+fn formatted_time_entry() -&gt; String {
+    let local: DateTime&lt;Local&gt; = Local::now();
+    let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;str, bytes: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;()&gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time("log.txt") {
+        Ok(..) =&gt; println!("File created!"),
+        Err(e) =&gt; println!("Error: {}", e)
+    }
+}
+</pre>
+
+
+<p>
+Now, the serving code:
+</p>
+<pre class="example">
+#[macro_use] extern crate nickel;
+
+use nickel::Nickel;
+
+fn say_hello() -&gt; &amp;'static str {
+    "Hello dear world!"
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get "**" =&gt; |_req, _res| {
+            say_hello()
+        }
+    });
+
+    server.listen("127.0.0.1:6767");
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Combining the Code: Fisticuffing with the Type System</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+So, I want to combine these two programs.
+First, I'll put them both into the same
+file (and change the name of one of the <code>main</code> functions, of course)
+to see if they all compile together.
+</p>
+
+<pre class="example">
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&gt; String {
+    let local: DateTime&lt;Local&gt; = Local::now();
+    let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;str, bytes: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;()&gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;bytes));
+    Ok(())
+}
+
+fn main2() {
+    match log_time("log.txt") {
+        Ok(..) =&gt; println!("File created!"),
+        Err(e) =&gt; println!("Error: {}", e)
+    }
+}
+
+
+fn say_hello() -&gt; &amp;'static str {
+    "Hello dear world!"
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get "**" =&gt; |_req, _res| {
+            say_hello()
+        }
+    });
+
+    server.listen("127.0.0.1:6767");
+}
+</pre>
+
+<p>
+Compiling &amp; Running:
+</p>
+
+<pre class="example">
+$ cargo run
+src/main.rs:5:15: 5:19 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:5 use std::fs::{File,OpenOptions};
+                            ^~~~
+src/main.rs:11:1: 15:2 warning: function is never used: `formatted_time_entry`, #[warn(dead_code)] o
+n by default
+src/main.rs:11 fn formatted_time_entry() -&gt; String {
+src/main.rs:12     let local: DateTime&lt;Local&gt; = Local::now();
+src/main.rs:13     let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+src/main.rs:14     formatted
+src/main.rs:15 }
+src/main.rs:17:1: 25:2 warning: function is never used: `record_entry_in_log`, #[warn(dead_code)] on
+ by default
+src/main.rs:17 fn record_entry_in_log(filename: &amp;str, bytes: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+src/main.rs:18     let mut file = try!(OpenOptions::new().
+src/main.rs:19                         append(true).
+src/main.rs:20                         write(true).
+src/main.rs:21                         create(true).
+src/main.rs:22                         open(filename));
+               ...
+src/main.rs:27:1: 33:2 warning: function is never used: `log_time`, #[warn(dead_code)] on by default
+src/main.rs:27 fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;()&gt; {
+src/main.rs:28     let entry = formatted_time_entry();
+src/main.rs:29     let bytes = entry.as_bytes();
+src/main.rs:30
+src/main.rs:31     try!(record_entry_in_log(filename, &amp;bytes));
+src/main.rs:32     Ok(())
+               ...
+src/main.rs:35:1: 40:2 warning: function is never used: `main2`, #[warn(dead_code)] on by default
+src/main.rs:35 fn main2() {
+src/main.rs:36     match log_time("log.txt") {
+src/main.rs:37         Ok(..) =&gt; println!("File created!"),
+src/main.rs:38         Err(e) =&gt; println!("Error: {}", e)
+src/main.rs:39     }
+src/main.rs:40 }
+     Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+</pre>
+
+<p>
+Cool. I totally expected those dead-code warning messages, and visiting
+<code>localhost:6767</code> in my browser still renders a "hello, world" page.
+</p>
+
+<p>
+Here's an attempt to integrate them:
+</p>
+
+<pre class="example">
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&gt; String {
+    let local: DateTime&lt;Local&gt; = Local::now();
+    let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;str, bytes: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;()&gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;bytes));
+    Ok(())
+}
+
+fn do_log_time() -&gt; &amp;'static str {
+    match log_time("log.txt") {
+        Ok(..) =&gt; println!("File created!"),
+        Err(e) =&gt; println!("Error: {}", e)
+    }
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get "**" =&gt; |_req, _res| {
+            do_log_time()
+        }
+    });
+
+    server.listen("127.0.0.1:6767");
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:19: 37:44 error: mismatched types:
+ expected `&amp;'static str`,
+    found `()`
+(expected &amp;-ptr,
+    found ()) [E0308]
+src/main.rs:37         Ok(..) =&gt; println!("File created!"),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:19: 38:43 error: mismatched types:
+ expected `&amp;'static str`,
+    found `()`
+(expected &amp;-ptr,
+    found ()) [E0308]
+src/main.rs:38         Err(e) =&gt; println!("Error: {}", e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+The macro <code>println!</code> here is writing to standard out, but what I want is
+something that will be returning a string. Is there a <code>sprintln!</code>, or
+something equivalent?
+</p>
+
+<p>
+Doing a quick search, it looks like the answer is <code>format!</code>:
+</p>
+
+<pre class="example">
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&gt; String {
+    let local: DateTime&lt;Local&gt; = Local::now();
+    let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;str, bytes: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;()&gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;bytes));
+    Ok(())
+}
+
+fn do_log_time() -&gt; &amp;'static str {
+    match log_time("log.txt") {
+        Ok(..) =&gt; format!("File created!"),
+        Err(e) =&gt; format!("Error: {}", e)
+    }
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get "**" =&gt; |_req, _res| {
+            do_log_time()
+        }
+    });
+
+    server.listen("127.0.0.1:6767");
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:19: 37:43 error: mismatched types:
+ expected `&amp;'static str`,
+    found `collections::string::String`
+(expected &amp;-ptr,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:37         Ok(..) =&gt; format!("File created!"),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:19: 38:42 error: mismatched types:
+ expected `&amp;'static str`,
+    found `collections::string::String`
+(expected &amp;-ptr,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:38         Err(e) =&gt; format!("Error: {}", e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+So, I know there's a way to convert between a <code>String</code> and an
+<code>&amp;str</code>&#x2026; hmm. I recall that I can use an <code>&amp;</code>.
+</p>
+
+<pre class="example">
+fn do_log_time() -&gt; &amp;'static str {
+    match log_time("log.txt") {
+        Ok(..) =&gt; &amp;format!("File created!"),
+        Err(e) =&gt; &amp;format!("Error: {}", e)
+    }
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:20: 37:44 error: borrowed value does not live long enough
+src/main.rs:37         Ok(..) =&gt; &amp;format!("File created!"),
+                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:37:19: 37:44 note: ...but borrowed value is only valid for the expression at 37:18
+src/main.rs:37         Ok(..) =&gt; &amp;format!("File created!"),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:20: 38:43 error: borrowed value does not live long enough
+src/main.rs:38         Err(e) =&gt; &amp;format!("Error: {}", e)
+                                  ^~~~~~~~~~~~~~~~~~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:38:19: 38:43 note: ...but borrowed value is only valid for the expression at 38:18
+src/main.rs:38         Err(e) =&gt; &amp;format!("Error: {}", e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+This thing again. I think I'm going to need a block here:
+</p>
+
+<pre class="example">
+fn do_log_time() -&gt; &amp;'static str {
+    match log_time("log.txt") {
+        Ok(..) =&gt; {
+            let fmt = format!("File created!");
+            &amp;fmt
+        },
+        Err(e) =&gt; {
+            let fmt = format!("Error: {}", e);
+            &amp;fmt
+        }
+    }
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:39:14: 39:17 error: `fmt` does not live long enough
+src/main.rs:39             &amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:38:48: 40:10 note: ...but borrowed value is only valid for the block suffix following s
+tatement 0 at 38:47
+src/main.rs:38             let fmt = format!("File created!");
+src/main.rs:39             &amp;fmt
+src/main.rs:40         },
+src/main.rs:43:14: 43:17 error: `fmt` does not live long enough
+src/main.rs:43             &amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:42:47: 44:10 note: ...but borrowed value is only valid for the block suffix following s
+tatement 0 at 42:46
+src/main.rs:42             let fmt = format!("Error: {}", e);
+src/main.rs:43             &amp;fmt
+src/main.rs:44         }
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+That didn't work. I think the problem is that <code>fmt</code> only exists for
+that new block, but the return value  is used outside of it. What if I
+promote <code>fmt</code> to the top of the function?
+</p>
+
+<pre class="example">
+fn do_log_time() -&gt; &amp;'static str {
+    let mut fmt = "".to_string();
+    match log_time("log.txt") {
+        Ok(..) =&gt; {
+            fmt = format!("File created!");
+            &amp;fmt
+        },
+        Err(e) =&gt; {
+            fmt = format!("Error: {}", e);
+            &amp;fmt
+        }
+    }
+
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:40:14: 40:17 error: `fmt` does not live long enough
+src/main.rs:40             &amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:36:34: 48:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 36:33
+src/main.rs:36     let mut fmt = "".to_string();
+src/main.rs:37     match log_time("log.txt") {
+src/main.rs:38         Ok(..) =&gt; {
+src/main.rs:39             fmt = format!("File created!");
+src/main.rs:40             &amp;fmt
+src/main.rs:41         },
+               ...
+src/main.rs:44:14: 44:17 error: `fmt` does not live long enough
+src/main.rs:44             &amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:36:34: 48:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 36:33
+src/main.rs:36     let mut fmt = "".to_string();
+src/main.rs:37     match log_time("log.txt") {
+src/main.rs:38         Ok(..) =&gt; {
+src/main.rs:39             fmt = format!("File created!");
+src/main.rs:40             &amp;fmt
+src/main.rs:41         },
+               ...
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+I don't know how to fix this. I'm going to just set this down, for
+now, and come back to it later.
+</p>
+
+<p>
+&#x2014;
+</p>
+
+<p>
+I've tried a few new things, and nothing works. I think I need to
+learn more of how this ownership/lifetime stuff works.
+</p>
+
+<p>
+I just read a bit of the Rust book, and I notice this note:
+</p>
+
+<blockquote>
+<p>
+We choose the <code>String</code> type for the name, rather than
+<code>&amp;str</code>. Generally speaking, working with a type which owns its data is
+easier than working with one that uses references.
+</p>
+</blockquote>
+
+<p>
+Because I'm in "do" mode and not "learn" mode, I want to try using
+<code>String</code> to see if that works.
+</p>
+
+<p>
+Now:
+</p>
+<pre class="example">
+fn do_log_time() -&gt; String {
+    match log_time("log.txt") {
+        Ok(..) =&gt; format!("File created!"),
+        Err(e) =&gt; format!("Error: {}", e)
+    }
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+</pre>
+
+<p>
+It worked. Visiting the page in a browser shows "File created!",
+and it also wrote an entry to the log file.
+</p>
+
+<p>
+I'm not really surprised that this works &#x2013; I kinda figured the
+solution would be to return a <code>String</code> instead of an <code>&amp;str</code>, but I
+wanted to take it as a challenge to figure out.
+</p>
+
+<p>
+Now that I think about it, this makes sense. I'm trying to
+return a borrowed reference, but I also own it, so returning it
+wouldn't make any sense. How would I return an <code>&amp;str</code> that I created
+in my own function? I haven't seen anything using a plain, not-borrowed "<code>str</code>"
+anywhere.
+</p>
+
+<p>
+I this absence of not-borrowed ~&amp;str~s has to do with it representing being a plain
+c string pointer. This
+must have some complications that I'm not aware of, and for it to
+play nicely with Rust it must interface with rust the normal
+Rust rules sharing ownership must apply.
+</p>
+
+<p>
+If some other part of the program has knowledge of an array of bytes,
+and provides me with a reference to that array, what does that mean?
+Are <code>&amp;str</code> types basically just so that C strings can be referenced
+without some additional metadata associated with them?
+</p>
+
+<p>
+The Rust book says <code>&amp;str</code> -&gt; <code>String</code> has some cost. I wonder if this
+always true, or only for static program strings. Would a
+heap-allocated <code>&amp;str</code> require copying for a <code>String</code>? Now that I
+think about it, I bet the answer is yes; if you want to convert
+a borrowed value into something that is owned, the only
+reasonable solution would be to copy it.
+</p>
+
+<p>
+Anyway, I think I just want to move on. I think the answer is that
+what I was trying to do just didn't make sense, and Rust correctly
+stopped me. I do wish I understood why every <code>str</code> is borrowed,
+though.
+</p>
+
+<p>
+I'm going to try to return the logged time string from <code>log_time</code> and
+have that displayed to the user. My first attempt:
+</p>
+
+
+<pre class="example">
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;String&gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;bytes));
+    Ok(entry)
+}
+
+fn do_log_time() -&gt; String {
+    match log_time("log.txt") {
+        Ok(entry) =&gt; format!("Entry Logged: {}", entry),
+        Err(e) =&gt; format!("Error: {}", e)
+    }
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:32:8: 32:13 error: cannot move out of `entry` because it is borrowed
+src/main.rs:32     Ok(entry)
+                      ^~~~~
+src/main.rs:29:17: 29:22 note: borrow of `entry` occurs here
+src/main.rs:29     let bytes = entry.as_bytes();
+                               ^~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+</pre>
+
+<p>
+Hmm. So I guess that makes sense&#x2026; <code>bytes</code> "borrows" the contents of
+<code>entry</code>. And, since this value is still borrowed by the time
+<code>OK(entry)</code> is called, this causes the error.
+</p>
+
+<p>
+This works:
+</p>
+
+<pre class="example">
+fn log_time(filename: &amp;'static str) -&gt; io::Result&lt;String&gt; {
+    let entry = formatted_time_entry();
+    {
+        let bytes = entry.as_bytes();
+
+        try!(record_entry_in_log(filename, &amp;bytes));
+    }
+    Ok(entry)
+}
+</pre>
+
+<p>
+=&gt;
+</p>
+
+<pre class="example">
+$ cargo run &amp;
+[1] 66858
+$      Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+
+$ curl localhost:6767
+Entry Logged: Tue, Jun 23 2015 12:34:19 AM
+</pre>
+
+<p>
+This isn't the first time I've used the "stick a new block
+here" feature, but it does seem to work for this, and it seems like a
+reasonably elegant way to handle this. My first thought though was
+that I needed to call another function to somehow "convert" bytes back
+into a <code>String</code>, but then I realized that this didn't actually make
+sense, and I needed to "deallocate" the borrow, somehow.
+</p>
+
+<p>
+I don't understand what "move out of `entry`" means in that error message
+though. I'm thinking that you can't transfer ownership of a value as
+long as there is a borrowed reference to it, too. But maybe
+that isn't actually true. Is sending it to <code>Ok()</code> changing it? I'm
+pretty confused by this, and the Rust book doesn't seem to address
+this specific issue, but I think this must be it &#x2013; ownership can't be
+changed while a borrow exists. I think.
+</p>
+
+<p>
+Its nice to see that as I've been browsing through the Rust book
+section on borrowing, using a block is the cited solution to this
+problem.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Fin</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Integrating this was much harder than I
+expected. Borrowing/ownership got me a few times here, so I'm going to
+cut it at this point, since this has gotten pretty long.
+</p>
+
+<p>
+Fortunately, I think I am slowly understanding how Rust works, and
+especially its borrowing functionality. This gives me hope for the
+future.
+</p>
+</div>
+</div>
+
+  </article>
+
+  <div id="disqus_thread" style="margin: 3em;"></div>
+  <script type="text/javascript">
+   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+   var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
+
+   /* * * DON'T EDIT BELOW THIS LINE * * */
+   (function() {
+     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+   })();
+  </script>
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">Joel McCracken</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:mccracken.joel@gmail.com">mccracken.joel@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/JoelMcCracken">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            <span class="username">JoelMcCracken</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/JoelMcCracken">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+                c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+                c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+                C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+                c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+                c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+              </svg>
+            </span>
+            <span class="username">JoelMcCracken</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 
+    <div class="footer-col-3 column">
+      <p class="text">would like to add some rotating content down here</p>
+    </div>
+    -->
+  </div>
+
+</footer>
+
+
+    <script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-7759066-1']);
+ _gaq.push(['_trackPageview']);
+
+ (function() {
+   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
+    </body>
+</html>

@@ -7,6 +7,802 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>A Simple Web App in Rust, Part 3 -- Integration</title>
+        <description>&lt;div id=&quot;table-of-contents&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-1&quot;&gt;1. Previously&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-1-1&quot;&gt;1.1. Review&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-2&quot;&gt;2. Combining the Code: Fisticuffing with the Type System&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-3&quot;&gt;3. Fin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-sec-1&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-1&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;1&lt;/span&gt; Previously&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-1&quot;&gt;
+&lt;p&gt;
+This is the third part in a series on writing a very simple web
+application in Rust.
+&lt;/p&gt;
+
+&lt;p&gt;
+So far, we have the the pieces for an MVP in separate rust
+files. Here, we want to put them together into a single app.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-1-1&quot; class=&quot;outline-3&quot;&gt;
+&lt;h3 id=&quot;sec-1-1&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;1.1&lt;/span&gt; Review&lt;/h3&gt;
+&lt;div class=&quot;outline-text-3&quot; id=&quot;text-1-1&quot;&gt;
+&lt;p&gt;
+We have the following two pieces to put together: the file
+writing/logging
+code, and the serving code. Lets review each of them.
+&lt;/p&gt;
+
+&lt;p&gt;
+First, the logging code:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+Now, the serving code:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+#[macro_use] extern crate nickel;
+
+use nickel::Nickel;
+
+fn say_hello() -&amp;gt; &amp;amp;&#39;static str {
+    &quot;Hello dear world!&quot;
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            say_hello()
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-2&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-2&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;2&lt;/span&gt; Combining the Code: Fisticuffing with the Type System&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-2&quot;&gt;
+&lt;p&gt;
+So, I want to combine these two programs.
+First, I&#39;ll put them both into the same
+file (and change the name of one of the &lt;code&gt;main&lt;/code&gt; functions, of course)
+to see if they all compile together.
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn main2() {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+    }
+}
+
+
+fn say_hello() -&amp;gt; &amp;amp;&#39;static str {
+    &quot;Hello dear world!&quot;
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            say_hello()
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Compiling &amp;amp; Running:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+src/main.rs:5:15: 5:19 warning: unused import, #[warn(unused_imports)] on by default
+src/main.rs:5 use std::fs::{File,OpenOptions};
+                            ^~~~
+src/main.rs:11:1: 15:2 warning: function is never used: `formatted_time_entry`, #[warn(dead_code)] o
+n by default
+src/main.rs:11 fn formatted_time_entry() -&amp;gt; String {
+src/main.rs:12     let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+src/main.rs:13     let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+src/main.rs:14     formatted
+src/main.rs:15 }
+src/main.rs:17:1: 25:2 warning: function is never used: `record_entry_in_log`, #[warn(dead_code)] on
+ by default
+src/main.rs:17 fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+src/main.rs:18     let mut file = try!(OpenOptions::new().
+src/main.rs:19                         append(true).
+src/main.rs:20                         write(true).
+src/main.rs:21                         create(true).
+src/main.rs:22                         open(filename));
+               ...
+src/main.rs:27:1: 33:2 warning: function is never used: `log_time`, #[warn(dead_code)] on by default
+src/main.rs:27 fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+src/main.rs:28     let entry = formatted_time_entry();
+src/main.rs:29     let bytes = entry.as_bytes();
+src/main.rs:30
+src/main.rs:31     try!(record_entry_in_log(filename, &amp;amp;bytes));
+src/main.rs:32     Ok(())
+               ...
+src/main.rs:35:1: 40:2 warning: function is never used: `main2`, #[warn(dead_code)] on by default
+src/main.rs:35 fn main2() {
+src/main.rs:36     match log_time(&quot;log.txt&quot;) {
+src/main.rs:37         Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+src/main.rs:38         Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+src/main.rs:39     }
+src/main.rs:40 }
+     Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+&lt;/pre&gt;
+
+&lt;p&gt;
+Cool. I totally expected those dead-code warning messages, and visiting
+&lt;code&gt;localhost:6767&lt;/code&gt; in my browser still renders a &quot;hello, world&quot; page.
+&lt;/p&gt;
+
+&lt;p&gt;
+Here&#39;s an attempt to integrate them:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn do_log_time() -&amp;gt; &amp;amp;&#39;static str {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+    }
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time()
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:19: 37:44 error: mismatched types:
+ expected `&amp;amp;&#39;static str`,
+    found `()`
+(expected &amp;amp;-ptr,
+    found ()) [E0308]
+src/main.rs:37         Ok(..) =&amp;gt; println!(&quot;File created!&quot;),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:19: 38:43 error: mismatched types:
+ expected `&amp;amp;&#39;static str`,
+    found `()`
+(expected &amp;amp;-ptr,
+    found ()) [E0308]
+src/main.rs:38         Err(e) =&amp;gt; println!(&quot;Error: {}&quot;, e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+The macro &lt;code&gt;println!&lt;/code&gt; here is writing to standard out, but what I want is
+something that will be returning a string. Is there a &lt;code&gt;sprintln!&lt;/code&gt;, or
+something equivalent?
+&lt;/p&gt;
+
+&lt;p&gt;
+Doing a quick search, it looks like the answer is &lt;code&gt;format!&lt;/code&gt;:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+#[macro_use] extern crate nickel;
+extern crate chrono;
+
+use std::io::prelude::*;
+use std::fs::{File,OpenOptions};
+use std::io;
+use chrono::{DateTime,Local};
+
+use nickel::Nickel;
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(())
+}
+
+fn do_log_time() -&amp;gt; &amp;amp;&#39;static str {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; format!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+
+fn main() {
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time()
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:19: 37:43 error: mismatched types:
+ expected `&amp;amp;&#39;static str`,
+    found `collections::string::String`
+(expected &amp;amp;-ptr,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:37         Ok(..) =&amp;gt; format!(&quot;File created!&quot;),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:19: 38:42 error: mismatched types:
+ expected `&amp;amp;&#39;static str`,
+    found `collections::string::String`
+(expected &amp;amp;-ptr,
+    found struct `collections::string::String`) [E0308]
+src/main.rs:38         Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, I know there&#39;s a way to convert between a &lt;code&gt;String&lt;/code&gt; and an
+&lt;code&gt;&amp;amp;str&lt;/code&gt;&amp;#x2026; hmm. I recall that I can use an &lt;code&gt;&amp;amp;&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time() -&amp;gt; &amp;amp;&#39;static str {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; &amp;amp;format!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; &amp;amp;format!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:37:20: 37:44 error: borrowed value does not live long enough
+src/main.rs:37         Ok(..) =&amp;gt; &amp;amp;format!(&quot;File created!&quot;),
+                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:37:19: 37:44 note: ...but borrowed value is only valid for the expression at 37:18
+src/main.rs:37         Ok(..) =&amp;gt; &amp;amp;format!(&quot;File created!&quot;),
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+src/main.rs:38:20: 38:43 error: borrowed value does not live long enough
+src/main.rs:38         Err(e) =&amp;gt; &amp;amp;format!(&quot;Error: {}&quot;, e)
+                                  ^~~~~~~~~~~~~~~~~~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:38:19: 38:43 note: ...but borrowed value is only valid for the expression at 38:18
+src/main.rs:38         Err(e) =&amp;gt; &amp;amp;format!(&quot;Error: {}&quot;, e)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+This thing again. I think I&#39;m going to need a block here:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time() -&amp;gt; &amp;amp;&#39;static str {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; {
+            let fmt = format!(&quot;File created!&quot;);
+            &amp;amp;fmt
+        },
+        Err(e) =&amp;gt; {
+            let fmt = format!(&quot;Error: {}&quot;, e);
+            &amp;amp;fmt
+        }
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:39:14: 39:17 error: `fmt` does not live long enough
+src/main.rs:39             &amp;amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:38:48: 40:10 note: ...but borrowed value is only valid for the block suffix following s
+tatement 0 at 38:47
+src/main.rs:38             let fmt = format!(&quot;File created!&quot;);
+src/main.rs:39             &amp;amp;fmt
+src/main.rs:40         },
+src/main.rs:43:14: 43:17 error: `fmt` does not live long enough
+src/main.rs:43             &amp;amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:42:47: 44:10 note: ...but borrowed value is only valid for the block suffix following s
+tatement 0 at 42:46
+src/main.rs:42             let fmt = format!(&quot;Error: {}&quot;, e);
+src/main.rs:43             &amp;amp;fmt
+src/main.rs:44         }
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+That didn&#39;t work. I think the problem is that &lt;code&gt;fmt&lt;/code&gt; only exists for
+that new block, but the return value  is used outside of it. What if I
+promote &lt;code&gt;fmt&lt;/code&gt; to the top of the function?
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time() -&amp;gt; &amp;amp;&#39;static str {
+    let mut fmt = &quot;&quot;.to_string();
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; {
+            fmt = format!(&quot;File created!&quot;);
+            &amp;amp;fmt
+        },
+        Err(e) =&amp;gt; {
+            fmt = format!(&quot;Error: {}&quot;, e);
+            &amp;amp;fmt
+        }
+    }
+
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:40:14: 40:17 error: `fmt` does not live long enough
+src/main.rs:40             &amp;amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:36:34: 48:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 36:33
+src/main.rs:36     let mut fmt = &quot;&quot;.to_string();
+src/main.rs:37     match log_time(&quot;log.txt&quot;) {
+src/main.rs:38         Ok(..) =&amp;gt; {
+src/main.rs:39             fmt = format!(&quot;File created!&quot;);
+src/main.rs:40             &amp;amp;fmt
+src/main.rs:41         },
+               ...
+src/main.rs:44:14: 44:17 error: `fmt` does not live long enough
+src/main.rs:44             &amp;amp;fmt
+                            ^~~
+note: reference must be valid for the static lifetime...
+src/main.rs:36:34: 48:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 36:33
+src/main.rs:36     let mut fmt = &quot;&quot;.to_string();
+src/main.rs:37     match log_time(&quot;log.txt&quot;) {
+src/main.rs:38         Ok(..) =&amp;gt; {
+src/main.rs:39             fmt = format!(&quot;File created!&quot;);
+src/main.rs:40             &amp;amp;fmt
+src/main.rs:41         },
+               ...
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+I don&#39;t know how to fix this. I&#39;m going to just set this down, for
+now, and come back to it later.
+&lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;ve tried a few new things, and nothing works. I think I need to
+learn more of how this ownership/lifetime stuff works.
+&lt;/p&gt;
+
+&lt;p&gt;
+I just read a bit of the Rust book, and I notice this note:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+We choose the &lt;code&gt;String&lt;/code&gt; type for the name, rather than
+&lt;code&gt;&amp;amp;str&lt;/code&gt;. Generally speaking, working with a type which owns its data is
+easier than working with one that uses references.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+Because I&#39;m in &quot;do&quot; mode and not &quot;learn&quot; mode, I want to try using
+&lt;code&gt;String&lt;/code&gt; to see if that works.
+&lt;/p&gt;
+
+&lt;p&gt;
+Now:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time() -&amp;gt; String {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(..) =&amp;gt; format!(&quot;File created!&quot;),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+&lt;/pre&gt;
+
+&lt;p&gt;
+It worked. Visiting the page in a browser shows &quot;File created!&quot;,
+and it also wrote an entry to the log file.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;m not really surprised that this works &amp;#x2013; I kinda figured the
+solution would be to return a &lt;code&gt;String&lt;/code&gt; instead of an &lt;code&gt;&amp;amp;str&lt;/code&gt;, but I
+wanted to take it as a challenge to figure out.
+&lt;/p&gt;
+
+&lt;p&gt;
+Now that I think about it, this makes sense. I&#39;m trying to
+return a borrowed reference, but I also own it, so returning it
+wouldn&#39;t make any sense. How would I return an &lt;code&gt;&amp;amp;str&lt;/code&gt; that I created
+in my own function? I haven&#39;t seen anything using a plain, not-borrowed &quot;&lt;code&gt;str&lt;/code&gt;&quot;
+anywhere.
+&lt;/p&gt;
+
+&lt;p&gt;
+I this absence of not-borrowed ~&amp;amp;str~s has to do with it representing being a plain
+c string pointer. This
+must have some complications that I&#39;m not aware of, and for it to
+play nicely with Rust it must interface with rust the normal
+Rust rules sharing ownership must apply.
+&lt;/p&gt;
+
+&lt;p&gt;
+If some other part of the program has knowledge of an array of bytes,
+and provides me with a reference to that array, what does that mean?
+Are &lt;code&gt;&amp;amp;str&lt;/code&gt; types basically just so that C strings can be referenced
+without some additional metadata associated with them?
+&lt;/p&gt;
+
+&lt;p&gt;
+The Rust book says &lt;code&gt;&amp;amp;str&lt;/code&gt; -&amp;gt; &lt;code&gt;String&lt;/code&gt; has some cost. I wonder if this
+always true, or only for static program strings. Would a
+heap-allocated &lt;code&gt;&amp;amp;str&lt;/code&gt; require copying for a &lt;code&gt;String&lt;/code&gt;? Now that I
+think about it, I bet the answer is yes; if you want to convert
+a borrowed value into something that is owned, the only
+reasonable solution would be to copy it.
+&lt;/p&gt;
+
+&lt;p&gt;
+Anyway, I think I just want to move on. I think the answer is that
+what I was trying to do just didn&#39;t make sense, and Rust correctly
+stopped me. I do wish I understood why every &lt;code&gt;str&lt;/code&gt; is borrowed,
+though.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;m going to try to return the logged time string from &lt;code&gt;log_time&lt;/code&gt; and
+have that displayed to the user. My first attempt:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;String&amp;gt; {
+    let entry = formatted_time_entry();
+    let bytes = entry.as_bytes();
+
+    try!(record_entry_in_log(filename, &amp;amp;bytes));
+    Ok(entry)
+}
+
+fn do_log_time() -&amp;gt; String {
+    match log_time(&quot;log.txt&quot;) {
+        Ok(entry) =&amp;gt; format!(&quot;Entry Logged: {}&quot;, entry),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:32:8: 32:13 error: cannot move out of `entry` because it is borrowed
+src/main.rs:32     Ok(entry)
+                      ^~~~~
+src/main.rs:29:17: 29:22 note: borrow of `entry` occurs here
+src/main.rs:29     let bytes = entry.as_bytes();
+                               ^~~~~
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+Hmm. So I guess that makes sense&amp;#x2026; &lt;code&gt;bytes&lt;/code&gt; &quot;borrows&quot; the contents of
+&lt;code&gt;entry&lt;/code&gt;. And, since this value is still borrowed by the time
+&lt;code&gt;OK(entry)&lt;/code&gt; is called, this causes the error.
+&lt;/p&gt;
+
+&lt;p&gt;
+This works:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;String&amp;gt; {
+    let entry = formatted_time_entry();
+    {
+        let bytes = entry.as_bytes();
+
+        try!(record_entry_in_log(filename, &amp;amp;bytes));
+    }
+    Ok(entry)
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run &amp;amp;
+[1] 66858
+$      Running `target/debug/simple-log`
+Listening on http://127.0.0.1:6767
+Ctrl-C to shutdown server
+
+$ curl localhost:6767
+Entry Logged: Tue, Jun 23 2015 12:34:19 AM
+&lt;/pre&gt;
+
+&lt;p&gt;
+This isn&#39;t the first time I&#39;ve used the &quot;stick a new block
+here&quot; feature, but it does seem to work for this, and it seems like a
+reasonably elegant way to handle this. My first thought though was
+that I needed to call another function to somehow &quot;convert&quot; bytes back
+into a &lt;code&gt;String&lt;/code&gt;, but then I realized that this didn&#39;t actually make
+sense, and I needed to &quot;deallocate&quot; the borrow, somehow.
+&lt;/p&gt;
+
+&lt;p&gt;
+I don&#39;t understand what &quot;move out of `entry`&quot; means in that error message
+though. I&#39;m thinking that you can&#39;t transfer ownership of a value as
+long as there is a borrowed reference to it, too. But maybe
+that isn&#39;t actually true. Is sending it to &lt;code&gt;Ok()&lt;/code&gt; changing it? I&#39;m
+pretty confused by this, and the Rust book doesn&#39;t seem to address
+this specific issue, but I think this must be it &amp;#x2013; ownership can&#39;t be
+changed while a borrow exists. I think.
+&lt;/p&gt;
+
+&lt;p&gt;
+Its nice to see that as I&#39;ve been browsing through the Rust book
+section on borrowing, using a block is the cited solution to this
+problem.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-3&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-3&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;3&lt;/span&gt; Fin&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-3&quot;&gt;
+&lt;p&gt;
+Integrating this was much harder than I
+expected. Borrowing/ownership got me a few times here, so I&#39;m going to
+cut it at this point, since this has gotten pretty long.
+&lt;/p&gt;
+
+&lt;p&gt;
+Fortunately, I think I am slowly understanding how Rust works, and
+especially its borrowing functionality. This gives me hope for the
+future.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 04 Jul 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-3/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-3/</guid>
+      </item>
+    
+      <item>
         <title>Rust, the Language for Growth</title>
         <description>&lt;p&gt;
 The most important feature that attracts me to Rust is its focus
@@ -3099,46 +3895,6 @@ is obvious, common advice, but still.
         <pubDate>Sun, 15 Feb 2015 00:00:00 -0500</pubDate>
         <link>http://joelmccracken.github.io//entries/backup-your-data-kids/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/backup-your-data-kids/</guid>
-      </item>
-    
-      <item>
-        <title>Wish for a New Programming Language</title>
-        <description>&lt;p&gt;
-There is a principle in program design: defer decisions to the last
-possible moment, because this is when you will have the most
-information about how to make the right choice.
-&lt;/p&gt;
-
-&lt;p&gt;
-If I were to design a new programming language today, I would apply
-this to a programming language environment. It would look something
-like this:
-&lt;/p&gt;
-
-&lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;A runtime that is small &amp;#x2013; optional, ideally &amp;#x2013; but can grow and be
-configured, incorporating ideas from different communities.
-&lt;/li&gt;
-
-&lt;li&gt;A language that is equally small, but growable. This means Lisp,
-but I include it from the standpoint of being a reasonable place to
-start. Include facilities to extend the actual textual syntax of
-the language, not just manipulating sexps.
-&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;
-One of the more frustrating aspects of programming languages is that
-they make tradeoffs up front. The design decisions are made at the
-earliest possible moment. These decisions often are as permanent as
-the languages themselves are, which is a shame. Programming is a
-constantly growing, dynamic field. We will never know less about it
-than we know now.
-&lt;/p&gt;
-</description>
-        <pubDate>Wed, 07 Jan 2015 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/wish-for-a-new-programming-language/</guid>
       </item>
     
   </channel>
