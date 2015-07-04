@@ -1,0 +1,41 @@
+---
+title: A Simple Web App in Rust, Part 4 -- CLI Option Parsing
+---
+I'm
+going to briefly attempt to do some command parsing. First, I'm going
+to move this file out of the way to do some CLI parsing
+experimentation. But, before that, lets just clean things up a bit:
+
+#+BEGIN_SRC
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+$ cd src/
+$ ls
+main.rs                 main_file_writing.rs    web_main.rs
+#+END_SRC
+
+~main_file_writing.rs~ and ~web_main.rs~ are both old, so I can remove
+them. After that I'll move ~main.rs~ to, say, ~main_logging_server.rs~
+and create a new ~main.rs~.
+
+#+BEGIN_SRC
+$ git rm main_file_writing.rs web_main.rs
+rm 'src/main_file_writing.rs'
+rm 'src/web_main.rs'
+$ git commit -m 'remove old files'
+[master 771380b] remove old files
+ 2 files changed, 35 deletions(-)
+ delete mode 100644 src/main_file_writing.rs
+ delete mode 100644 src/web_main.rs
+$ git mv main.rs main_logging_server.rs
+$ git commit -m 'move main out of the way for cli parsing experiment'
+[master 4d24206] move main out of the way for cli parsing experiment
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename src/{main.rs => main_logging_server.rs} (100%)
+$ touch main.rs
+#+END_SRC
+
+
+On to parameter parsing. In an earlier post,
+[[http://blog.ssokolow.com/][Stephan Sokolow]] asked if I had considered using the package [[https://github.com/kbknapp/clap-rs][clap]] for
+command line parsing. I was going to use
