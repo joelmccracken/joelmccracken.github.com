@@ -1,10 +1,21 @@
 ---
 title: A Simple Web App in Rust, Part 4 -- CLI Option Parsing
+layout: post
 ---
-I'm
-going to briefly attempt to do some command parsing. First, I'm going
-to move this file out of the way to do some CLI parsing
-experimentation. But, before that, lets just clean things up a bit:
+
+* Intro
+
+Last time, we built a "working" application; the proof-of-concept is
+there. In order to make it into something that could actually be used,
+we need to worry about some other things like adding command line
+options.
+
+So, I'm
+going to do some command parsing. But first, lets move this existing
+code out of the way to have a "blank slate" to do some CLI parsing
+experimentation.
+But, even before that, lets just generally clean things up a bit by
+removing some old files, and then creating a new ~main.rs~:
 
 #+BEGIN_SRC
 $ ls
@@ -36,6 +47,473 @@ $ touch main.rs
 #+END_SRC
 
 
-On to parameter parsing. In an earlier post,
+On to parameter parsing. In the comments section of an earlier post,
 [[http://blog.ssokolow.com/][Stephan Sokolow]] asked if I had considered using the package [[https://github.com/kbknapp/clap-rs][clap]] for
-command line parsing. I was going to use
+command line parsing. Clap looks interesting, so, I'll try it.
+
+* Requirements
+
+The service needs to be parameterized for the following:
+
+1. The location of the log file.
+2. A secret token to authenticate with.
+3. (Possibly) setting the time zone to use with logging.
+
+I just checked the Digital Ocean VM that I'm planning to use this on,
+and the machine is in EST, which is also my time zone, so I'll
+probably skip number 3, for now.
+
+* Implementation
+
+As far as I can tell, the way to specify /this/ dependency is via
+~clap = "*"~. I'd always rather specify one, specific version, but
+for now "*" will work.
+
+My new Cargo.toml:
+
+#+BEGIN_SRC
+[package]
+name = "simple-log"
+version = "0.1.0"
+authors = ["Joel McCracken <mccracken.joel@gmail.com>"]
+
+[dependencies]
+
+chrono = "0.2"
+clap   = "*"
+
+[dependencies.nickel]
+
+git = "https://github.com/nickel-org/nickel.rs.git"
+#+END_SRC
+
+
+Installing the dependency:
+
+#+BEGIN_SRC
+$ cargo run
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading ansi_term v0.6.3
+ Downloading strsim v0.4.0
+ Downloading clap v1.0.0-beta
+   Compiling strsim v0.4.0
+   Compiling ansi_term v0.6.3
+   Compiling clap v1.0.0-beta
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+error: main function not found
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+
+#+END_SRC
+
+The error is just because my ~main.rs~ file is still empty; the
+important part is that the "Compiling clap" things look good.
+
+Based upon the README, I'll try the very simple version listed:
+
+#+BEGIN_SRC
+extern crate clap;
+use clap::App;
+
+fn main() {
+  let _ = App::new("fake").version("v1.0-beta").get_matches();
+}
+#+END_SRC
+Running:
+#+BEGIN_SRC
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+$ cargo run
+     Running `target/debug/simple-log`
+$ cargo build --relase
+Unknown flag: '--relase'. Did you mean '--release'?
+
+Usage:
+    cargo build [options]
+$ cargo build --release
+   Compiling lazy_static v0.1.10
+   Compiling matches v0.1.2
+   Compiling bitflags v0.1.1
+   Compiling httparse v0.1.2
+   Compiling strsim v0.4.0
+   Compiling rustc-serialize v0.3.14
+   Compiling modifier v0.1.0
+   Compiling libc v0.1.8
+   Compiling unicase v0.1.0
+   Compiling groupable v0.2.0
+   Compiling regex v0.1.30
+   Compiling traitobject v0.0.3
+   Compiling pkg-config v0.3.4
+   Compiling ansi_term v0.6.3
+   Compiling gcc v0.3.5
+   Compiling typeable v0.1.1
+   Compiling unsafe-any v0.4.1
+   Compiling num_cpus v0.2.5
+   Compiling rand v0.3.8
+   Compiling log v0.3.1
+   Compiling typemap v0.3.2
+   Compiling clap v1.0.0-beta
+   Compiling plugin v0.2.6
+   Compiling mime v0.0.11
+   Compiling time v0.1.25
+   Compiling openssl-sys v0.6.2
+   Compiling openssl v0.6.2
+   Compiling url v0.2.34
+   Compiling mustache v0.6.1
+   Compiling num v0.1.25
+   Compiling cookie v0.1.20
+   Compiling hyper v0.4.0
+   Compiling chrono v0.2.14
+   Compiling nickel v0.5.0 (https://github.com/nickel-org/nickel.rs.git#69546f58)
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+
+$ target/debug/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+$ target/release/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+#+END_SRC
+
+I don't know why the readme told me to compile with ~--release~ -- it
+looks like the ~debug~ worked the same way. Unless I don't understand
+what's going on. Lemmie rm the target dir, then try again without the
+release flag:
+
+
+#+BEGIN_SRC
+$ rm -rf target
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src
+$ cargo build
+   Compiling gcc v0.3.5
+   Compiling strsim v0.4.0
+   Compiling typeable v0.1.1
+   Compiling unicase v0.1.0
+   Compiling ansi_term v0.6.3
+   Compiling modifier v0.1.0
+   Compiling httparse v0.1.2
+   Compiling regex v0.1.30
+   Compiling matches v0.1.2
+   Compiling pkg-config v0.3.4
+   Compiling lazy_static v0.1.10
+   Compiling traitobject v0.0.3
+   Compiling rustc-serialize v0.3.14
+   Compiling libc v0.1.8
+   Compiling groupable v0.2.0
+   Compiling bitflags v0.1.1
+   Compiling unsafe-any v0.4.1
+   Compiling clap v1.0.0-beta
+   Compiling typemap v0.3.2
+   Compiling rand v0.3.8
+   Compiling num_cpus v0.2.5
+   Compiling log v0.3.1
+   Compiling time v0.1.25
+   Compiling openssl-sys v0.6.2
+   Compiling plugin v0.2.6
+   Compiling mime v0.0.11
+   Compiling openssl v0.6.2
+   Compiling url v0.2.34
+   Compiling num v0.1.25
+   Compiling mustache v0.6.1
+   Compiling cookie v0.1.20
+   Compiling hyper v0.4.0
+   Compiling chrono v0.2.14
+   Compiling nickel v0.5.0 (https://github.com/nickel-org/nickel.rs.git#69546f58)
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+$ target/release/simple-log --help
+bash: target/release/simple-log: No such file or directory
+$ target/debug/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+$
+#+END_SRC
+
+So, I guess you don't need that ~--release~ flag. Ya learn something
+new every day.
+
+Also, looking at the ~main~ code again, I notice that the variable is
+named ~_~; I assume this must be in order to silence warnings/signify
+disuse. Using ~_~ in this way is pretty normal.
+
+So, based upon the clap readme and a little experimentation, I've come
+up with this first attempt at writing an argument parser:
+
+
+#+BEGIN_SRC
+extern crate clap;
+use clap::{App,Arg};
+
+fn main() {
+    let matches = App::new("simple-log").version("v0.0.1")
+        .arg(Arg::with_name("LOG FILE")
+             .short("l")
+             .long("logfile")
+             .takes_value(true))
+        .get_matches();
+
+    println!("Logfile path: {}", matches.value_of("LOG FILE").unwrap());
+
+}
+
+#+END_SRC
+
+=>
+
+#+BEGIN_SRC
+$ cargo run -- --logfile whodat
+     Running `target/debug/simple-log --logfile whodat`
+Logfile path: whodat
+$ cargo run -- -l whodat
+     Running `target/debug/simple-log -l whodat`
+Logfile path: whodat
+#+END_SRC
+
+Ok, so that worked! But here's a problem:
+
+
+#+BEGIN_SRC $ cargo run
+$ cargo run
+     Running `target/debug/simple-log`
+thread '<main>' panicked at 'called `Option::unwrap()` on a `None` value', /private/tmp/rust2015051
+6-38954-h579wb/rustc-1.0.0/src/libcore/option.rs:362
+An unknown error occurred
+
+To learn more, run the command again with --verbose.
+#+END_SRC
+
+So. Calling ~unwrap()~ up there was a bad idea, since this argument
+may not be passed in!
+
+I'm not sure what the opinion of the greater Rust community is on
+~unwrap~, but everywhere I've noticed it there is also a comment
+explaining why it should be OK to use here. While I think that makes
+sense, as an application grows it is easy for assumptions in one place
+to become invalidated. And, notice that the error occurs at
+/run-time/. This isn't something that the compiler can determine!
+
+Is ~unwrap~ the same basic idea as there being a null pointer
+exception? I think so. But, it does make you stop and
+think for a second a little bit about what you're doing, and if it
+means that ~unwrap~ is a code sort-of-smell, then that's
+great. Which leads me to a bit of a rant:
+
+* A Rant
+
+I firmly believe that you cannot make developers write good
+code. The problem I have with static language communities is that the
+rhetoric around these programming languages: that they will "prevent the programmer
+from doing bad things". Well, guess what: that's impossible.
+
+Firstly, you cannot define "good code" in any sensible way. Indeed, much of
+what makes code good is highly context-dependent. As a very basic
+example, sloppy code is good
+when prototyping, but sloppy code is horrible when making something
+production-quality.
+
+The latest OpenSSL vulnerability is a great example of this
+Now, I didn't read very much into the news about the vulnerability,
+but if I understand correctly, the cause of the bug was
+/an error in business logic/. Under certain very-specific
+circumstances, an attacker could become a certificate authority. How
+do you write a compiler that prevents /this/ problem?
+
+Indeed, this takes me back to a quote by the original great-grand-daddy of
+computer science, Charles Babbage:
+
+#+BEGIN_QUOTE
+On two occasions I have been asked, — "Pray, Mr. Babbage, if you put
+into the machine wrong figures, will the right answers come out?" In
+one case a member of the Upper, and in the other a member of the
+Lower, House put this question. I am not able rightly to apprehend the
+kind of confusion of ideas that could provoke such a question.
+#+END_QUOTE
+
+The best thing that you can do is make it /easier/ for developers to write
+good code. Doing the right thing should be the default.
+
+Once you start talking about static type systems as tools to make
+programming easier, I think things start to make sense. In the end,
+the developer is still responsible for doing the right thing, and we
+must /trust/ them and /empower/ them to do these things.
+
+That doesn't mean that they should have to work against the grain in
+order to do the right thing. The right thing should be easy to do.
+
+Ultimately, remember: the programmer can always implement a little
+Scheme interpreter and write all their application logic in that. Good
+luck trying to type-check that sort of thing.
+
+I'll get down off my soapbox. Thanks for indulging me.
+
+* Continuing
+
+Back in the real world, I notice that there is an option for ~Arg~s
+for specifying an argument is required. I think I'd like to use that here:
+
+#+BEGIN_SRC
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+error: The following required arguments were not supplied:
+        '--logfile <LOG FILE>'
+
+USAGE:
+        simple-log --logfile <LOG FILE>
+
+For more information try --help
+An unknown error occurred
+
+To learn more, run the command again with --verbose.
+$ cargo run -- -l whodat
+     Running `target/debug/simple-log -l whodat`
+Logfile path: whodat
+#+END_SRC
+
+Super-duper, it works. Hmm. The only other thing would be the secret
+token to use. Lets add that, but make it optional because, well, why
+not? I might want to put up an open version of this for people to see.
+
+I'm left with this:
+
+#+BEGIN_SRC
+extern crate clap;
+use clap::{App,Arg};
+
+fn main() {
+    let matches = App::new("simple-log").version("v0.0.1")
+        .arg(Arg::with_name("LOG FILE")
+             .short("l")
+             .long("logfile")
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name("AUTH TOKEN")
+             .short("t")
+             .long("token")
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of("LOG FILE").unwrap();
+    let auth_token   = matches.value_of("AUTH TOKEN");
+}
+
+#+END_SRC
+
+=>
+
+#+BEGIN_SRC
+$ cargo run -- -l whodat
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:17:9: 17:21 warning: unused variable: `logfile_path`, #[warn(unused_variables)] on by d
+efault
+src/main.rs:17     let logfile_path = matches.value_of("LOG FILE").unwrap();
+                       ^~~~~~~~~~~~
+src/main.rs:18:9: 18:19 warning: unused variable: `auth_token`, #[warn(unused_variables)] on by default
+src/main.rs:18     let auth_token   = matches.value_of("AUTH TOKEN");
+                       ^~~~~~~~~~
+     Running `target/debug/simple-log -l whodat`
+#+END_SRC
+
+
+I mean, of course there are a lot of warnings, but it compiles and
+runs fine. I just wanted it to type-check. Now lets bring this back to
+the main program. I will try to do a super basic integration below:
+
+#+BEGIN_SRC
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+use std::io;
+
+#[macro_use] extern crate nickel;
+use nickel::Nickel;
+
+extern crate chrono;
+use chrono::{DateTime,Local};
+
+extern crate clap;
+use clap::{App,Arg};
+
+fn formatted_time_entry() -> String {
+    let local: DateTime<Local> = Local::now();
+    let formatted = local.format("%a, %b %d %Y %I:%M:%S %p\n").to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &str, bytes: &[u8]) -> io::Result<()> {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &'static str) -> io::Result<String> {
+    let entry = formatted_time_entry();
+    {
+        let bytes = entry.as_bytes();
+
+        try!(record_entry_in_log(filename, &bytes));
+    }
+    Ok(entry)
+}
+
+fn do_log_time(logfile_path, auth_token) -> String {
+    match log_time(logfile_path) {
+        Ok(entry) => format!("Entry Logged: {}", entry),
+        Err(e) => format!("Error: {}", e)
+    }
+}
+
+fn main() {
+    let matches = App::new("simple-log").version("v0.0.1")
+        .arg(Arg::with_name("LOG FILE")
+             .short("l")
+             .long("logfile")
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name("AUTH TOKEN")
+             .short("t")
+             .long("token")
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of("LOG FILE").unwrap();
+    let auth_token   = matches.value_of("AUTH TOKEN");
+
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get "**" => |_req, _res| {
+            do_log_time(logfile_path, auth_token)
+        }
+    });
+
+    server.listen("127.0.0.1:6767");
+}
+#+END_SRC
+
+=>
