@@ -7,6 +7,1558 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>A Simple Web App in Rust, Part 4 -- CLI Option Parsing</title>
+        <description>&lt;div id=&quot;table-of-contents&quot;&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;div id=&quot;text-table-of-contents&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-1&quot;&gt;1. Back from Hiatus&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-2&quot;&gt;2. Intro&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-3&quot;&gt;3. Requirements&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-4&quot;&gt;4. Implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-5&quot;&gt;5. A Rant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-6&quot;&gt;6. Continuing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-7&quot;&gt;7. More Debugging&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-8&quot;&gt;8. Regrouping&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-9&quot;&gt;9. Refactoring&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#sec-10&quot;&gt;10. Conclusions &amp;amp; Retrospective on Part 4&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;outline-container-sec-1&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-1&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;1&lt;/span&gt; Back from Hiatus&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-1&quot;&gt;
+&lt;p&gt;
+Hello! Sorry for the delay in this one. My wife and I just bought a
+house, and we have been dealing with all that. Thanks for your
+patience.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-2&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-2&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;2&lt;/span&gt; Intro&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-2&quot;&gt;
+&lt;p&gt;
+Last time, we built a &quot;working&quot; application; the proof-of-concept is
+there. In order to make it into something that could actually be used,
+we need to worry about some other things like adding command line
+options.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, I&#39;m
+going to do some command parsing. But first, lets move this existing
+code out of the way to have a &quot;blank slate&quot; to do some CLI parsing
+experimentation.
+But, even before that, lets just generally clean things up a bit by
+removing some old files, and then creating a new &lt;code&gt;main.rs&lt;/code&gt;:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src             target
+$ cd src/
+$ ls
+main.rs                 main_file_writing.rs    web_main.rs
+&lt;/pre&gt;
+
+&lt;p&gt;
+&lt;code&gt;main_file_writing.rs&lt;/code&gt; and &lt;code&gt;web_main.rs&lt;/code&gt; are both old, so I can remove
+them. After that I&#39;ll move &lt;code&gt;main.rs&lt;/code&gt; to, say, &lt;code&gt;main_logging_server.rs&lt;/code&gt;
+and create a new &lt;code&gt;main.rs&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ git rm main_file_writing.rs web_main.rs
+rm &#39;src/main_file_writing.rs&#39;
+rm &#39;src/web_main.rs&#39;
+$ git commit -m &#39;remove old files&#39;
+[master 771380b] remove old files
+ 2 files changed, 35 deletions(-)
+ delete mode 100644 src/main_file_writing.rs
+ delete mode 100644 src/web_main.rs
+$ git mv main.rs main_logging_server.rs
+$ git commit -m &#39;move main out of the way for cli parsing experiment&#39;
+[master 4d24206] move main out of the way for cli parsing experiment
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename src/{main.rs =&amp;gt; main_logging_server.rs} (100%)
+$ touch main.rs
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+On to parameter parsing. In the comments section of an earlier post,
+&lt;a href=&quot;http://blog.ssokolow.com/&quot;&gt;Stephan Sokolow&lt;/a&gt; asked if I had considered using the package &lt;a href=&quot;https://github.com/kbknapp/clap-rs&quot;&gt;clap&lt;/a&gt; for
+command line parsing. Clap looks interesting, so, I&#39;ll try it.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-3&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-3&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;3&lt;/span&gt; Requirements&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-3&quot;&gt;
+&lt;p&gt;
+The service needs to be parameterized for the following:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;The location of the log file.
+&lt;/li&gt;
+&lt;li&gt;A secret token to authenticate with.
+&lt;/li&gt;
+&lt;li&gt;(Possibly) setting the time zone to use with logging.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+I just checked the Digital Ocean VM that I&#39;m planning to use this on,
+and the machine is in EST, which is also my time zone, so I&#39;ll
+probably skip number 3, for now.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-4&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-4&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;4&lt;/span&gt; Implementation&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-4&quot;&gt;
+&lt;p&gt;
+As far as I can tell, the way to specify &lt;i&gt;this&lt;/i&gt; dependency is via
+&lt;code&gt;clap = &quot;*&quot;;&lt;/code&gt;. I&#39;d always rather specify one, specific version, but
+for now &quot;*&quot; will work.
+&lt;/p&gt;
+
+&lt;p&gt;
+My new Cargo.toml:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+[package]
+name = &quot;simple-log&quot;
+version = &quot;0.1.0&quot;
+authors = [&quot;Joel McCracken &amp;lt;mccracken.joel@gmail.com&amp;gt;&quot;]
+
+[dependencies]
+
+chrono = &quot;0.2&quot;
+clap   = &quot;*&quot;
+
+[dependencies.nickel]
+
+git = &quot;https://github.com/nickel-org/nickel.rs.git&quot;
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+Installing the dependency:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+    Updating registry `https://github.com/rust-lang/crates.io-index`
+ Downloading ansi_term v0.6.3
+ Downloading strsim v0.4.0
+ Downloading clap v1.0.0-beta
+   Compiling strsim v0.4.0
+   Compiling ansi_term v0.6.3
+   Compiling clap v1.0.0-beta
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+error: main function not found
+error: aborting due to previous error
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+The error is just because my &lt;code&gt;main.rs&lt;/code&gt; file is still empty; the
+important part is that the &quot;Compiling clap&quot; things look good.
+&lt;/p&gt;
+
+&lt;p&gt;
+Based upon the README, I&#39;ll try the very simple version listed:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate clap;
+use clap::App;
+
+fn main() {
+  let _ = App::new(&quot;fake&quot;).version(&quot;v1.0-beta&quot;).get_matches();
+}
+&lt;/pre&gt;
+&lt;p&gt;
+Running:
+&lt;/p&gt;
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+$ cargo run
+     Running `target/debug/simple-log`
+$ cargo build --release
+   Compiling lazy_static v0.1.10
+   Compiling matches v0.1.2
+   Compiling bitflags v0.1.1
+   Compiling httparse v0.1.2
+   Compiling strsim v0.4.0
+   Compiling rustc-serialize v0.3.14
+   Compiling modifier v0.1.0
+   Compiling libc v0.1.8
+   Compiling unicase v0.1.0
+   Compiling groupable v0.2.0
+   Compiling regex v0.1.30
+   Compiling traitobject v0.0.3
+   Compiling pkg-config v0.3.4
+   Compiling ansi_term v0.6.3
+   Compiling gcc v0.3.5
+   Compiling typeable v0.1.1
+   Compiling unsafe-any v0.4.1
+   Compiling num_cpus v0.2.5
+   Compiling rand v0.3.8
+   Compiling log v0.3.1
+   Compiling typemap v0.3.2
+   Compiling clap v1.0.0-beta
+   Compiling plugin v0.2.6
+   Compiling mime v0.0.11
+   Compiling time v0.1.25
+   Compiling openssl-sys v0.6.2
+   Compiling openssl v0.6.2
+   Compiling url v0.2.34
+   Compiling mustache v0.6.1
+   Compiling num v0.1.25
+   Compiling cookie v0.1.20
+   Compiling hyper v0.4.0
+   Compiling chrono v0.2.14
+   Compiling nickel v0.5.0 (https://github.com/nickel-org/nickel.rs.git#69546f58)
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+
+$ target/debug/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+$ target/release/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+&lt;/pre&gt;
+
+&lt;p&gt;
+I don&#39;t know why the readme told me to compile with &lt;code&gt;--release&lt;/code&gt; &amp;#x2013; it
+looks like the &lt;code&gt;debug&lt;/code&gt; worked the same way. Unless I don&#39;t understand
+what&#39;s going on. Lemmie rm the target dir, then try again without the
+release flag:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rm -rf target
+$ ls
+Cargo.lock      Cargo.toml      log.txt         src
+$ cargo build
+   Compiling gcc v0.3.5
+   Compiling strsim v0.4.0
+   Compiling typeable v0.1.1
+   Compiling unicase v0.1.0
+   Compiling ansi_term v0.6.3
+   Compiling modifier v0.1.0
+   Compiling httparse v0.1.2
+   Compiling regex v0.1.30
+   Compiling matches v0.1.2
+   Compiling pkg-config v0.3.4
+   Compiling lazy_static v0.1.10
+   Compiling traitobject v0.0.3
+   Compiling rustc-serialize v0.3.14
+   Compiling libc v0.1.8
+   Compiling groupable v0.2.0
+   Compiling bitflags v0.1.1
+   Compiling unsafe-any v0.4.1
+   Compiling clap v1.0.0-beta
+   Compiling typemap v0.3.2
+   Compiling rand v0.3.8
+   Compiling num_cpus v0.2.5
+   Compiling log v0.3.1
+   Compiling time v0.1.25
+   Compiling openssl-sys v0.6.2
+   Compiling plugin v0.2.6
+   Compiling mime v0.0.11
+   Compiling openssl v0.6.2
+   Compiling url v0.2.34
+   Compiling num v0.1.25
+   Compiling mustache v0.6.1
+   Compiling cookie v0.1.20
+   Compiling hyper v0.4.0
+   Compiling chrono v0.2.14
+   Compiling nickel v0.5.0 (https://github.com/nickel-org/nickel.rs.git#69546f58)
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+$ target/release/simple-log --help
+bash: target/release/simple-log: No such file or directory
+$ target/debug/simple-log --help
+simple-log v1.0-beta
+
+USAGE:
+        simple-log [FLAGS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+$
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, I guess you don&#39;t need that &lt;code&gt;--release&lt;/code&gt; flag. Ya learn something
+new every day.
+&lt;/p&gt;
+
+&lt;p&gt;
+Also, looking at the &lt;code&gt;main&lt;/code&gt; code again, I notice that the variable is
+named &lt;code&gt;_&lt;/code&gt;; I assume this must be in order to silence warnings/signify
+disuse. Using &lt;code&gt;_&lt;/code&gt; to signify &quot;intentionally unused&quot; is pretty
+standard, I like that Rust supports this.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, based upon the clap readme and a little experimentation, I&#39;ve come
+up with this first attempt at writing an argument parser:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate clap;
+use clap::{App,Arg};
+
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    println!(&quot;Logfile path: {}&quot;, matches.value_of(&quot;LOG FILE&quot;).unwrap());
+
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run -- --logfile whodat
+     Running `target/debug/simple-log --logfile whodat`
+Logfile path: whodat
+$ cargo run -- -l whodat
+     Running `target/debug/simple-log -l whodat`
+Logfile path: whodat
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ok, so that worked! But here&#39;s a problem:
+&lt;/p&gt;
+
+
+&lt;div class=&quot;org-src-container&quot;&gt;
+
+&lt;pre class=&quot;src src-$&quot;&gt;$ cargo run
+     Running `target/debug/simple-log`
+thread &#39;&amp;lt;main&amp;gt;&#39; panicked at &#39;called `Option::unwrap()` on a `None` value&#39;, /private/tmp/rust2015051
+6-38954-h579wb/rustc-1.0.0/src/libcore/option.rs:362
+An unknown error occurred
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+So. Calling &lt;code&gt;unwrap()&lt;/code&gt; up there was a bad idea, since this argument
+may not be passed in!
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;m not sure what the opinion of the greater Rust community is on
+&lt;code&gt;unwrap&lt;/code&gt;, but everywhere I&#39;ve noticed it there is also a comment
+explaining why it should be OK to use here. While I think that makes
+sense, as an application grows it is easy for assumptions in one place
+to become invalidated. And, notice that the error occurs at
+&lt;i&gt;run-time&lt;/i&gt;. This isn&#39;t something that the compiler can determine!
+&lt;/p&gt;
+
+&lt;p&gt;
+Is &lt;code&gt;unwrap&lt;/code&gt; the same basic idea as there being a null pointer
+exception? I think so. But, it does make you stop and
+think about what you&#39;re doing, and if it means that &lt;code&gt;unwrap&lt;/code&gt; is a code
+sort-of-smell, then that&#39;s great. Which leads me to a bit of a rant:
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-5&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-5&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;5&lt;/span&gt; A Rant&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-5&quot;&gt;
+&lt;p&gt;
+I firmly believe that you cannot make developers write good
+code. The problem I have with static language communities is that the
+rhetoric around these programming languages: that they will &quot;prevent the programmer
+from doing bad things&quot;. Well, guess what: that&#39;s impossible.
+&lt;/p&gt;
+
+&lt;p&gt;
+Firstly, you cannot define &quot;good code&quot; in any sensible way. Indeed, much of
+what makes code good is highly context-dependent. As a very basic
+example, sloppy code is good when prototyping, but sloppy code is
+horrible when making something production-quality.
+&lt;/p&gt;
+
+&lt;p&gt;
+The latest OpenSSL vulnerability is a great example of this.
+I didn&#39;t read very much into the news about the vulnerability,
+but from what I gathered, the cause of the bug was
+&lt;i&gt;an error in business logic&lt;/i&gt;. Under certain very-specific
+circumstances, an attacker could become a certificate authority. How
+do you write a compiler that prevents &lt;i&gt;this&lt;/i&gt; problem?
+&lt;/p&gt;
+
+&lt;p&gt;
+Indeed, this takes me back to an old quote from Charles Babbage:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+On two occasions I have been asked,   &quot;Pray, Mr. Babbage, if you put
+into the machine wrong figures, will the right answers come out?&quot; In
+one case a member of the Upper, and in the other a member of the
+Lower, House put this question. I am not able rightly to apprehend the
+kind of confusion of ideas that could provoke such a question.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+The best thing that you can do is make it &lt;i&gt;easier&lt;/i&gt; for developers to write
+good code. Doing the right thing should be the normal, easy path.
+&lt;/p&gt;
+
+&lt;p&gt;
+Once you start talking about static type systems as tools to make
+programming &lt;i&gt;easier&lt;/i&gt;, I think things start to make sense again. In the end,
+the developer is still responsible for doing the right thing, and we
+must &lt;i&gt;trust&lt;/i&gt; them and &lt;i&gt;empower&lt;/i&gt; them to do these things.
+&lt;/p&gt;
+
+&lt;p&gt;
+Finally: the programmer can always implement a little
+Scheme interpreter and write all their application logic in that. Good
+luck trying to get your type checker to prevent that sort of thing.
+&lt;/p&gt;
+
+&lt;p&gt;
+Ok, I&#39;m done. I&#39;ll get down off my soapbox. Thanks for indulging me.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-6&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-6&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;6&lt;/span&gt; Continuing&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-6&quot;&gt;
+&lt;p&gt;
+Back in the real world, I notice that there is an option for an &lt;code&gt;Arg&lt;/code&gt;
+that specifies that the argument is required. I think I&#39;d like to use
+that here:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate clap;
+use clap::{App,Arg};
+
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .get_matches();
+
+    println!(&quot;Logfile path: {}&quot;, matches.value_of(&quot;LOG FILE&quot;).unwrap());
+
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+     Running `target/debug/simple-log`
+error: The following required arguments were not supplied:
+        &#39;--logfile &amp;lt;LOG FILE&amp;gt;&#39;
+
+USAGE:
+        simple-log --logfile &amp;lt;LOG FILE&amp;gt;
+
+For more information try --help
+An unknown error occurred
+
+To learn more, run the command again with --verbose.
+$ cargo run -- -l whodat
+     Running `target/debug/simple-log -l whodat`
+Logfile path: whodat
+&lt;/pre&gt;
+
+&lt;p&gt;
+It works! The next we need option is to specify a secret token via the
+command line.
+Lets add that, but make it optional because, well, why
+not? I might want to put up an open version of this for people to see.
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;m left with this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+extern crate clap;
+use clap::{App,Arg};
+
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+    let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run -- -l whodat
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:17:9: 17:21 warning: unused variable: `logfile_path`, #[warn(unused_variables)] on by d
+efault
+src/main.rs:17     let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+                       ^~~~~~~~~~~~
+src/main.rs:18:9: 18:19 warning: unused variable: `auth_token`, #[warn(unused_variables)] on by default
+src/main.rs:18     let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+                       ^~~~~~~~~~
+     Running `target/debug/simple-log -l whodat`
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+There are a lot of (expected) warnings, but it compiles and
+runs fine. I just wanted it to type-check. Now lets bring this back to
+the real program. I start with the code below:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+use std::io;
+
+#[macro_use] extern crate nickel;
+use nickel::Nickel;
+
+extern crate chrono;
+use chrono::{DateTime,Local};
+
+extern crate clap;
+use clap::{App,Arg};
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;str, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;&#39;static str) -&amp;gt; io::Result&amp;lt;String&amp;gt; {
+    let entry = formatted_time_entry();
+    {
+        let bytes = entry.as_bytes();
+
+        try!(record_entry_in_log(filename, &amp;amp;bytes));
+    }
+    Ok(entry)
+}
+
+fn do_log_time(logfile_path: &amp;amp;&#39;static str, auth_token: Option&amp;lt;&amp;amp;str&amp;gt;) -&amp;gt; String {
+    match log_time(logfile_path) {
+        Ok(entry) =&amp;gt; format!(&quot;Entry Logged: {}&quot;, entry),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+    let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+
+    let mut server = Nickel::new();
+
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(logfile_path, auth_token)
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run -- -l whodat
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:60:24: 60:31 error: `matches` does not live long enough
+src/main.rs:60     let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+                                      ^~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:58:24: 72:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 58:23
+src/main.rs:58         .get_matches();
+src/main.rs:59
+src/main.rs:60     let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+src/main.rs:61     let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+src/main.rs:62
+src/main.rs:63     let mut server = Nickel::new();
+               ...
+src/main.rs:61:24: 61:31 error: `matches` does not live long enough
+src/main.rs:61     let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+                                      ^~~~~~~
+note: reference must be valid for the static lifetime...
+src/main.rs:58:24: 72:2 note: ...but borrowed value is only valid for the block suffix following st
+atement 0 at 58:23
+src/main.rs:58         .get_matches();
+src/main.rs:59
+src/main.rs:60     let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+src/main.rs:61     let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+src/main.rs:62
+src/main.rs:63     let mut server = Nickel::new();
+               ...
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+I don&#39;t understand what is wrong &amp;#x2013; this is essentially the same code
+as from the example.
+I tried commenting out a bunch of code besides what is essentially this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+    let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; and now it compiles. There are lots of warnings, but that&#39;s fine.
+&lt;/p&gt;
+
+&lt;p&gt;
+None of the error messages above refer to any lines that are commented
+out. Now that I know that the error message do not refer to what is
+causing the problem, I know to look elsewhere.
+&lt;/p&gt;
+
+&lt;p&gt;
+The first thing I do is remove the references to those two
+variables. The code becomes this:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+    let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+
+
+    let mut server = Nickel::new();
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(&quot;&quot;, Some(&quot;&quot;))
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+This compiles and runs correctly. Now that I know this is the problem,
+I &lt;i&gt;suspect&lt;/i&gt; that this is because the get request is routing to the
+&lt;code&gt;get **&lt;/code&gt; closure, and importing these variables into a closure would
+clearly impact their lifetimes.
+&lt;/p&gt;
+
+&lt;p&gt;
+I talked with my friend &lt;a href=&quot;https://twitter.com/Carols10cents&quot;&gt;Carol Nichols&lt;/a&gt; about the problem, and she was
+able to suggest something that got me one step closer: convert
+&lt;code&gt;logfile_path&lt;/code&gt; and &lt;code&gt;auth_token&lt;/code&gt; to &lt;code&gt;String&lt;/code&gt; types.
+&lt;/p&gt;
+
+&lt;p&gt;
+What I believe is going on here is that &lt;code&gt;logfile_path&lt;/code&gt; and
+&lt;code&gt;auth_token&lt;/code&gt; are both borrowed &lt;code&gt;str&lt;/code&gt; types from somewhere inside the
+&lt;code&gt;matches&lt;/code&gt; data structure, which goes out of scope&amp;#x2026; some time. At the
+end of &lt;code&gt;main&lt;/code&gt;? Since &lt;code&gt;main&lt;/code&gt; should still be running
+while the closure exists, it seems like &lt;code&gt;matches&lt;/code&gt; should still exist.
+&lt;/p&gt;
+
+&lt;p&gt;
+Alternatively, it might be that closures just don&#39;t work with
+borrows. This seems &lt;i&gt;unlikely&lt;/i&gt; to me. It seems more likely that the
+compiler can&#39;t &lt;i&gt;prove&lt;/i&gt; that &lt;code&gt;matches&lt;/code&gt; will still exist while closure
+could still be invoked. Although this &lt;i&gt;still&lt;/i&gt; doesn&#39;t make sense,
+since the closure is passed into &lt;code&gt;server&lt;/code&gt;, which would go out of scope
+at the same time as &lt;code&gt;matches&lt;/code&gt;!
+&lt;/p&gt;
+
+&lt;p&gt;
+But anyway, changing this code:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+// ...
+let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap();
+let auth_token   = matches.value_of(&quot;AUTH TOKEN&quot;);
+
+let mut server = Nickel::new();
+server.utilize(router! {
+    get &quot;**&quot; =&amp;gt; |_req, _res| {
+        do_log_time(logfile_path, auth_token)
+    }
+});
+// ...
+&lt;/pre&gt;
+
+&lt;p&gt;
+into this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+// ...
+let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap().to_string();
+let auth_token = match matches.value_of(&quot;AUTH TOKEN&quot;) {
+    Some(str) =&amp;gt; Some(str.to_string()),
+    None =&amp;gt; None
+};
+
+let mut server = Nickel::new();
+server.utilize(router! {
+    get &quot;**&quot; =&amp;gt; |_req, _res| {
+        do_log_time(logfile_path, auth_token)
+    }
+});
+
+server.listen(&quot;127.0.0.1:6767&quot;);
+// ...
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; fixed the problem. I also had to change the various functions that
+take &lt;code&gt;&amp;amp;str&lt;/code&gt; types to take &lt;code&gt;String&lt;/code&gt; types.
+&lt;/p&gt;
+
+&lt;p&gt;
+Of course, this reveals a &lt;i&gt;new&lt;/i&gt; problem:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo build
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:69:25: 69:37 error: cannot move out of captured outer variable in an `Fn` closure
+src/main.rs:69             do_log_time(logfile_path, auth_token)
+                                       ^~~~~~~~~~~~
+&amp;lt;nickel macros&amp;gt;:1:1: 1:27 note: in expansion of as_block!
+&amp;lt;nickel macros&amp;gt;:10:12: 10:42 note: expansion site
+note: in expansion of closure expansion
+&amp;lt;nickel macros&amp;gt;:9:6: 10:54 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 10:62 note: in expansion of _middleware_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:60 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 7:46 note: in expansion of middleware!
+&amp;lt;nickel macros&amp;gt;:11:32: 11:78 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 21:78 note: in expansion of _router_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:43 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 4:47 note: in expansion of router!
+src/main.rs:67:20: 71:6 note: expansion site
+src/main.rs:69:39: 69:49 error: cannot move out of captured outer variable in an `Fn` closure
+src/main.rs:69             do_log_time(logfile_path, auth_token)
+                                                     ^~~~~~~~~~
+&amp;lt;nickel macros&amp;gt;:1:1: 1:27 note: in expansion of as_block!
+&amp;lt;nickel macros&amp;gt;:10:12: 10:42 note: expansion site
+note: in expansion of closure expansion
+&amp;lt;nickel macros&amp;gt;:9:6: 10:54 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 10:62 note: in expansion of _middleware_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:60 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 7:46 note: in expansion of middleware!
+&amp;lt;nickel macros&amp;gt;:11:32: 11:78 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 21:78 note: in expansion of _router_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:43 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 4:47 note: in expansion of router!
+src/main.rs:67:20: 71:6 note: expansion site
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+At first glance, this error doesn&#39;t make any sense to me:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+src/main.rs:69:25: 69:37 error: cannot move out of captured outer variable in an `Fn` closure
+src/main.rs:69             do_log_time(logfile_path, auth_token)
+&lt;/pre&gt;
+
+&lt;p&gt;
+What does it mean to &quot;move out of&quot; a captured variable? I don&#39;t
+remember anything that used language like moving in to or out of
+variables, and besides, that sentence doesn&#39;t make any sense to me.
+&lt;/p&gt;
+
+&lt;p&gt;
+The error also says some other weird stuff; what does a
+&lt;code&gt;Fn&lt;/code&gt; closure have to do with any of this?
+&lt;/p&gt;
+
+&lt;p&gt;
+I searched the Internet a while for this error message, and found some
+results. However, none of them seemed like they applied to me. So,
+back to playing around
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-7&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-7&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;7&lt;/span&gt; More Debugging&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-7&quot;&gt;
+&lt;p&gt;
+First, I tried compiling with the &lt;code&gt;--verbose&lt;/code&gt; flag just to see if was
+helpful, but it did not print any additional debugging information
+about the error, only about the general command.
+&lt;/p&gt;
+
+&lt;p&gt;
+I remembered seeing a section specific to closures in the the Rust
+book, so I decided to look at that. From it, my guess is that I need
+to do a &quot;move&quot; closure. But, when I try it:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+server.utilize(router! {
+    get &quot;**&quot; =&amp;gt; move |_req, _res| {
+        do_log_time(logfile_path, auth_token)
+    }
+});
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; I get a new error message:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run -- -l whodat
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:66:21: 66:25 error: no rules expected the token `move`
+src/main.rs:66         get &quot;**&quot; =&amp;gt; move |_req, _res| {
+                                   ^~~~
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+This confused me, so I decided to just try to move it outside:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+foo = move |_req, _res| {
+    do_log_time(logfile_path, auth_token)
+};
+
+server.utilize(router! {
+    get &quot;**&quot; =&amp;gt; foo
+});
+&lt;/pre&gt;
+
+&lt;p&gt;
+=&amp;gt;
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo run -- -l whodat
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:70:21: 70:24 error: no rules expected the token `foo`
+src/main.rs:70         get &quot;**&quot; =&amp;gt; foo
+                                   ^~~
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+&lt;p&gt;
+This is the same error message.
+&lt;/p&gt;
+
+&lt;p&gt;
+At this point, I notice that the language of the error message sounds
+suspiciously like the wording used around Scheme pattern matching
+macro systems, and I remember the &lt;code&gt;router!&lt;/code&gt; macro being used
+here. Some macro weirdness! I know how to solve this, because I had to
+deal with it before.
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rustc src/main.rs --pretty=expanded -Z unstable-options
+src/main.rs:5:14: 5:34 error: can&#39;t find crate for `nickel`
+src/main.rs:5 #[macro_use] extern crate nickel;
+&lt;/pre&gt;
+
+&lt;p&gt;
+So, I guess I need to pass this argument to cargo? Searching
+cargo docs doesnt seem to show anything about passing &lt;code&gt;rustc&lt;/code&gt; arguments.
+&lt;/p&gt;
+
+&lt;p&gt;
+Searching the Internet, I found some GitHub issues that indicate
+sending arbitrary arguments
+is not supported, besides creating a custom cargo command.
+Creating a custom cargo command sounds like an awful diversion from
+the problem I am trying to solve right now, so I don&#39;t want to go down
+that route.
+&lt;/p&gt;
+
+&lt;p&gt;
+Suddenly, a wild idea appears: when using &lt;code&gt;cargo run --verbose&lt;/code&gt;, I saw this
+&lt;code&gt;rustc&lt;/code&gt; command in its output:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+# ...
+Caused by:
+  Process didn&#39;t exit successfully: `rustc src/main.rs --crate-name simple_log --crate-type bin -g -
+-out-dir /Users/joel/Projects/simple-log/target/debug --emit=dep-info,link -L dependency=/Users/joel
+/Projects/simple-log/target/debug -L dependency=/Users/joel/Projects/simple-log/target/debug/deps --
+extern nickel=/Users/joel/Projects/simple-log/target/debug/deps/libnickel-0a4cb77ee6c08a8b.rlib --ex
+tern chrono=/Users/joel/Projects/simple-log/target/debug/deps/libchrono-a9b06d7e3a59ae0d.rlib --exte
+rn clap=/Users/joel/Projects/simple-log/target/debug/deps/libclap-01156bdabdb6927f.rlib -L native=/U
+sers/joel/Projects/simple-log/target/debug/build/openssl-sys-9c1a0f13b3d0a12d/out -L native=/Users/j
+oel/Projects/simple-log/target/debug/build/time-30c208bd835b525d/out` (exit code: 101)
+# ...
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; which makes me wonder: Could I modify this to make it compile and
+output the macro-expanded code? Trying it:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rustc src/main.rs --crate-name simple_log --crate-type bin -g --out-dir /Users/joel/Projects/simple-log/target/debug --emit=dep-info,link -L dependency=/Users/joel/Projects/simple-log/target/debug -L
+dependency=/Users/joel/Projects/simple-log/target/debug/deps --extern nickel=/Users/joel/Projects/simple-log/target/debug/deps/libnickel-0a4cb77ee6c08a8b.rlib --extern chrono=/Users/joel/Projects/simple
+-log/target/debug/deps/libchrono-a9b06d7e3a59ae0d.rlib --extern clap=/Users/joel/Projects/simple-log/target/debug/deps/libclap-01156bdabdb6927f.rlib -L native=/Users/joel/Projects/simple-log/target/debu
+g/build/openssl-sys-9c1a0f13b3d0a12d/out -L native=/Users/joel/Projects/simple-log/target/debug/build/time-30c208bd835b525d/out --pretty=expanded -Z unstable-options &amp;gt; macro-expanded.rs
+$ cat macro-expanded.rs
+#![feature(no_std)]
+#![no_std]
+#[prelude_import]
+use std::prelude::v1::*;
+#[macro_use]
+extern crate std as std;
+use std::io::prelude::*;
+...
+&lt;/pre&gt;
+
+&lt;p&gt;
+It worked! It is inelegant, but at least I was able to
+figure it out. It is also clearer to me how the &lt;code&gt;cargo&lt;/code&gt; interfaces
+with &lt;code&gt;rustc&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+The relevant portion of the output is this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+server.utilize({
+                   use nickel::HttpRouter;
+                   let mut router = ::nickel::Router::new();
+                   {
+                       router.get(&quot;**&quot;,
+                                  {
+                                      use nickel::{MiddlewareResult,
+                                                   Responder, Response,
+                                                   Request};
+                                      #[inline(always)]
+                                      fn restrict&amp;lt;&#39;a,
+                                                  R: Responder&amp;gt;(r: R,
+                                                                res:
+                                                                    Response&amp;lt;&#39;a&amp;gt;)
+                                       -&amp;gt; MiddlewareResult&amp;lt;&#39;a&amp;gt; {
+                                          res.send(r)
+                                      }
+                                      #[inline(always)]
+                                      fn restrict_closure&amp;lt;F&amp;gt;(f: F) -&amp;gt; F
+                                       where F: for&amp;lt;&#39;r, &#39;b,
+                                       &#39;a&amp;gt;Fn(&amp;amp;&#39;r mut Request&amp;lt;&#39;b, &#39;a, &#39;b&amp;gt;,
+                                             Response&amp;lt;&#39;a&amp;gt;) -&amp;gt;
+                                       MiddlewareResult&amp;lt;&#39;a&amp;gt; + Send +
+                                       Sync {
+                                          f
+                                      }
+                                      restrict_closure(move |_req, _res| {
+                                                       restrict({
+                                                                    do_log_time(logfile_path,
+                                                                                auth_token)
+                                                                }, _res)
+                                                   })
+                                  });
+                       router
+                   }
+               });
+&lt;/pre&gt;
+
+&lt;p&gt;
+Ok, so that&#39;s a lot to look at. Let us unpack it a little bit.
+&lt;/p&gt;
+
+&lt;p&gt;
+There are two functions, &lt;code&gt;restrict&lt;/code&gt; and &lt;code&gt;restrict_closure&lt;/code&gt;, that
+immediately surprise me. I &lt;i&gt;think&lt;/i&gt; they exist to provide better
+type/error messaging about these request handling closures.
+&lt;/p&gt;
+
+&lt;p&gt;
+However, what is even &lt;i&gt;more&lt;/i&gt; interesting is:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+restrict_closure(move |_req, _res| { ... })
+&lt;/pre&gt;
+
+&lt;p&gt;
+&amp;#x2026; which tells me that macro is specify the closure as a move
+closure &lt;i&gt;already&lt;/i&gt;. Well, there goes that theory.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-8&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-8&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;8&lt;/span&gt; Regrouping&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-8&quot;&gt;
+&lt;p&gt;
+Lets regroup and try to restate the problem.
+At this point, I have a &lt;code&gt;main&lt;/code&gt; that looks like this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap().to_string();
+    let auth_token = match matches.value_of(&quot;AUTH TOKEN&quot;) {
+        Some(str) =&amp;gt; Some(str.to_string()),
+        None =&amp;gt; None
+    };
+
+    let mut server = Nickel::new();
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(logfile_path, auth_token)
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Compiling gives me this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ cargo build
+   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
+src/main.rs:69:25: 69:37 error: cannot move out of captured outer variable in an `Fn` closure
+src/main.rs:69             do_log_time(logfile_path, auth_token)
+                                       ^~~~~~~~~~~~
+&amp;lt;nickel macros&amp;gt;:1:1: 1:27 note: in expansion of as_block!
+&amp;lt;nickel macros&amp;gt;:10:12: 10:42 note: expansion site
+note: in expansion of closure expansion
+&amp;lt;nickel macros&amp;gt;:9:6: 10:54 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 10:62 note: in expansion of _middleware_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:60 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 7:46 note: in expansion of middleware!
+&amp;lt;nickel macros&amp;gt;:11:32: 11:78 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 21:78 note: in expansion of _router_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:43 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 4:47 note: in expansion of router!
+src/main.rs:67:20: 71:6 note: expansion site
+src/main.rs:69:39: 69:49 error: cannot move out of captured outer variable in an `Fn` closure
+src/main.rs:69             do_log_time(logfile_path, auth_token)
+                                                     ^~~~~~~~~~
+&amp;lt;nickel macros&amp;gt;:1:1: 1:27 note: in expansion of as_block!
+&amp;lt;nickel macros&amp;gt;:10:12: 10:42 note: expansion site
+note: in expansion of closure expansion
+&amp;lt;nickel macros&amp;gt;:9:6: 10:54 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 10:62 note: in expansion of _middleware_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:60 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 7:46 note: in expansion of middleware!
+&amp;lt;nickel macros&amp;gt;:11:32: 11:78 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 21:78 note: in expansion of _router_inner!
+&amp;lt;nickel macros&amp;gt;:4:1: 4:43 note: expansion site
+&amp;lt;nickel macros&amp;gt;:1:1: 4:47 note: in expansion of router!
+src/main.rs:67:20: 71:6 note: expansion site
+error: aborting due to 2 previous errors
+Could not compile `simple-log`.
+
+To learn more, run the command again with --verbose.
+&lt;/pre&gt;
+
+
+
+&lt;p&gt;
+I asked about it on IRC, but I got no replies. Realistically, I should
+have probably tried to ask on IRC during a time that I had more
+patience, but it is what it is.
+&lt;/p&gt;
+
+&lt;p&gt;
+I submitted an issue on
+the &lt;code&gt;nickel.rs&lt;/code&gt; project, thinking that this was an issue with the
+macro. This was the last idea I had &amp;#x2013; I &lt;i&gt;knew&lt;/i&gt; how likely
+it was that I was wrong, but I saw no other way forward and I didn&#39;t
+want to give up.
+&lt;/p&gt;
+
+&lt;p&gt;
+And thus the issue at
+&lt;a href=&quot;https://github.com/nickel-org/nickel.rs/issues/241&quot;&gt;https://github.com/nickel-org/nickel.rs/issues/241&lt;/a&gt; was born. Ryman
+quickly saw
+my mistake and was kind enough to help me through it. Sure enough, he
+was right &amp;#x2013; if you&#39;re reading this Ryman, I owe you one.
+&lt;/p&gt;
+
+&lt;p&gt;
+The problem occurred in the following specific closure. Let us examine
+it to see what we can see:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+get &quot;**&quot; =&amp;gt; |_req, _res| {
+    do_log_time(logfile_path, auth_token)
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+If you notice, here, the call to &lt;code&gt;do_log_time&lt;/code&gt; is
+&lt;i&gt;transferring ownership&lt;/i&gt;
+of &lt;code&gt;logfile_path&lt;/code&gt; and &lt;code&gt;auth_token&lt;/code&gt; to that invocation of that
+function. This is where the problem is.
+&lt;/p&gt;
+
+&lt;p&gt;
+To my untrained eye, this looks &quot;normal&quot;, the most natural form of the
+code. There is an important caveat that I missed:
+&lt;i&gt;in its current form, this lambda cannot be called more than once&lt;/i&gt;.
+On the first time it is called, ownership of &lt;code&gt;logfile_path&lt;/code&gt; and
+&lt;code&gt;auth_token&lt;/code&gt; are transferred to the invocation of
+&lt;code&gt;do_log_time&lt;/code&gt;. Here&#39;s the thing: if this function is called again, it
+&lt;i&gt;couldn&#39;t&lt;/i&gt; transfer ownership to &lt;code&gt;do_log_time&lt;/code&gt;, as it no longer owns
+these two variables.
+&lt;/p&gt;
+
+&lt;p&gt;
+Thus, we get the error message:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+src/main.rs:69:39: 69:49 error: cannot move out of captured outer variable in an `Fn` closure
+&lt;/pre&gt;
+
+&lt;p&gt;
+I still don&#39;t think it makes any sense but now I understand at least
+that it deals with moving ownership &quot;out&quot; from a closure.
+&lt;/p&gt;
+
+&lt;p&gt;
+Anyway, the simplest way to fix this problem is to do:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+let mut server = Nickel::new();
+server.utilize(router! {
+    get &quot;**&quot; =&amp;gt; |_req, _res| {
+        do_log_time(logfile_path.clone(), auth_token.clone())
+    }
+});
+&lt;/pre&gt;
+
+&lt;p&gt;
+Now, upon each invocation, &lt;code&gt;logfile_path&lt;/code&gt; and &lt;code&gt;auth_token&lt;/code&gt; are still
+owned, but clones are created and ownership of the clones is transferred.
+&lt;/p&gt;
+
+&lt;p&gt;
+However, I&#39;d like to point out that I still believe this is a
+sub-optimal solution. Since passing ownership is not referentially
+transparent by definition, I&#39;m now leaning towards favoring the use of
+references whenever possible.
+&lt;/p&gt;
+
+&lt;p&gt;
+Would rust have been better if it used bare symbols to represent
+borrowed references, but some other symbol for owned, say &lt;code&gt;*&lt;/code&gt;? I don&#39;t
+know, but is an interesting question.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;outline-container-sec-9&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-9&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;9&lt;/span&gt; Refactoring&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-9&quot;&gt;
+&lt;p&gt;
+I&#39;m going to try a quick refactor to see if I can make things use
+references. This is going to be interesting, because I might have some
+unforeseen problems arise &amp;#x2013; we&#39;ll see!
+&lt;/p&gt;
+
+&lt;p&gt;
+I&#39;ve been reading the Martin Fowler Refactoring book, and this has
+renewed my appreciation for doing things in small steps at a
+time. First, I want to change just one ownership transfer to a borrow;
+lets start with &lt;code&gt;logfile_path&lt;/code&gt;. Starting with this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time(logfile_path: String, auth_token: Option&amp;lt;String&amp;gt;) -&amp;gt; String {
+    match log_time(logfile_path) {
+        Ok(entry) =&amp;gt; format!(&quot;Entry Logged: {}&quot;, entry),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+
+// ...
+
+fn main() {
+    // ...
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(logfile_path.clone(), auth_token.clone())
+        }
+    });
+   // ...
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+I end up with this:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+fn do_log_time(logfile_path: &amp;amp;String, auth_token: Option&amp;lt;String&amp;gt;) -&amp;gt; String {
+    match log_time(logfile_path.clone()) {
+        Ok(entry) =&amp;gt; format!(&quot;Entry Logged: {}&quot;, entry),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+
+// ...
+
+fn main() {
+    // ...
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(&amp;amp;logfile_path, auth_token.clone())
+        }
+    });
+   // ...
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+This refactoring might be called something like:
+&lt;i&gt;replace ownership with borrow and clone&lt;/i&gt;. If I own something, and I
+want to change this to a borrow, but I currently transfer ownership
+somewhere else, I must create my own copy internally first. This
+allows me to change my ownership to a borrow, and yet still transfer
+ownership when I must. Of course, this involves cloning the
+thing I borrowed, which duplicates memory and has performance costs,
+but it allows me to change this line of code safely. I
+can then keep replacing ownership with borrows without breaking
+anything.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+Applying this a few more times gives me this code:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+use std::io;
+
+#[macro_use] extern crate nickel;
+use nickel::Nickel;
+
+extern crate chrono;
+use chrono::{DateTime,Local};
+
+extern crate clap;
+use clap::{App,Arg};
+
+fn formatted_time_entry() -&amp;gt; String {
+    let local: DateTime&amp;lt;Local&amp;gt; = Local::now();
+    let formatted = local.format(&quot;%a, %b %d %Y %I:%M:%S %p\n&quot;).to_string();
+    formatted
+}
+
+fn record_entry_in_log(filename: &amp;amp;String, bytes: &amp;amp;[u8]) -&amp;gt; io::Result&amp;lt;()&amp;gt; {
+    let mut file = try!(OpenOptions::new().
+                        append(true).
+                        write(true).
+                        create(true).
+                        open(filename));
+    try!(file.write_all(bytes));
+    Ok(())
+}
+
+fn log_time(filename: &amp;amp;String) -&amp;gt; io::Result&amp;lt;String&amp;gt; {
+    let entry = formatted_time_entry();
+    {
+        let bytes = entry.as_bytes();
+
+        try!(record_entry_in_log(filename, &amp;amp;bytes));
+    }
+    Ok(entry)
+}
+
+fn do_log_time(logfile_path: &amp;amp;String, auth_token: &amp;amp;Option&amp;lt;String&amp;gt;) -&amp;gt; String {
+    match log_time(logfile_path) {
+        Ok(entry) =&amp;gt; format!(&quot;Entry Logged: {}&quot;, entry),
+        Err(e) =&amp;gt; format!(&quot;Error: {}&quot;, e)
+    }
+}
+
+fn main() {
+    let matches = App::new(&quot;simple-log&quot;).version(&quot;v0.0.1&quot;)
+        .arg(Arg::with_name(&quot;LOG FILE&quot;)
+             .short(&quot;l&quot;)
+             .long(&quot;logfile&quot;)
+             .required(true)
+             .takes_value(true))
+        .arg(Arg::with_name(&quot;AUTH TOKEN&quot;)
+             .short(&quot;t&quot;)
+             .long(&quot;token&quot;)
+             .takes_value(true))
+        .get_matches();
+
+    let logfile_path = matches.value_of(&quot;LOG FILE&quot;).unwrap().to_string();
+    let auth_token = match matches.value_of(&quot;AUTH TOKEN&quot;) {
+        Some(str) =&amp;gt; Some(str.to_string()),
+        None =&amp;gt; None
+    };
+
+    let mut server = Nickel::new();
+    server.utilize(router! {
+        get &quot;**&quot; =&amp;gt; |_req, _res| {
+            do_log_time(&amp;amp;logfile_path, &amp;amp;auth_token)
+        }
+    });
+
+    server.listen(&quot;127.0.0.1:6767&quot;);
+
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+I&#39;m going to need to deal with &lt;code&gt;auth_token&lt;/code&gt; soon, but for now this is
+a good place to stop.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div id=&quot;outline-container-sec-10&quot; class=&quot;outline-2&quot;&gt;
+&lt;h2 id=&quot;sec-10&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;10&lt;/span&gt; Conclusions &amp;amp; Retrospective on Part 4&lt;/h2&gt;
+&lt;div class=&quot;outline-text-2&quot; id=&quot;text-10&quot;&gt;
+&lt;p&gt;
+The application now parses options. However, it was tremendously
+difficult. I nearly ran out of options while trying solve my
+problems. I would have been really frustrated if the issue on
+nickel.rs wasn&#39;t resolved so helpfully.
+&lt;/p&gt;
+
+&lt;p&gt;
+Some lessons:
+&lt;/p&gt;
+
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;Transferring ownership is a tricky thing. I think a new guideline
+for me is to favor passing immutable borrows by default unless I
+&lt;i&gt;must&lt;/i&gt; pass ownership for whatever reason.
+&lt;/li&gt;
+
+&lt;li&gt;Cargo &lt;i&gt;really&lt;/i&gt; should have an option to pass arbitrary &lt;code&gt;rustc&lt;/code&gt;
+  arguments.
+&lt;/li&gt;
+
+&lt;li&gt;Some of the Rust error messages are still not very good.
+&lt;/li&gt;
+
+&lt;li&gt;Even if the error messages were poor, Rust was still right &amp;#x2013;
+transferring ownership inside my closure &lt;i&gt;was&lt;/i&gt; an error, since the
+function is called many times, once per web request. A lesson here
+for me is: if
+I don&#39;t understand an error message, it would be a good idea to
+&lt;i&gt;think through&lt;/i&gt; the code, specifically looking what might be hard for
+Rust to prove to be safe.
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+This experience also reinforces my frustration with compiled,
+strong-typed programming languages. Sometimes, you really need to
+examine things &lt;i&gt;in vivo&lt;/i&gt; in order to appreciate what is going
+on. In this example, it was hard to create a minimal reproducible that
+illustrated the problem.
+&lt;/p&gt;
+
+&lt;p&gt;
+When error messages don&#39;t give you the information you need, you&#39;re
+next best option is to start searching the Internet for information
+related to the error message. This doesn&#39;t really give you the ability
+to investigate, understand, and solve the problem yourself.
+&lt;/p&gt;
+
+&lt;p&gt;
+I think this could be alleviated by adding some ability to interrogate
+the state of the compiler at different times, to find more information
+about the problem. Something like opening an interactive prompt on
+compile errors would be really great, but even annotating the code to
+request detailed information from the compiler would be extremely useful.
+&lt;/p&gt;
+
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+I wrote this post over the course of about a month, mostly because I
+was so busy dealing with house buying stuff. At times, I was
+&lt;i&gt;extremely&lt;/i&gt; frustrated with some of this. I expected integrating
+option parsing to be the easiest of tasks!
+&lt;/p&gt;
+
+&lt;p&gt;
+However, realizing that Rust caught my bug really relieving. Even if
+the error message wasn&#39;t as good as I had hoped, I liked that this
+would have been a legitimate segmentation fault that I was saved
+from.
+&lt;/p&gt;
+
+&lt;p&gt;
+I hope that as Rust matures, the error messages get better. If they
+do, I think all my concerns will disappear.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 08 Aug 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-4--cli-option-parsing/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-4--cli-option-parsing/</guid>
+      </item>
+    
+      <item>
         <title>A Simple Web App in Rust, Part 3 -- Integration</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -3861,40 +5413,6 @@ over, and over again.
         <pubDate>Sun, 15 Mar 2015 00:00:00 -0400</pubDate>
         <link>http://joelmccracken.github.io//entries/context/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/context/</guid>
-      </item>
-    
-      <item>
-        <title>Backup Your Data, Kids</title>
-        <description>&lt;p&gt;
-Last weekend, I deleted a directory that was &quot;empty&quot; that included
-some of my personal data.
-&lt;/p&gt;
-
-&lt;p&gt;
-I use empty with scare quotes because the directory wasn&#39;t actually
-empty. I don&#39;t know what exactly caused it, but OS X was listing the
-directory as empty. I was trying to figure out what was going on with
-something else, noticed the directory, thought it was some junk
-directory I never actually used, deleted it, and then a few minutes
-later that a &lt;i&gt;number&lt;/i&gt; of directories were mysteriously empty. I
-restarted computer and they all came back.
-&lt;/p&gt;
-
-&lt;p&gt;
-I didn&#39;t lose that much data because I do keep most things in
-git. However, there were a few projects that I had been working on
-recently that I hadn&#39;t pushed remotely.
-&lt;/p&gt;
-
-&lt;p&gt;
-My personal lesson is to not have things that I want to keep not
-backed up, no matter how short a time it will be. I know, I know, this
-is obvious, common advice, but still.
-&lt;/p&gt;
-</description>
-        <pubDate>Sun, 15 Feb 2015 00:00:00 -0500</pubDate>
-        <link>http://joelmccracken.github.io//entries/backup-your-data-kids/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/backup-your-data-kids/</guid>
       </item>
     
   </channel>
