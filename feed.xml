@@ -33,7 +33,8 @@ struct User {
 }
 
 fn main() {
-    println!(&quot;{:?}&quot;, User { name: &quot;Gary&quot;.to_string(), id: 1234} );
+    let user = User { name: &quot;Gary&quot;.to_string(), id: 1234 };
+    println!(&quot;{:?}&quot;, user);
 }
 &lt;/pre&gt;
 
