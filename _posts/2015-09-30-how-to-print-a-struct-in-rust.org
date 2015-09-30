@@ -1,0 +1,45 @@
+---
+layout: post
+title:  How to Print a Struct in Rust
+---
+
+So, you're programming in Rust, and one day you think it would be
+really nice to be able to display a printed version of your structure in
+memory.
+
+This is one of the handier things I've learned to do while working
+with Rust. I use it all the time, and while I've memorized the
+pattern, I don't want to forget again.
+
+So, here it is:
+
+
+#+BEGIN_SRC
+#[derive(Debug)]
+struct User {
+    name: String,
+    id: i32
+}
+
+fn main() {
+    println!("{:?}", User { name: "Gary".to_string(), id: 1234} );
+}
+#+END_SRC
+
+Compiling and running:
+
+#+BEGIN_SRC
+$ rustc print-struct.rs
+$ ./print-struct
+User { name: "Gary", id: 1234 }
+#+END_SRC
+
+
+Lets look at the pieces:
+
+1. Add ~#[derive(Debug)]~ above the struct definition to have rust
+   extend the debug trait.
+2. Use ~{:?}~ inside your ~println!~ format string instead of the
+   usual ~{}~.
+
+That's it! It is really simple, but it makes development sooo much easier.
