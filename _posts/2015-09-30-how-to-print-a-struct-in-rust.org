@@ -22,7 +22,8 @@ struct User {
 }
 
 fn main() {
-    println!("{:?}", User { name: "Gary".to_string(), id: 1234} );
+    let user = User { name: "Gary".to_string(), id: 1234 };
+    println!("{:?}", user);
 }
 #+END_SRC
 
