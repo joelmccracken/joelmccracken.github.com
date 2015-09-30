@@ -7,6 +7,70 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>How to Print a Struct in Rust</title>
+        <description>&lt;p&gt;
+So, you&#39;re programming in Rust, and one day you think it would be
+really nice to be able to display a printed version of your structure in
+memory.
+&lt;/p&gt;
+
+&lt;p&gt;
+This is one of the handier things I&#39;ve learned to do while working
+with Rust. I use it all the time, and while I&#39;ve memorized the
+pattern, I don&#39;t want to forget again.
+&lt;/p&gt;
+
+&lt;p&gt;
+So, here it is:
+&lt;/p&gt;
+
+
+&lt;pre class=&quot;example&quot;&gt;
+#[derive(Debug)]
+struct User {
+    name: String,
+    id: i32
+}
+
+fn main() {
+    println!(&quot;{:?}&quot;, User { name: &quot;Gary&quot;.to_string(), id: 1234} );
+}
+&lt;/pre&gt;
+
+&lt;p&gt;
+Compiling and running:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+$ rustc print-struct.rs
+$ ./print-struct
+User { name: &quot;Gary&quot;, id: 1234 }
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+Lets look at the pieces:
+&lt;/p&gt;
+
+&lt;ol class=&quot;org-ol&quot;&gt;
+&lt;li&gt;Add &lt;code&gt;#[derive(Debug)]&lt;/code&gt; above the struct definition to have rust
+extend the debug trait.
+&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;{:?}&lt;/code&gt; inside your &lt;code&gt;println!&lt;/code&gt; format string instead of the
+usual &lt;code&gt;{}&lt;/code&gt;.
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;
+That&#39;s it! It is really simple, but it makes development sooo much easier.
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 30 Sep 2015 00:00:00 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/how-to-print-a-struct-in-rust/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/how-to-print-a-struct-in-rust/</guid>
+      </item>
+    
+      <item>
         <title>A Simple Web App in Rust, Part 4 -- CLI Option Parsing</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -5337,82 +5401,6 @@ effort.
         <pubDate>Thu, 26 Mar 2015 00:00:00 -0400</pubDate>
         <link>http://joelmccracken.github.io//entries/scope-creep/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/scope-creep/</guid>
-      </item>
-    
-      <item>
-        <title>Context</title>
-        <description>&lt;p&gt;
-I believe &lt;i&gt;context&lt;/i&gt; as a concept is one of the most under-appreciated
-ideas in programming. When it is not appreciated and planned for,
-context can leak into areas of code that it shouldn&#39;t.
-&lt;/p&gt;
-
-&lt;p&gt;
-In the &quot;Data, Context, and Interaction&quot; (&lt;i&gt;DCI&lt;/i&gt;) model, context takes a
-central role. The intuition is that code and ideas may be correct in a
-certain context while being confusing and unclear in another.
-&lt;/p&gt;
-
-&lt;p&gt;
-We have an intuitive grasp of what context is. If we talk about a
-small piece of code, context might refer to code from the same
-package, class, or module. Or, it
-might refer to the code&#39;s usage &amp;#x2013; the context from which it is
-invoked.
-I think this is the most subtle form of coupling due to context that may arise.
-&lt;/p&gt;
-
-&lt;p&gt;
-Occasionally, I encounter code that looks a little strange.
-Typically, I&#39;ll then do a search of the code base, trying to find
-where that code is called from. Normally, I&#39;m able to understand what
-confused me: some oddity in the caller prompted the author to change
-the code-in-question, adding some behavior specific to that caller.
-&lt;/p&gt;
-
-
-&lt;p&gt;
-What problems does context leaking cause?
-&lt;/p&gt;
-
-&lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;It hampers reuse. I&#39;m less likely to find code useful that has
-strange pieces that were specific to some other story from a year
-ago. Often, the behavior
-&lt;/li&gt;
-
-&lt;li&gt;It makes the code more complicated. As I hinted at above, this kind
-of thing almost always makes the called code look &lt;i&gt;bizarre&lt;/i&gt;. The
-only way to make sense of it being to look up and understand
-the context of another caller.
-&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;
-What can be done?
-&lt;/p&gt;
-
-&lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;Limit context-specific code to &lt;i&gt;that context&lt;/i&gt;. For example, don&#39;t add logic
-specific to CSV importing to your core models. If you identify
-something that is &lt;i&gt;essential&lt;/i&gt; to the model, sure, add it.
-&lt;/li&gt;
-
-&lt;li&gt;Break your application into modules. When all the concepts in your
-application are blended together, it can be really hard to identify
-kind of context leakage.
-&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;
-Failure to recognize context and conceptual boundaries will make your
-code worse. Throughout my career, it&#39;s something I&#39;ve seen over, and
-over, and over again.
-&lt;/p&gt;
-</description>
-        <pubDate>Sun, 15 Mar 2015 00:00:00 -0400</pubDate>
-        <link>http://joelmccracken.github.io//entries/context/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/context/</guid>
       </item>
     
   </channel>
