@@ -81,7 +81,7 @@ branch makes it publicly viewable. Which is awesome.</p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/uploaded-talk-functional-programming-in-ruby/";
+       this.page.url = "http://joelmccracken.github.io/entries/uploaded-talk-functional-programming-in-ruby/";
        this.page.identifier = "/entries/uploaded-talk-functional-programming-in-ruby";
        this.page.title = "Uploaded Slides from "Functional Programming in Ruby" Talk";
    };
@@ -90,7 +90,6 @@ branch makes it publicly viewable. Which is awesome.</p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

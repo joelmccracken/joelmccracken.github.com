@@ -268,7 +268,7 @@ on top of Jekyll, because that I what I started with. </p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/prototyping-applications-in-emacs-svbtle/";
+       this.page.url = "http://joelmccracken.github.io/entries/prototyping-applications-in-emacs-svbtle/";
        this.page.identifier = "/entries/prototyping-applications-in-emacs-svbtle";
        this.page.title = "Prototyping Applications in Emacs: Svbtle Model of Content Creation";
    };
@@ -277,7 +277,6 @@ on top of Jekyll, because that I what I started with. </p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

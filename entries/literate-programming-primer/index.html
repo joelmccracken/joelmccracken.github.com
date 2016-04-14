@@ -173,7 +173,7 @@ publishable. For now, I'll just plug away, because I need to publish.
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/literate-programming-primer/";
+       this.page.url = "http://joelmccracken.github.io/entries/literate-programming-primer/";
        this.page.identifier = "/entries/literate-programming-primer";
        this.page.title = "A Literate Programming Primer";
    };
@@ -182,7 +182,6 @@ publishable. For now, I'll just plug away, because I need to publish.
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

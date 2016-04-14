@@ -91,7 +91,7 @@ instances of these things. Stay tuned. </p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/a-restatement/";
+       this.page.url = "http://joelmccracken.github.io/entries/a-restatement/";
        this.page.identifier = "/entries/a-restatement";
        this.page.title = "A Restatement";
    };
@@ -100,7 +100,6 @@ instances of these things. Stay tuned. </p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

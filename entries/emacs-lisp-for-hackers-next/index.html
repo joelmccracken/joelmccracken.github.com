@@ -129,7 +129,7 @@ various ways to use and define them. </p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/emacs-lisp-for-hackers-next/";
+       this.page.url = "http://joelmccracken.github.io/entries/emacs-lisp-for-hackers-next/";
        this.page.identifier = "/entries/emacs-lisp-for-hackers-next";
        this.page.title = "Emacs Lisp for Hackers: Hello World";
    };
@@ -138,7 +138,6 @@ various ways to use and define them. </p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

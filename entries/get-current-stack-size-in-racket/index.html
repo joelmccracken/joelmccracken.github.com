@@ -147,7 +147,7 @@ that functions are executing within the space we expect them to.
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/get-current-stack-size-in-racket/";
+       this.page.url = "http://joelmccracken.github.io/entries/get-current-stack-size-in-racket/";
        this.page.identifier = "/entries/get-current-stack-size-in-racket";
        this.page.title = "SICP & Getting the Size of the Current "Stack" in Racket";
    };
@@ -156,7 +156,6 @@ that functions are executing within the space we expect them to.
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

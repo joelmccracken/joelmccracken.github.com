@@ -101,7 +101,7 @@ brings you as much joy as it has brought me. </p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/what-emacs-means-to-me/";
+       this.page.url = "http://joelmccracken.github.io/entries/what-emacs-means-to-me/";
        this.page.identifier = "/entries/what-emacs-means-to-me";
        this.page.title = "What Emacs Means to Me";
    };
@@ -110,7 +110,6 @@ brings you as much joy as it has brought me. </p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();

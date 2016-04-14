@@ -66,7 +66,7 @@ important to help other people. I&#39;d love to hear what you think.</p>
    var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
    var disqus_config = function () {
-       this.page.url = "/entries/gaining-words/";
+       this.page.url = "http://joelmccracken.github.io/entries/gaining-words/";
        this.page.identifier = "/entries/gaining-words";
        this.page.title = "Just put up a page about words";
    };
@@ -75,7 +75,6 @@ important to help other people. I&#39;d love to hear what you think.</p>
        var d = document, s = d.createElement('script');
 
        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
-
        s.setAttribute('data-timestamp', +new Date());
        (d.head || d.body).appendChild(s);
    })();
