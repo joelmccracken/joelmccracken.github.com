@@ -1,4 +1,4 @@
-EMACS_PATH=File.expand_path "~/Applications/Emacs.app/Contents/MacOS/Emacs"
+EMACS_PATH="/usr/local/Cellar/emacs-mac/emacs-24.5-z-mac-5.15/Emacs.app/Contents/MacOS/Emacs"
 
 module Jekyll
   class OrgConverter < Converter
