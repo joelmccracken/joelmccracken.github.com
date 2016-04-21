@@ -1,7 +1,7 @@
 name: Joel's Journal
 markdown: redcarpet
 highlighter: pygments
-description: "My personal place to write about the things I find interesting. Programming, Lisp, Ruby, Emacs, etc."
+description: "Nebby about Tech"
 url: http://joelmccracken.github.io
 permalink: /entries/:title/
 excerpt_separator: ""
