@@ -11,9 +11,9 @@ html, body { height: 100%; }
 body {
   background-color: #FFF;
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.5;
-  font-weight: 300;
+  font-weight: 400;
   background-color: #fdfdfd;
 }
 
@@ -29,10 +29,10 @@ a:visited { color: #205caa; }
 .wrap:after { content:""; display:table; }
 .wrap:after { clear: both; }
 .wrap {
-  max-width: 800px;
-  padding: 0 30px;
-  margin: 0 auto;
-  zoom: 1;
+    max-width: 30em;
+    padding: 0 30px;
+    margin: 0 auto;
+    zoom: 1;
 }
 
 
