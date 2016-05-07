@@ -1,0 +1,90 @@
+* tech on radar
+haskell
+elm
+elixir
+purescript
+racket
+emacs
+clojure
+rust
+* haskell
+** pros
+may have great promise for me as a solo software dev
+type theory exposure/familiariy
+can be used to write cli apps
+pure fp
+** cons
+not many jobs
+academic/impractica community
+problems iwth tooling
+hard. will take a while to become productive
+best use cases are server application and scripting lang
+* Elm
+** pros
+js lang
+- games
+- apps
+sexy
+type theory exposure, intro to haskell
+** cons
+new
+unproven
+unknown future
+no real server side/shell script support yet
+* Racket
+** pros
+really interesting
+want to explore these ideas in pl design eventually
+ignites my passion
+academic access
+** cons
+single threaded
+small community
+no "jobs"
+* Emacs
+** pros
+useful; use it all the time
+may be great platform for shell scripts
+hacker cred
+i love it
+** cons
+no good web ui story
+no direct value to any companies
+other editors may eventually be better
+elisp is not as interesting as many other languages
+* Rust
+** pros
+systems lang, and i dont know one really
+- os dev
+- vm dev
+- 3d dev
+interesting types
+** cons
+no gc
+weird abstractions
+impure fp
+not useful in my own career
+* Elixir
+** pros
+erlang
+macros
+great server/webdev career fit
+small community
+good tools
+dialyzer
+** cons
+slow for cpu intensive applications
+not incredibly interesting
+* Clojure
+** pros
+lisp
+close to racket community
+reasonable side community
+focus on purity
+jobs
+lots to learn
+** cons
+boring kinda
+java slow, slow to start up
+relaly only good for server apps
+i dont know java
