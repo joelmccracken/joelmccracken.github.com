@@ -162,7 +162,7 @@ a:visited { color: #205caa; }
 
 .posts .post-link {
   font-size: 24px;
-  letter-spacing: -1px;
+/*  letter-spacing: -1px;*/
   line-height: 1;
 }
 
