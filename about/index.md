@@ -3,8 +3,22 @@ layout: page
 title: About
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+Facts about Joel:
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+- Joel McCracken is a software engineer from Pittsburgh.
+- He loves to program, and often thinks about how to program better.
+- He studied computer science at the University of Pittsburgh.
+- Some technology he likes, has familiarity with, and may or may not talk about on here:
+  - Lisp
+     - Scheme
+     - Racket
+     - Emacs Lisp
+  - Ruby
+  - Trendy
+     - Elixir
+     - Haskell
+     - Elm
+     - Rust
+- He has some familiarity with other technologies, but doesn't find them that interesting.
+- Incidentally, he finds talking about himself in the third person uncomfrotable.
+- He is comforted by lists.
