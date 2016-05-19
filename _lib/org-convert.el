@@ -16,6 +16,7 @@
   ;; not doing anything for now
   )
 
+(setq debug-on-error t)
 
 (defvar org-jekyll-convert-string nil)
 (defvar org-jekyll-convert-string-size nil)
@@ -36,9 +37,9 @@
   (when org-jekyll-convert-string-size
     (when (= (string-bytes org-jekyll-convert-string)
              org-jekyll-convert-string-size)
-
-      (process-send-string process
-                           (compile-org-file org-jekyll-convert-string))
+      (when (> org-jekyll-convert-string-size 0)
+        (process-send-string process
+                             (compile-org-file org-jekyll-convert-string)))
       (delete-process process)
       (setq org-jekyll-convert-string nil
             org-jekyll-convert-string-size nil))))
