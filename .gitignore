@@ -2,3 +2,4 @@ _site
 _github_deploy
 .sass-cache
 .deploy/
+.jekyll-metadata
