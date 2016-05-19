@@ -7,6 +7,63 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Homebrew Command `brew leaves`: List Packages Without Dependents</title>
+        <description>&lt;p&gt;
+Have you ever wondered what packages you&#39;ve installed via
+Homebrew? You know, the ones that you&#39;ve actually purposefully
+installed:
+&lt;/p&gt;
+
+&lt;pre class=&quot;example&quot;&gt;
+brew install &amp;lt;whatever&amp;gt;
+&lt;/pre&gt;
+
+&lt;p&gt;
+I have always wanted this, for a number of reasons, but one
+of the main reasons is to quickly see what software I have installed on
+my machine.
+&lt;/p&gt;
+
+&lt;p&gt;
+To be clear, &lt;code&gt;brew leaves&lt;/code&gt; doesn&#39;t actually show what you have manually
+installed, but it shows the commands that have no dependents. &lt;code&gt;leaves&lt;/code&gt; is a
+reasonable &lt;i&gt;approximation&lt;/i&gt; of this, though.
+&lt;/p&gt;
+
+&lt;p&gt;
+Additionally, I like to use the command as a quick way to show things that I
+can &lt;i&gt;probably&lt;/i&gt; remove from my system without worry. Something I use that isn&#39;t
+in homebrew might still use the package, but you&#39;ll have that.
+&lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Sometimes, you just miss things in documentation.
+I&#39;ve looked at the &lt;code&gt;brew&lt;/code&gt; man page a number of times while this feature
+has been in homebrew, and I haven&#39;t ever noticed it. I&#39;m not sure if it was
+a product of poor searching, or me reading it and not comprehending it.
+The man page says this for the &lt;code&gt;leaves&lt;/code&gt; subcommand:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+Show installed formulae that are not dependencies of another installed formula.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+You live and you learn.
+&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 May 2016 22:02:12 -0400</pubDate>
+        <link>http://joelmccracken.github.io//entries/brew-leaves/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/brew-leaves/</guid>
+      </item>
+    
+      <item>
         <title>How to Print a Struct in Rust</title>
         <description>&lt;p&gt;
 So, you&#39;re programming in Rust, and one day you think it would be
@@ -5297,111 +5354,6 @@ would like a refresher into the topic), I highly recommend it.
         <pubDate>Sat, 16 May 2015 00:00:00 -0400</pubDate>
         <link>http://joelmccracken.github.io//entries/a-mid-course-review-of-from-nand-to-tetris/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-mid-course-review-of-from-nand-to-tetris/</guid>
-      </item>
-    
-      <item>
-        <title>Scope Creep, or, the Decline and Fall of My Personal Projects</title>
-        <description>&lt;p&gt;
-Scope creep can kill any project. There&#39;s no doubt about
-that. However, it surprises me just how often this problem
-manifests itself in my personal projects &amp;#x2013; that is, whatever I am
-hacking on at the moment. I wonder what causes the
-problem?
-&lt;/p&gt;
-
-&lt;p&gt;
-It is easy to give in to the urge to slowly add more features to
-projects. Its so easy to say &quot;Oh! one more thing!&quot;, especially when you
-are your own boss, and there isn&#39;t necessarily anything that &lt;i&gt;needs&lt;/i&gt;
-to be delivered &amp;#x2013; There isn&#39;t necessarily an end goal, or singular,
-driving purpose. 
-&lt;/p&gt;
-
-&lt;p&gt;
-You&#39;d think it would be easier to have a fixed scope on my own
-projects. After all, I am the one who defines the scope. I&#39;m also
-familiar with the problems of scope creep. As a general principle,
-I think it is probably true that its easier to control the scope on
-something you define (because &lt;i&gt;I&lt;/i&gt; control and define it, after
-all). However, I let my 
-wandering curiosity influence the direction of the projects I work on.
-This creates an ever-shifting set of goals that leaves a wake of
-half-done things behind. This makes sense, because my satisfying my
-curiosity brings me great pleasure &amp;amp; makes up a huge part of who I am.
-&lt;/p&gt;
-
-&lt;p&gt;
-The problem, though, is
-that the spark of understanding comes, not at the &lt;i&gt;end&lt;/i&gt; of a project or
-investigation, but at the beginning of the project when things are
-still in a formative state. But once that understanding comes, it
-&lt;i&gt;moves&lt;/i&gt;, ever forward.
-&lt;/p&gt;
-
-&lt;p&gt;
-Another aspect to this is that most of my personal projects do not
-have an explicit goal I&#39;m trying to achieve. I start with &lt;i&gt;some&lt;/i&gt; idea of what
-I want to do, but the project is defined ad hoc as I work through
-it. This is &lt;i&gt;fun&lt;/i&gt;, but I think it is less effective than having a
-specific, finite goal in mind (at least effective for producing useful
-artifacts). 
-&lt;/p&gt;
-
-&lt;p&gt;
-I&#39;m going to go one step further. There&#39;s another pattern I&#39;ve
-noticed, and this one is a bit less self-indulgent: when something
-gets too confusing and I get frustrated, I tend to drop the
-project. I&#39;m probably less worried about this, because normally I
-change gears and work on something that would fill in my knowledge
-gaps, hopefully removing those frustrations. 
-&lt;/p&gt;
-
-&lt;p&gt;
-I guess it ultimately depends upon what I&#39;m trying to do. Am I trying
-to produce things on topics I love, or am I just trying to learn? If
-I&#39;m trying to learn, is this the best way to do it? Am I just fooling
-myself, getting exciting about projects and then dropping them?
-&lt;/p&gt;
-
-&lt;p&gt;
-&amp;#x2014;
-&lt;/p&gt;
-
-&lt;p&gt;
-I recently started working on SICP again, and it got me thinking about
-this problem. Initially, my goal was something like: read the book,
-work through the exercises, and put the results on GitHub.
-&quot;Oh,&quot; I thought, &quot;the code should really have unit
-tests written to show that it works. I&#39;ve been wanting to play with
-RackUnit anyway&quot;. A few exercises later, I thought, &quot;I should really look into
-Scribble for documenting the code I am working on. I could use Plot to
-create charts in the Scribble docs, and show interactive examples of
-how it all works through the Literate-like facilities in Scribble&quot;.
-&lt;/p&gt;
-
-&lt;p&gt;
-To be honest, this project definition has grown into something
-extremely interesting. I just wish it wasn&#39;t &lt;i&gt;so much work&lt;/i&gt;, a little more
-finite, and easier to make progress on. As it stands, this is really a
-huge task. I started writing this post because I wanted to debug my
-brain, sorting out the threads that compose this phenomenon.
-&lt;/p&gt;
-
-
-&lt;p&gt;
-&amp;#x2014;
-&lt;/p&gt;
-
-&lt;p&gt;
-What lessons can I learn? I think I need to be more careful to think
-through my project goals, and learn to recognize when I&#39;m changing
-them &amp;#x2013; and before changing them, decide if the change is worth the
-effort. 
-&lt;/p&gt;
-</description>
-        <pubDate>Thu, 26 Mar 2015 00:00:00 -0400</pubDate>
-        <link>http://joelmccracken.github.io//entries/scope-creep/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/scope-creep/</guid>
       </item>
     
   </channel>
