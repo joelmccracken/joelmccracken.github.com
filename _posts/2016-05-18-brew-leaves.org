@@ -1,0 +1,39 @@
+---
+title: "Homebrew Command `brew leaves`: List Packages Without Dependents"
+date: 2016-05-18T22:02:12-04:00
+layout: post
+---
+
+Have you ever wondered what packages you've installed via
+Homebrew? You know, the ones that you've actually purposefully
+installed:
+
+#+BEGIN_SRC
+brew install <whatever>
+#+END_SRC
+
+I have always wanted this, for a number of reasons, but one
+of the main reasons is to quickly see what software I have installed on
+my machine.
+
+To be clear, ~brew leaves~ doesn't actually show what you have manually
+installed, but it shows the commands that have no dependents. ~leaves~ is a
+reasonable /approximation/ of this, though.
+
+Additionally, I like to use the command as a quick way to show things that I
+can /probably/ remove from my system without worry. Something I use that isn't
+in homebrew might still use the package, but you'll have that.
+
+---
+
+Sometimes, you just miss things in documentation.
+I've looked at the ~brew~ man page a number of times while this feature
+has been in homebrew, and I haven't ever noticed it. I'm not sure if it was
+a product of poor searching, or me reading it and not comprehending it.
+The man page says this for the ~leaves~ subcommand:
+
+#+BEGIN_QUOTE
+Show installed formulae that are not dependencies of another installed formula.
+#+END_QUOTE
+
+You live and you learn.
