@@ -6,19 +6,20 @@ date: 2016-06-05T22:01:24-04:00
 
 I'm working on an Elm emulator for the the game
 /[[http://tomorrowcorporation.com/humanresourcemachine][Human Resource Machine]]/.
-The goal of the game is to solve problems with a sort of "assembly-like" language,
-which you put together by dragging commands around as blocks.
+The goal of the game is to use a sort of "assembly-like" language to control a character
+and have them perform requested tasks.
+The player puts commands together by dragging commands around as blocks.
 Its a basically a "visual" assembly language.
-The exercises have been fun and challenging enough to keep me interested.
+The levels in the game have been fun and challenging enough to keep me interested.
 
 Each level is presented as a conveyor belt inbox, a conveyor belt outbox, and some place to work with.
 The player is asked to transform the input in some way, using the commands that are available for this level.
 
 I thought it would be a fun exercise to write an emulator for the the game in Elm.
 I want to fix a number of usability issues I see in the game.
-Also, I've been wanting to learn to write more games.
+Also, I've been wanting to learn to write games.
 While this isn't a game, it is closely tied to a game,
-and scratches many of the same creative itches.
+and I think it addresses the same desire.
 
 I'm still learning Elm, so this code probably has many flaws. Still, I
 believe it is useful to see things through my eyes, as they are, now.
@@ -40,8 +41,8 @@ I first wanted to write a "proof-of-concept", from which I can add more features
 
 The smallest design that I could come up with for this proof-of-concept is:
 - Only emulate the first level, which has the most basic set of instructions.
-- Each second, apply the next instruction to the machine state.
-- Show the machine state after each instruction is calculated.
+- Each second, apply the next instruction to the machine status.
+- Show the machine status after each instruction is calculated.
 
 The first level consists of a simple task: For each item on an inbox conveyor belt, place it on the outbox conveyor belt.
 We are given two possible instructions: 'inbox', and 'outbox'. The 'inbox' command instructs the character to pick
@@ -50,13 +51,14 @@ and hold it in their hands. The 'outbox' command says to place whatever is being
 * The Program
 Lets go through the solution, piece by piece, starting with the most straightforward pieces first.
 
+** Model
 The easiest way to represent instructions is as a Union type:
 #+BEGIN_SRC elm
 type Instruction = Inbox
                  | Outbox
 #+END_SRC
 
-Hard-coding the solution program as an array of instructions makes this MVP easier:
+Hard-coding the solution program as an array of instructions makes this proof of concept easier:
 
 #+BEGIN_SRC elm
 program : Array Instruction
@@ -74,10 +76,11 @@ program =
 It seems like every Elm program has a "Model" type, and this is no exception:
 
 #+BEGIN_SRC elm
+import Array exposing (Array)
 
 type alias Model =
     { program : Array Instruction
-    , state  : MachineState
+    , status  : MachineStatus
     }
 #+END_SRC
 
@@ -91,38 +94,223 @@ explore what the solution may look like in the future.
   since it is hard-coded and won't change. However, we want this to be different
   very soon, so it makes sense to just put this on the model, for now.
 
-- ~state~ is a separate type because in the future I want to maintain a list of all states,
+- ~status~ is a separate type because in the future I want to maintain a list of all statuss,
   for debuggability. It becomes just a little easier to refactor to a list if it is
-  separate, and allows for a little bit of exploration of what a ~MachineState~ type
+  separate, and allows for a little bit of exploration of what a ~MachineStatus~ type
   should contain.
 
 #+BEGIN_SRC elm
-type alias MachineState =
-    { complete : Bool
-    , held     : Value
-    , input    : List Value
-    , output   : List Value
-    , pc       : Int
+type alias MachineStatus =
+    { status : Status
+    , held   : Maybe Value
+    , input  : List Value
+    , output : List Value
+    , pc     : Int
     }
+
+type Status = Running | Complete | Error String
 #+END_SRC
-- ~complete~ signifies execution completion. I strongly suspect that this will go somewhere else, as
+- ~status~ signifies execution completion. I strongly suspect that this will go somewhere else, as
   it feels strange to have it in here. But, this is OK for now.
 - ~held~ represents the current value that is being held. In HRM, what you
   hold is akin to a CPU register; your character do calculations with and moves values to and
-  from their hands -- which, really, is just like real life.
+  from their hands -- which, really, is just like real life. This is a ~Maybe~ because it is possible
+  for the hands to be empty.
 - ~input~ represents the input conveyor. Values are taken from it and manipulated.
-- ~input~ represents the output conveyor, onto which values are placed.
-- ~pc~ represents the "program counter". This is the next instruction to be executed.
+- ~output~ represents the output conveyor, onto which values are placed.
+- ~pc~ represents the "program counter". This is the index of the next instruction to be executed.
 
 You may notice that the above references a ~Value~. This is the "values" that may be worked with
 in the game:
 #+BEGIN_SRC elm
-type Value = VInt Int
-           | VNothing
+type Value = Int
 #+END_SRC
-For now, we are only working with integers. It is also possible for something that stores a value
-to be empty, which is represented as ~VNothing~.
+For now, we are only working with integers.
 
-You might think that the VNothing is similar to ~Maybe~ (http://package.elm-lang.org/packages/elm-lang/core/4.0.1/Maybe).
-I think it is, too. I remember that in later levels the game works with letters, so I think there
-needs to be /some/ special type here.
+** Program Scaffolding & View
+
+I'm not sure where to mention this, but I want to include here the bits and pieces that
+make the program actually run. I think its helpful to get them out of the way.
+
+#+BEGIN_SRC elm
+import Html.App as Html
+
+main : Program Never
+main =
+  Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+
+#+END_SRC
+
+The program is an ~Html.program~, with the basic wiring.
+
+#+BEGIN_SRC elm
+import Time exposing (Time, second)
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Time.every second Tick
+#+END_SRC
+
+Tick each second. The only input the program receives for now are
+ticks.
+
+The view can also be made fairly simple:
+#+BEGIN_SRC elm
+import Html exposing (Html, div, text)
+
+
+-- VIEW
+
+renderState : MachineState -> Html a
+renderState state =
+    div [] [text (toString state)]
+
+
+view : Model -> Html Msg
+view model =
+  div []
+    [ div [] [text (toString model.program)]
+    , renderState model.state
+    ]
+#+END_SRC
+
+Instead of worrying about anything very complicated, we just use Elm's ~toString~ method
+to create a user-readable version of the data structure.
+** The Update
+The "meat" of the application is the update functionality. This is the code that actually
+emulates the machine.
+
+With our types defined, the code is not necessarily overly-complicated:
+
+#+BEGIN_SRC elm
+-- UPDATE
+
+type Msg
+  = Tick Time
+
+
+update : Msg -> Model -> (Model, Cmd Msg)
+update action model =
+  case action of
+    Tick newTime ->
+        let
+            isComplete = model.state.status
+        in
+            case isComplete of
+                Running -> (stepModel model, Cmd.none)
+                _       -> (model, Cmd.none)
+#+END_SRC
+
+The function ~update~ is the main loop. On each tick of the clock,
+apply an instrution and compute the next version of the model
+if the machine is still running.
+
+I didn't point this out earlier, but there are two other status types:
+~Complete~ and ~Error String~. Complete indicates that the program completed
+successfully, and is no longer running. ~Error String~ provides a way to report
+an error if the program tries to do something invalid, such as:
+
+- Finish without the correct values being on the output conveyor.
+- Tries to pick up something from the input conveyor when the conveyor is empty.
+- Tries to place something on the output conveyor when the character is not
+  holding anything.
+
+Although, there are others. Next up, ~stepModel~, which is where things begin
+to get interesting.
+
+#+BEGIN_SRC elm
+stepModel : Model -> Model
+stepModel model =
+  let curr = currentInstruction model.program model.state.pc
+  in case curr of
+    Just instruction  ->
+      processInstruction instruction model
+    Nothing        ->
+      updateState model (\s-> { s | status = Error "The machine attempted to access an invalid instruction."})
+#+END_SRC
+
+Before calculating the next state,
+Calculating the next value of the model involves:
+1. Finding the current instruction to execute.
+2. Performing a specific action based upon the current instruction.
+3. Performing some bookkeeping: Move to the next counter, complete
+   the state if the program has finished, etc.
+
+Lets look at each of these functions, one at a time.
+
+#+BEGIN_SRC elm
+currentInstruction : Array Instruction -> Int -> Instruction
+currentInstruction instructions pc =
+  case (Array.get pc instructions) of
+    Just a  -> a
+    Nothing -> Debug.crash "you're trying to access an instruction that doesn't exist"
+
+#+END_SRC
+
+This is one of those situations where a type system makes things interesting. I wouldn't have
+thought about ~Array.get~ possibly failing without it returning a ~Maybe~, which I then have
+to deal with.
+
+#+BEGIN_SRC elm
+updateState : Model -> (MachineState -> MachineState) -> Model
+updateState model updater =
+    let newState = updater model.state
+    in { model | state = newState }
+
+
+stepPC : Model -> Model
+stepPC model =
+    updateState model (\s-> {s | pc = s.pc + 1 })
+
+
+completeIfFinished : Model -> Model
+completeIfFinished model =
+  let programLength = Array.length model.program
+      pc = model.state.pc
+  in if pc < programLength then
+         model
+     else
+         updateState model complete
+
+
+shiftInboxToHands : Model -> Model
+shiftInboxToHands model =
+  let first = List.head model.state.input
+      rest  = case List.tail model.state.input of
+                Just r  -> r
+                Nothing -> []
+  in case first of
+       Just val ->
+           updateState model (\s-> { s | held = Just val, input = rest})
+       Nothing -> updateState model (\s-> {s | status = Error "tried to pick up an item from the inbox, but inbox was empty" })
+
+
+-- state manipulators
+
+complete : MachineState -> MachineState
+complete state = { state | status = Complete }
+
+
+shiftHandsToOutbox : Model -> Model
+shiftHandsToOutbox model =
+  let currentState = model.state
+  in case model.state.held of
+    Nothing  -> updateState model complete
+    Just val -> { model | state =
+                     { currentState
+                         | held = Nothing,
+                           output  = (val :: currentState.output)
+                     }}
+
+stepModel : Model -> Model
+stepModel model =
+  let curr = currentInstruction model.program model.state.pc
+  in case curr of
+    Inbox ->
+      shiftInboxToHands model |> stepPC |> completeIfFinished
+    Outbox ->
+      shiftHandsToOutbox model |> stepPC |> completeIfFinished
+
+
+
+#+END_SRC
