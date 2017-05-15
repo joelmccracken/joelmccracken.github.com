@@ -30,8 +30,7 @@ So, I assume that you are a programmer, and that you know nothing
 about functional programming or Lisp. If you do not know how to
 program, then I suggest you look into document that would be more
 suited to you, [An Introduction to Programming in Emacs
-Lisp](http://www.gnu.org/software/emacs/emacs-lisp-intro/).
-
+Lisp](http://www.gnu.org/software/emacs/manual/html_node/eintr/index.html)
 This first post covers the very basics of lisp.
 
 # Getting Started #
@@ -213,4 +212,3 @@ should hopefully be enough to enable you to understand most Emacs Lisp
 that you come accross. But for now, this covers the essentials of a
 Lisp program, and you should already be equipped to "read" an Emacs Lisp
 program while relying heavily on a reference.
-
