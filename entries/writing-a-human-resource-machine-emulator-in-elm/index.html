@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Writing a 'Human Resource Machine' Emulator in Elm</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Nebby about Tech">
+    <link rel="canonical" href="http://joelmccracken.github.io/entries/writing-a-human-resource-machine-emulator-in-elm/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+</head>
+
+    <body>
+
+        <header class="site-header">
+
+  <div class="wrap">
+
+    <a class="site-title" href="/">Joel's Journal</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        <a class="page-link" href="/about">About</a>
+        <a class="page-link" href="/projects">Projects</a>
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+        <div class="page-content">
+            <div class="wrap">
+                <div class="post">
+                    <header class="post-header">
+                        <h1>Writing a 'Human Resource Machine' Emulator in Elm</h1>
+                        <p class="meta">Jun 5, 2016</p>
+                    </header>
+
+                    <article class="post-content">
+                        <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Goals and Ideas</a></li>
+<li><a href="#sec-2">2. MVP</a></li>
+<li><a href="#sec-3">3. The Program</a>
+<ul>
+<li><a href="#sec-3-1">3.1. Model</a></li>
+<li><a href="#sec-3-2">3.2. Program Scaffolding &amp; View</a></li>
+<li><a href="#sec-3-3">3.3. The Update</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+I'm working on an Elm emulator for the the game
+<i><a href="http://tomorrowcorporation.com/humanresourcemachine">Human Resource Machine</a></i>.
+The goal of the game is to use a sort of "assembly-like" language to control a character
+and have them perform requested tasks.
+The player puts commands together by dragging commands around as blocks.
+Its a basically a "visual" assembly language.
+The levels in the game have been fun and challenging enough to keep me interested.
+</p>
+
+<p>
+Each level is presented as a conveyor belt inbox, a conveyor belt outbox, and some place to work with.
+The player is asked to transform the input in some way, using the commands that are available for this level.
+</p>
+
+<p>
+I thought it would be a fun exercise to write an emulator for the the game in Elm.
+I want to fix a number of usability issues I see in the game.
+Also, I've been wanting to learn to write games.
+While this isn't a game, it is closely tied to a game,
+and I think it addresses the same desire.
+</p>
+
+<p>
+I'm still learning Elm, so this code probably has many flaws. Still, I
+believe it is useful to see things through my eyes, as they are, now.
+If you notice something that could be better, please, let me know
+in the comments.
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Goals and Ideas</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+What would make a good online emulator, something that people might find worth using?
+</p>
+<ul class="org-ul">
+<li>The HRM editor is very basic. While good, I find it frustrating because of the inability
+to write comments, among other things.
+Later on in the game, you gain the ability to create little comment-y slips of paper, but
+this requires you
+to actually "draw" the words with your mouse/trackpad. It is really, really bad.
+I'd much rather work with "normal" comments, and there is no practical reason
+</li>
+<li>Instead of working with text, in HRM you drag around boxes with words in them. This is more akin
+to programming with the MIT scratch project than traditional programming. This
+is OK, and I think it is a good idea for beginners, but I personally want to write text.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> MVP</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+I first wanted to write a "proof-of-concept", from which I can add more features, over time.
+</p>
+
+<p>
+The smallest design that I could come up with for this proof-of-concept is:
+</p>
+<ul class="org-ul">
+<li>Only emulate the first level, which has the most basic set of instructions.
+</li>
+<li>Each second, apply the next instruction to the machine status.
+</li>
+<li>Show the machine status after each instruction is calculated.
+</li>
+</ul>
+
+<p>
+The first level consists of a simple task: For each item on an inbox conveyor belt, place it on the outbox conveyor belt.
+We are given two possible instructions: 'inbox', and 'outbox'. The 'inbox' command instructs the character to pick
+something up off the inbox
+and hold it in their hands. The 'outbox' command says to place whatever is being held on the outbox.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> The Program</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lets go through the solution, piece by piece, starting with the most straightforward pieces first.
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Model</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The easiest way to represent instructions is as a Union type:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elm">type Instruction = Inbox
+		 | Outbox
+</pre>
+</div>
+
+<p>
+Hard-coding the solution program as an array of instructions makes this proof of concept easier:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">program : Array Instruction
+program =
+  Array.fromList
+	 [ Inbox
+	 , Outbox
+	 , Inbox
+	 , Outbox
+	 , Inbox
+	 , Outbox
+	 ]
+</pre>
+</div>
+
+<p>
+It seems like every Elm program has a "Model" type, and this is no exception:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">import Array exposing (Array)
+
+type alias Model =
+    { program : Array Instruction
+    , status  : MachineStatus
+    }
+</pre>
+</div>
+
+<p>
+So, model is a combination between a program and an emulated "machine".
+</p>
+
+<p>
+There is some forward thinking going on in this design. The model <i>could</i> be
+slightly simpler for this MVP, but part of the goal of this iteration is to
+explore what the solution may look like in the future.
+</p>
+
+<ul class="org-ul">
+<li><code>program</code> is listed as part of the model, although it needn't be in this case,
+since it is hard-coded and won't change. However, we want this to be different
+very soon, so it makes sense to just put this on the model, for now.
+</li>
+
+<li><code>status</code> is a separate type because in the future I want to maintain a list of all statuss,
+for debuggability. It becomes just a little easier to refactor to a list if it is
+separate, and allows for a little bit of exploration of what a <code>MachineStatus</code> type
+should contain.
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">type alias MachineStatus =
+    { status : Status
+    , held   : Maybe Value
+    , input  : List Value
+    , output : List Value
+    , pc     : Int
+    }
+
+type Status = Running | Complete | Error String
+</pre>
+</div>
+<ul class="org-ul">
+<li><code>status</code> signifies execution completion. I strongly suspect that this will go somewhere else, as
+it feels strange to have it in here. But, this is OK for now.
+</li>
+<li><code>held</code> represents the current value that is being held. In HRM, what you
+hold is akin to a CPU register; your character do calculations with and moves values to and
+from their hands &#x2013; which, really, is just like real life. This is a <code>Maybe</code> because it is possible
+for the hands to be empty.
+</li>
+<li><code>input</code> represents the input conveyor. Values are taken from it and manipulated.
+</li>
+<li><code>output</code> represents the output conveyor, onto which values are placed.
+</li>
+<li><code>pc</code> represents the "program counter". This is the index of the next instruction to be executed.
+</li>
+</ul>
+
+<p>
+You may notice that the above references a <code>Value</code>. This is the "values" that may be worked with
+in the game:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elm">type Value = Int
+</pre>
+</div>
+<p>
+For now, we are only working with integers.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Program Scaffolding &amp; View</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+I'm not sure where to mention this, but I want to include here the bits and pieces that
+make the program actually run. I think its helpful to get them out of the way.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">import Html.App as Html
+
+main : Program Never
+main =
+  Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+</pre>
+</div>
+
+<p>
+The program is an <code>Html.program</code>, with the basic wiring.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">import Time exposing (Time, second)
+
+subscriptions : Model -&gt; Sub Msg
+subscriptions model =
+  Time.every second Tick
+</pre>
+</div>
+
+<p>
+Tick each second. The only input the program receives for now are
+ticks.
+</p>
+
+<p>
+The view can also be made fairly simple:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elm">import Html exposing (Html, div, text)
+
+
+-- VIEW
+
+renderState : MachineState -&gt; Html a
+renderState state =
+    div [] [text (toString state)]
+
+
+view : Model -&gt; Html Msg
+view model =
+  div []
+    [ div [] [text (toString model.program)]
+    , renderState model.state
+    ]
+</pre>
+</div>
+
+<p>
+Instead of worrying about anything very complicated, we just use Elm's <code>toString</code> method
+to create a user-readable version of the data structure.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> The Update</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+The "meat" of the application is the update functionality. This is the code that actually
+emulates the machine.
+</p>
+
+<p>
+With our types defined, the code is not necessarily overly-complicated:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">-- UPDATE
+
+type Msg
+  = Tick Time
+
+
+update : Msg -&gt; Model -&gt; (Model, Cmd Msg)
+update action model =
+  case action of
+    Tick newTime -&gt;
+	let
+	    isComplete = model.state.status
+	in
+	    case isComplete of
+		Running -&gt; (stepModel model, Cmd.none)
+		_       -&gt; (model, Cmd.none)
+</pre>
+</div>
+
+<p>
+The function <code>update</code> is the main loop. On each tick of the clock,
+apply an instrution and compute the next version of the model
+if the machine is still running.
+</p>
+
+<p>
+I didn't point this out earlier, but there are two other status types:
+<code>Complete</code> and <code>Error String</code>. Complete indicates that the program completed
+successfully, and is no longer running. <code>Error String</code> provides a way to report
+an error if the program tries to do something invalid, such as:
+</p>
+
+<ul class="org-ul">
+<li>Finish without the correct values being on the output conveyor.
+</li>
+<li>Tries to pick up something from the input conveyor when the conveyor is empty.
+</li>
+<li>Tries to place something on the output conveyor when the character is not
+holding anything.
+</li>
+</ul>
+
+<p>
+Although, there are others. Next up, <code>stepModel</code>, which is where things begin
+to get interesting.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">stepModel : Model -&gt; Model
+stepModel model =
+  let curr = currentInstruction model.program model.state.pc
+  in case curr of
+    Just instruction  -&gt;
+      processInstruction instruction model
+    Nothing        -&gt;
+      updateState model (\s-&gt; { s | status = Error "The machine attempted to access an invalid instruction."})
+</pre>
+</div>
+
+<p>
+Before calculating the next state,
+Calculating the next value of the model involves:
+</p>
+<ol class="org-ol">
+<li>Finding the current instruction to execute.
+</li>
+<li>Performing a specific action based upon the current instruction.
+</li>
+<li>Performing some bookkeeping: Move to the next counter, complete
+the state if the program has finished, etc.
+</li>
+</ol>
+
+<p>
+Lets look at each of these functions, one at a time.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">currentInstruction : Array Instruction -&gt; Int -&gt; Instruction
+currentInstruction instructions pc =
+  case (Array.get pc instructions) of
+    Just a  -&gt; a
+    Nothing -&gt; Debug.crash "you're trying to access an instruction that doesn't exist"
+</pre>
+</div>
+
+<p>
+This is one of those situations where a type system makes things interesting. I wouldn't have
+thought about <code>Array.get</code> possibly failing without it returning a <code>Maybe</code>, which I then have
+to deal with.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elm">updateState : Model -&gt; (MachineState -&gt; MachineState) -&gt; Model
+updateState model updater =
+    let newState = updater model.state
+    in { model | state = newState }
+
+
+stepPC : Model -&gt; Model
+stepPC model =
+    updateState model (\s-&gt; {s | pc = s.pc + 1 })
+
+
+completeIfFinished : Model -&gt; Model
+completeIfFinished model =
+  let programLength = Array.length model.program
+      pc = model.state.pc
+  in if pc &lt; programLength then
+	 model
+     else
+	 updateState model complete
+
+
+shiftInboxToHands : Model -&gt; Model
+shiftInboxToHands model =
+  let first = List.head model.state.input
+      rest  = case List.tail model.state.input of
+		Just r  -&gt; r
+		Nothing -&gt; []
+  in case first of
+       Just val -&gt;
+	   updateState model (\s-&gt; { s | held = Just val, input = rest})
+       Nothing -&gt; updateState model (\s-&gt; {s | status = Error "tried to pick up an item from the inbox, but inbox was empty" })
+
+
+-- state manipulators
+
+complete : MachineState -&gt; MachineState
+complete state = { state | status = Complete }
+
+
+shiftHandsToOutbox : Model -&gt; Model
+shiftHandsToOutbox model =
+  let currentState = model.state
+  in case model.state.held of
+    Nothing  -&gt; updateState model complete
+    Just val -&gt; { model | state =
+		     { currentState
+			 | held = Nothing,
+			   output  = (val :: currentState.output)
+		     }}
+
+stepModel : Model -&gt; Model
+stepModel model =
+  let curr = currentInstruction model.program model.state.pc
+  in case curr of
+    Inbox -&gt;
+      shiftInboxToHands model |&gt; stepPC |&gt; completeIfFinished
+    Outbox -&gt;
+      shiftHandsToOutbox model |&gt; stepPC |&gt; completeIfFinished
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+                    </article>
+
+                    <div id="disqus_thread"></div>
+                    <script>
+                     var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
+
+                     var disqus_config = function () {
+                         this.page.url = "http://joelmccracken.github.io/entries/writing-a-human-resource-machine-emulator-in-elm/";
+                         this.page.identifier = "/entries/writing-a-human-resource-machine-emulator-in-elm";
+                         this.page.title = "Writing a 'Human Resource Machine' Emulator in Elm";
+                     };
+
+                     (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+                         var d = document, s = d.createElement('script');
+
+                         s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
+                         s.setAttribute('data-timestamp', +new Date());
+                         (d.head || d.body).appendChild(s);
+                     })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+
+  <div class="wrap">
+
+    <h2 class="footer-heading">Joel McCracken</h2>
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li><a href="mailto:mccracken.joel@gmail.com">mccracken.joel@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/JoelMcCracken">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            <span class="username">JoelMcCracken</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/JoelMcCracken">
+            <span class="icon twitter">
+              <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+                c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+                c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+                C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+                c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+                c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+              </svg>
+            </span>
+            <span class="username">JoelMcCracken</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 
+    <div class="footer-col-3 column">
+      <p class="text">would like to add some rotating content down here</p>
+    </div>
+    -->
+  </div>
+
+</footer>
+
+
+        <script type="text/javascript">
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-7759066-1']);
+ _gaq.push(['_trackPageview']);
+
+ (function() {
+   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
+    </body>
+</html>

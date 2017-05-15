@@ -1,0 +1,119 @@
+$text-color: #282828;
+$text-color-light: lighten($text-color, 25%);
+$text-color-lighter: lighten($text-color, 50%);
+$background: #f9f9f9;
+$background: #ffffff;
+
+@mixin inline-li {
+  min-width: 100px;
+  margin: auto;
+  display: inline-block;
+}
+
+@mixin central-column-wrapper {
+  max-width: 800px;
+  margin: auto;
+}
+
+body {
+  font-size: 20px;
+  font-family: Helvetica,Arial,sans-serif;
+  color: $text-color;
+  background-color: $background;
+}
+
+header {
+  @include central-column-wrapper;
+  text-align: right;
+  h1 {
+    margin-top: 1em;
+    margin-bottom: 0.42em;
+  }
+}
+
+nav {
+  @include central-column-wrapper;
+  a {
+    color: $text-color-light;
+  }
+}
+
+main {
+  @include central-column-wrapper;
+  h1 {
+    padding-top: 0.5em;
+    text-align: center;
+  }
+}
+
+footer {
+  font-size: .7em;
+  @include central-column-wrapper;
+  margin-top: 7em;
+  color: $text-color-light;
+  ul {
+    padding-left: 0;
+  }
+
+  li {
+    @include inline-li;
+  }
+}
+
+section {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+ul.nav-links {
+  padding-left: 0px;
+  text-align: right;
+  font-size: 0.9em;
+  margin-top: 0;
+
+  li {
+    display: inline-block;
+    margin-left: 2em;
+  }
+}
+
+
+
+
+ul.entries {
+  padding-left: 0;
+  list-style-type: circle;
+
+  li {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+}
+
+a {
+  color: $text-color;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+hr.section-split {
+  padding: 0;
+  border: none;
+  border-top: medium double $text-color-lighter;
+  color: $text-color-lighter;
+  text-align: center;
+  width: 80%;
+}
+
+hr.section-split:after {
+  content: "\A7";
+  display: inline-block;
+  position: relative;
+  top: -0.7em;
+  font-size: 1em;
+  padding: 0 0.25em;
+  background: $background;
+}

@@ -3,10 +3,10 @@
     <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>hudat</title>
+    <title>who dat</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="Nebby about Tech">
-    <link rel="canonical" href="http://joelmccracken.github.io/entries/rust-euler-1/">
+    <link rel="canonical" href="http://joelmccracken.github.io/awesome/foo/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
@@ -47,154 +47,14 @@
             <div class="wrap">
                 <div class="post">
                     <header class="post-header">
-                        <h1>hudat</h1>
-                        <p class="meta">Jul 15, 2016</p>
+                        <h1>who dat</h1>
+                        <p class="meta">Feb 21, 2017</p>
                     </header>
 
                     <article class="post-content">
-                        <div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. First Try</a></li>
-<li><a href="#sec-2">2. Adding a HOF</a></li>
-<li><a href="#sec-3">3. Peano numbers?</a></li>
-</ul>
-</div>
-</div>
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> First Try</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-Right now, I'm at that stage where I'm still not quite there with
-Rust. I can do things, but I tend to get stuck, and I know
+                        <p>
+asodfj
 </p>
-
-
-<p>
-So, in order to keep interest and my momentum, I've been looking for
-some small challenges. Project Euler seems perfect.
-</p>
-
-<p>
-This first challenge is straightforward. Create a range, sum a
-variable, and use the modulo operator. I came up with this solution
-almost right away:
-</p>
-
-<pre class="example">
-fn main() {
-    let mut total = 0;
-    for i in 1..1_000 {
-        if is_addable(i) {
-            total += i
-        }
-    }
-    println!("{}", total);
-}
-
-fn is_addable(x: i64) -&gt; bool {
-    (x % 3) == 0 || (x % 5) == 0
-}
-</pre>
-
-<p>
-The documentation for the <code>1..1_000</code> form is here:
-<a href="http://doc.rust-lang.org/std/ops/struct.Range.html">http://doc.rust-lang.org/std/ops/struct.Range.html</a>.
-It was a little hard to find. I think this is because the most
-prominent thing on the page shows the <code>struct</code> definition, but the
-actual operators aren't really around.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> Adding a HOF</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-That was great, but I'm really interested in doing things
-functionally. Can I <code>filter</code> the range, and then maybe <code>sum</code>?
-</p>
-
-<p>
-After a little bit of fiddling, this is what I came up with:
-</p>
-
-<pre class="example">
-fn main() {
-    let total = (1..1_000).filter(|i| is_addable(*i)).
-        fold(0, |acc, i| acc + i);
-    println!("{:?}", total);
-}
-
-fn is_addable(x: i64) -&gt; bool {
-    (x % 3) == 0 || (x % 5) == 0
-}
-</pre>
-
-<p>
-Can I make this any better? I notice that the lambda around is<sub>addable</sub>
-seems unnecessary:
-</p>
-
-<pre class="example">
-fn main() {
-    let total = (1..1_000).filter(is_addable).
-        fold(0, |acc, i| acc + i);
-    println!("{:?}", total);
-}
-
-fn is_addable(x: &amp;i64) -&gt; bool {
-    (x % 3) == 0 || (x % 5) == 0
-}
-</pre>
-
-<p>
-Great, it still works.
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> Peano numbers?</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-OK, this is a real stretch goal, but I'm feeling good about myself
-because this all went pretty well.
-</p>
-
-<p>
-I've always been a little bit intrigued by Peano numbers. You might
-object that they're very slow &#x2013; they are &#x2013; but, I think they are
-still interesting in terms of being conceptually very simple.
-</p>
-
-<p>
-The other things is that I know Peano numbers will require some memory
-management, which is something I want to exercise.
-</p>
-
-
-<p>
-We start with the Peano enum:
-</p>
-
-
-<p>
-enum Peano {
-    Zero,
-    Succ(Box&lt;Peano&gt;)
-}
-</p>
-
-
-<p>
-You might notice that this is almost the same as various Rust List
-tutorials around. The <code>Box</code> call is for the same reason: Rust needs.
-</p>
-</div>
-</div>
 
                     </article>
 
@@ -203,9 +63,9 @@ tutorials around. The <code>Box</code> call is for the same reason: Rust needs.
                      var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
                      var disqus_config = function () {
-                         this.page.url = "http://joelmccracken.github.io/entries/rust-euler-1/";
-                         this.page.identifier = "/entries/rust-euler-1";
-                         this.page.title = "hudat";
+                         this.page.url = "http://joelmccracken.github.io/awesome/foo/";
+                         this.page.identifier = "/awesome/foo";
+                         this.page.title = "who dat";
                      };
 
                      (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW

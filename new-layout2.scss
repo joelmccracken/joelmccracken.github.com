@@ -16,19 +16,19 @@ $lambda-color: red;
 body {
   font-size: 24px;
   font-family: Helvetica,Arial,sans-serif;
+  margin: 0;
   color: $body-text-color;
 }
 
 header {
-  @include central-column-wrapper;
-  font-size: 3em;
+  display: inline-block;
+  font-size: 1em;
+  background-color: #ababab;
+  background-color: #ffe1ba;
+  background-color: #bad8ff;
 }
 
-nav {
-  @include central-column-wrapper;
-  background-color: #bad8ff;
-  background-color: #ffe1ba;
-}
+nav { }
 
 main {
   @include central-column-wrapper;
@@ -57,7 +57,7 @@ ul.nav-links {
 
   padding-left: 0px;
   text-align: justify;
-
+  margin: 0;
   li:before {
     content: "\03BB \020";
   }
