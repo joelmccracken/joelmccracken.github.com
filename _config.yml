@@ -1,5 +1,4 @@
-name: Joel's Journal
-markdown: redcarpet
+name: "Joel's Journal"
 highlighter: pygments
 description: "Nebby about Tech"
 url: http://joelmccracken.github.io
