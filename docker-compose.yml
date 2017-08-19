@@ -1,0 +1,14 @@
+version: '3'
+services:
+  jekyll:
+    image: journal-jekyll
+    volumes:
+      - ".:/jekyll"
+    ports:
+      - "4000:4000"
+    build: ./_jekyll-image
+  emacs-org-compiler:
+    image: emacs-org-compiler
+    ports:
+      - "9876:9876"
+    build: ./_emacs-org-compiler
