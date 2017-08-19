@@ -50,10 +50,11 @@
 (defvar org-jekyll-server-process nil)
 
 (defun start-compile-server ()
+  (message "Starting compile server...")
   (setq org-jekyll-server-process
         (make-network-process :name "org-jekyll-daemon"
                               :server t
                               :sentinel 'org-jekyll-daemon-sentinel
                               :filter 'org-jekyll-daemon-filter
                               :service 9876
-                              :host 'local)))
+                              :host "0.0.0.0")))

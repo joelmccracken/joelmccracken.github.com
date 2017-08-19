@@ -5,3 +5,4 @@ url: http://joelmccracken.github.io
 permalink: /entries/:title/
 excerpt_separator: ""
 post_ext: org
+host: "0.0.0.0"
