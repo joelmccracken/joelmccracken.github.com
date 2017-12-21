@@ -54,29 +54,31 @@
                     <article class="post-content">
                         <p>So, this is something that has irritated me from time to time about
 emacs. I have long thought that it was not possible to read data from stdin
-from emacs when in batch mode (I had discovered that <code>(message &quot;foo&quot;)</code>
-would write foo to stdout, so that wasn&#39;t an issue). I have tried to
+from emacs when in batch mode (I had discovered that <code>(message "foo")</code>
+would write foo to stdout, so that wasn’t an issue). I have tried to
 search google for it in the past, but I never found what I was looking
 for.</p>
 
 <p>I have again been dealing with this problem, and finally found the
 solution, which is documented at
-<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Batch-Mode.html#Batch-Mode">(info &quot;(elisp) Batch Mode&quot;)</a>.</p>
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Batch-Mode.html#Batch-Mode">(info “(elisp) Batch Mode”)</a>.</p>
 
 <p>The relvant selection is:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Any Lisp program output that would normally go to the echo area,
-either using `message&#39;, or using `prin1&#39;, etc., with `t&#39; as the stream,
-goes instead to Emacs&#39;s standard error descriptor when in batch mode.
+
+<pre><code>Any Lisp program output that would normally go to the echo area,
+either using `message', or using `prin1', etc., with `t' as the stream,
+goes instead to Emacs's standard error descriptor when in batch mode.
 Similarly, input that would normally come from the minibuffer is read
 from the standard input descriptor.  Thus, Emacs behaves much like a
 noninteractive application program.  (The echo area output that Emacs
 itself normally generates, such as command echoing, is suppressed
 entirely.)
-</code></pre></div>
+</code></pre>
+
 <p>So, we can use <code>read-from-minibuffer</code> to get data from stdin, and
 <code>princ</code> to write data.</p>
 
-<h2>A Real-World Example</h2>
+<h2 id="a-real-world-example">A Real-World Example</h2>
 
 <p>My goal was to write a plugin for Jekyll that will convert org mode
 files into blog posts (which is working, but I still need to tweak
@@ -90,30 +92,32 @@ world, I would be able to pipe this text into emacs and have it output
 the html I want.</p>
 
 <p>The portion of elisp that implements this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defun compile-org-file ()
+
+<pre><code>(defun compile-org-file ()
   (interactive)
-  (let ((org-document-content &quot;&quot;)
+  (let ((org-document-content "")
         this-read)
     (while (setq this-read (ignore-errors
-                             (read-from-minibuffer &quot;&quot;)))
-      (setq org-document-content (concat org-document-content &quot;\n&quot; this-read)))
+                             (read-from-minibuffer "")))
+      (setq org-document-content (concat org-document-content "\n" this-read)))
 
     (with-temp-buffer
       (org-mode)
       (insert org-document-content)
       (org-html-export-as-html)
       (princ (buffer-string)))))
-</code></pre></div>
+</code></pre>
+
 <p>There are a number of things to point out, here.</p>
 
 <p><code>read-from-minibuffer</code> was tricky, and needed some special consideration:</p>
 
 <ul>
-<li>No prompt should be displayed to the user, since data is coming in
+  <li>No prompt should be displayed to the user, since data is coming in
 unprompted. Thus, an empty string argument.</li>
-<li>This function reads in a single line at a time. As data is
+  <li>This function reads in a single line at a time. As data is
 read in, it must be appended to what has already been read.</li>
-<li>When EOF is read, an error is thrown, which is useless to
+  <li>When EOF is read, an error is thrown, which is useless to
 us. Instead of worrying about the error, we can wrap the function
 call in an <code>ignore-errors</code> macro, which will return <code>nil</code> when an
 EOF occurs.</li>
@@ -122,17 +126,17 @@ EOF occurs.</li>
 <p>Once the entire data is read in, we can convert it org mode.</p>
 
 <ul>
-<li>A temporary buffer is created, which is converted to <code>org-mode</code></li>
-<li>The contents of the org document are inserted into the buffer.</li>
-<li><code>org-html-export-as-html</code> creates a new buffer, makes it current,
+  <li>A temporary buffer is created, which is converted to <code>org-mode</code></li>
+  <li>The contents of the org document are inserted into the buffer.</li>
+  <li><code>org-html-export-as-html</code> creates a new buffer, makes it current,
 and inserts the exported html into that buffer.</li>
-<li><code>princ</code> writes the converted html to stdout.</li>
+  <li><code>princ</code> writes the converted html to stdout.</li>
 </ul>
 
 <p>Overall, I am pretty happy with the solution. This is one of the
-lesser known areas of Emacs, and I&#39;m really glad that I finally know
+lesser known areas of Emacs, and I’m really glad that I finally know
 how to do it, because it is a problem I have had to deal with on
-several occasions. </p>
+several occasions.</p>
 
                     </article>
 

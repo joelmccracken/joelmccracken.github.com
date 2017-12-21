@@ -52,30 +52,30 @@
                     </header>
 
                     <article class="post-content">
-                        <p>I&#39;m always on the lookout for new ways to improve myself.
+                        <p>I’m always on the lookout for new ways to improve myself.
 Emacs is one of the ways that I do this. 
-Because all of Emacs&#39; features are extremely accessible, it is easy to
-quickly build what you need to get things done. </p>
+Because all of Emacs’ features are extremely accessible, it is easy to
+quickly build what you need to get things done.</p>
 
-<p>I have written a few of these &quot;mini-applications&quot;, but one is fresh in
+<p>I have written a few of these “mini-applications”, but one is fresh in
 my mind: svbtle. 
 When svbtle was announced/released, I had mixed feelings
 about it. However, one of the things that I <em>do</em> really like is the
-application&#39;s split between published posts and ideas. </p>
+application’s split between published posts and ideas.</p>
 
-<p>In case you don&#39;t remember, everything in svbtle is either a published
+<p>In case you don’t remember, everything in svbtle is either a published
 post, or an idea. I think this split works, because pre-publishing,
-writing is so... ephemeral. However, once something is out there, it
-takes on a completely different character. </p>
+writing is so… ephemeral. However, once something is out there, it
+takes on a completely different character.</p>
 
 <p>I feel like <em>draft</em> has a negative connotation. An unpublished draft
 is basically an undone to-do. Even the word draft implies work that
-still needs to be done. </p>
+still needs to be done.</p>
 
 <p>However, labeling drafts as <em>ideas</em> changes them. Ideas are
 positive. The more ideas you have, the better. And, an unpublished
 idea is just, well, still an idea. I think this cognitive
-shift encourages the writing process. </p>
+shift encourages the writing process.</p>
 
 <p>So, I made a mental note, and began thinking about how I could implement this
 in my writing process. Over the last few weeks, I spent 20 or so minutes here
@@ -83,33 +83,34 @@ and there hacking some code together that lets me think this way. So,
 for a total of <em>at most</em> two hours, I got most of the 
 benefit that I perceive from svbtle. And, that makes me very happy.</p>
 
-<p>Now, time for the code. It isn&#39;t pretty or well-factored, but it
+<p>Now, time for the code. It isn’t pretty or well-factored, but it
 does what I need. I want to show it like this because it
-works, and is good enough. There&#39;s nothing magic here; its straight-up
+works, and is good enough. There’s nothing magic here; its straight-up
 maneuvering of files, Emacs buffers, and window layouts. It also sits
-on top of Jekyll, because that I what I started with. </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defvar journal-ideas-directory &quot;~/Journal/joelmccracken.github.com/_posts/ideas&quot;)
-(defvar journal-ideas-org-directory &quot;~/Journal/joelmccracken.github.com/_posts/ideas/org&quot;)
-(defvar journal-publish-directory &quot;~/Journal/joelmccracken.github.com/_posts&quot;)
+on top of Jekyll, because that I what I started with.</p>
 
-(defvar journal-notes-archive-directory &quot;~/Journal/notes&quot;)
-(defvar journal-site-directory &quot;~/Journal/joelmccracken.github.com&quot;)
+<pre><code>(defvar journal-ideas-directory "~/Journal/joelmccracken.github.com/_posts/ideas")
+(defvar journal-ideas-org-directory "~/Journal/joelmccracken.github.com/_posts/ideas/org")
+(defvar journal-publish-directory "~/Journal/joelmccracken.github.com/_posts")
 
-(defvar journal-idea-magic-date &quot;2099-01-01&quot;)
+(defvar journal-notes-archive-directory "~/Journal/notes")
+(defvar journal-site-directory "~/Journal/joelmccracken.github.com")
+
+(defvar journal-idea-magic-date "2099-01-01")
 
 (defvar journal-map (make-sparse-keymap))
 
-(define-key journal-map (kbd &quot;g&quot;) &#39;journal-magit)
-(define-key journal-map (kbd &quot;n&quot;) &#39;journal-idea-new)
-(define-key journal-map (kbd &quot;o&quot;) &#39;journal-idea-open)
-(define-key journal-map (kbd &quot;p&quot;) &#39;journal-idea-publish)
+(define-key journal-map (kbd "g") 'journal-magit)
+(define-key journal-map (kbd "n") 'journal-idea-new)
+(define-key journal-map (kbd "o") 'journal-idea-open)
+(define-key journal-map (kbd "p") 'journal-idea-publish)
 
-(global-set-key (kbd &quot;C-c j&quot;) journal-map)
+(global-set-key (kbd "C-c j") journal-map)
 
 
 (defun journal-idea-name-from-filename (filename)
   (when 
-    (string-match (concat &quot;^&quot; journal-idea-magic-date &quot;-\\(.*\\)\\(.markdown\\|.md\\)&quot;) filename)
+    (string-match (concat "^" journal-idea-magic-date "-\\(.*\\)\\(.markdown\\|.md\\)") filename)
     (match-string 1 filename)))
 
 
@@ -120,56 +121,56 @@ on top of Jekyll, because that I what I started with. </p>
                   (directory-files journal-ideas-directory))))
 
 (defun journal-todays-date ()
-  (format-time-string &quot;%Y-%m-%d&quot;
+  (format-time-string "%Y-%m-%d"
                       (current-time)))
 
 (defun file-namify-string (str)
   (downcase (replace-regexp-in-string
-             &quot; &quot; &quot;-&quot;
-             (replace-regexp-in-string  &quot;\\(^[ ]+\\|[ ]+$\\|[^a-z0-9_ ]+\\)&quot; &quot;&quot; str))))
+             " " "-"
+             (replace-regexp-in-string  "\\(^[ ]+\\|[ ]+$\\|[^a-z0-9_ ]+\\)" "" str))))
 
 
 (ert-deftest file-namify-string-tests ()
-  (should (equal (file-namify-string &quot;they&#39;re here&quot;)
-                 &quot;theyre-here&quot;))
+  (should (equal (file-namify-string "they're here")
+                 "theyre-here"))
+  
+  (should (equal (file-namify-string " they're here")
+                 "theyre-here"))
+  (should (equal (file-namify-string " they're here ")
+                 "theyre-here"))
+  (should (equal (file-namify-string "   they're here ")
+                 "theyre-here"))
 
-  (should (equal (file-namify-string &quot; they&#39;re here&quot;)
-                 &quot;theyre-here&quot;))
-  (should (equal (file-namify-string &quot; they&#39;re here &quot;)
-                 &quot;theyre-here&quot;))
-  (should (equal (file-namify-string &quot;   they&#39;re here &quot;)
-                 &quot;theyre-here&quot;))
-
-  (should (equal (file-namify-string &quot; Rapid Application Prototyping with Emacs  &quot;)
-                 &quot;rapid-application-prototyping-with-emacs&quot;))
-  (should (equal (file-namify-string &quot;Going to the Bathroom part 78&quot;)
-                 &quot;going-to-the-bathroom-part-78&quot;)))
+  (should (equal (file-namify-string " Rapid Application Prototyping with Emacs  ")
+                 "rapid-application-prototyping-with-emacs"))
+  (should (equal (file-namify-string "Going to the Bathroom part 78")
+                 "going-to-the-bathroom-part-78")))
 
 
 (defun journal-idea-notes-file (idea-slug)
-  (concat journal-ideas-org-directory &quot;/&quot; idea-slug &quot;.org&quot;))
+  (concat journal-ideas-org-directory "/" idea-slug ".org"))
 
 (defun journal-archived-notes-file-for-slug (slug)
-  (concat journal-notes-archive-directory &quot;/&quot; slug &quot;.org&quot;))
+  (concat journal-notes-archive-directory "/" slug ".org"))
 
 (defun journal-publish-file-name (slug)
-  (concat journal-publish-directory &quot;/&quot; (journal-todays-date) &quot;-&quot; slug &quot;.markdown&quot;))
+  (concat journal-publish-directory "/" (journal-todays-date) "-" slug ".markdown"))
 
 (defun journal-insert-post-skeleton-if-empty (idea-name)
   (when (= 0 (buffer-size))
-    (insert &quot;---\n&quot;)
-    (insert &quot;layout: post\n&quot;)
-    (insert (concat &quot;title: &#39;&quot; idea-name &quot;&#39;\n&quot;))
-    (insert &quot;---\n&quot;)))
+    (insert "---\n")
+    (insert "layout: post\n")
+    (insert (concat "title: '" idea-name "'\n"))
+    (insert "---\n")))
 
 
 (defun journal-window-setup-for-idea (idea-draft-buffer idea-notes-buffer)
-  &quot;&quot;
+  ""
   (delete-other-windows)
   (switch-to-buffer idea-draft-buffer)
 
   (split-window-horizontally)
-
+  
   (other-window 1)
 
   (switch-to-buffer idea-notes-buffer))
@@ -177,53 +178,53 @@ on top of Jekyll, because that I what I started with. </p>
 
 
 (defun journal-idea-draft-filename-from-slug (idea-slug)
-  (concat &quot;~/Journal/joelmccracken.github.com/_posts/ideas/&quot;
+  (concat "~/Journal/joelmccracken.github.com/_posts/ideas/"
           journal-idea-magic-date
-          &quot;-&quot; idea-slug &quot;.markdown&quot;))
+          "-" idea-slug ".markdown"))
 
 
 (defun journal-idea-notes-filename-from-slug (idea-slug)
-  (concat journal-ideas-org-directory &quot;/&quot; idea-slug &quot;.org&quot;))
+  (concat journal-ideas-org-directory "/" idea-slug ".org"))
 
 
 (defun journal-find-idea-file (idea-slug file-type)
   (find-file
    (case file-type
-     (&#39;draft (journal-idea-draft-filename-from-slug idea-slug))
-     (&#39;notes (journal-idea-notes-filename-from-slug idea-slug)))))
+     ('draft (journal-idea-draft-filename-from-slug idea-slug))
+     ('notes (journal-idea-notes-filename-from-slug idea-slug)))))
 
 
 (defun journal-idea-new (idea-name)
-  (interactive &quot;Midea name: &quot;)
-
+  (interactive "Midea name: ")
+  
   (let ((file-slug (file-namify-string idea-name))
         draft-buffer notes-buffer)
-
-    (setq draft-buffer (journal-find-idea-file file-slug &#39;draft))
+    
+    (setq draft-buffer (journal-find-idea-file file-slug 'draft))
     ;; current file is draft, so insert skeleton
     (journal-insert-post-skeleton-if-empty idea-name)
-
-    (setq notes-buffer (journal-find-idea-file file-slug &#39;notes))
-
+    
+    (setq notes-buffer (journal-find-idea-file file-slug 'notes))
+    
     (journal-window-setup-for-idea draft-buffer notes-buffer)))
 
 
 (defun journal-idea-open ()
   (interactive)
-  (let ((file-slug (ido-completing-read &quot;Idea: &quot; (journal-idea-list))))
+  (let ((file-slug (ido-completing-read "Idea: " (journal-idea-list))))
     (journal-window-setup-for-idea
-     (journal-find-idea-file file-slug &#39;draft)
-     (journal-find-idea-file file-slug &#39;notes))))
+     (journal-find-idea-file file-slug 'draft)
+     (journal-find-idea-file file-slug 'notes))))
 
 
 (defun journal-insert-idea-draft-into-notes (draft-buffer notes-buffer)
   (save-excursion
     (with-current-buffer  notes-buffer
       (goto-char (point-min))
-      (insert &quot;* draft at publish time\n&quot;)
+      (insert "* draft at publish time\n")
       (insert  (with-current-buffer draft-buffer
                  (buffer-string)))
-      (insert &quot;\n&quot;))))
+      (insert "\n"))))
 
 
 (defun journal-idea-publish ()
@@ -233,8 +234,8 @@ on top of Jekyll, because that I what I started with. </p>
          (idea-slug (journal-idea-name-from-filename basename))
          (new-notes-name (journal-archived-notes-file-for-slug idea-slug))
          (new-file-name (journal-publish-file-name idea-slug)))
-
-    (when (yes-or-no-p (format &quot;really publish file %s as %s?&quot;
+    
+    (when (yes-or-no-p (format "really publish file %s as %s?"
                                orig-name
                                new-file-name))
       (let ((idea-buffer (current-buffer))
@@ -246,7 +247,7 @@ on top of Jekyll, because that I what I started with. </p>
         (with-current-buffer notes-buffer
           (write-file new-notes-name)
           (kill-buffer))
-
+        
         )
       (delete-file orig-name)
       (delete-file (journal-idea-notes-file idea-slug)))))
@@ -258,8 +259,10 @@ on top of Jekyll, because that I what I started with. </p>
 
 
 
-(provide &#39;journal)
-</code></pre></div>
+(provide 'journal)
+</code></pre>
+
+
                     </article>
 
                     <div id="disqus_thread"></div>

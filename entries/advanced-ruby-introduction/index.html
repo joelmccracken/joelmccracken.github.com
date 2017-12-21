@@ -53,53 +53,54 @@
 
                     <article class="post-content">
                         <p>Originally I went through Metaprogramming Ruby about a year ago, but
-never really took the time to use it. Recently I&#39;ve been doing much
-more Ruby, so I feel like it is time for a refresher. </p>
+never really took the time to use it. Recently I’ve been doing much
+more Ruby, so I feel like it is time for a refresher.</p>
 
 <p>Ruby is a really interesting programming language. Very recently, my
-view shifted on it. For a long time, I wasn&#39;t sure exactly what to
+view shifted on it. For a long time, I wasn’t sure exactly what to
 think about it. Now, Ruby seems like the ideal
 scripting language to interact 
-with the Unix environment... especially because I am really sick
+with the Unix environment… especially because I am really sick
 of dealing with Bash.</p>
 
 <p>So, here is a first in a series of examples that show off the great
-dynamic features of Ruby. These examples are </p>
+dynamic features of Ruby. These examples are</p>
 
 <p>Most of what
 makes Ruby different is only surprising from the standpoint of a
-user of &quot;mainstream&quot; languages. To a Lisp programmer, for example,
-none of these should be very surprising. </p>
+user of “mainstream” languages. To a Lisp programmer, for example,
+none of these should be very surprising.</p>
 
-<p>Eventually, I&#39;m going to investigate adding real syntactic
+<p>Eventually, I’m going to investigate adding real syntactic
 extensions (macros), but that is for a future date. 
 There are obvious ways to approach this,
 and libraries that basically do it (rewrite ruby, etc), 
-but there doesn&#39;t seem to be much action in
+but there doesn’t seem to be much action in
 this arena. Which is a shame. I think this is important for the
 long-term health of 
 Ruby. I believe the perception (and reality) of Ruby as an <em>advanced</em> language is
 important for its long term health.</p>
 
-<hr>
+<hr />
 
 <p>So, here we go: a basic set of minispec specs which demonstrate some
 extreme flexibility of Ruby:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">describe &quot;ruby classes&quot; do
 
-  describe &quot;definitions are just regular code&quot; do
+<pre><code>describe "ruby classes" do
 
-    it &quot;evaluates regular code&quot; do
+  describe "definitions are just regular code" do
+
+    it "evaluates regular code" do
       $the_secret = nil
 
       class ClassDefSideEffects
-        $the_secret = &quot;shh&quot;
+        $the_secret = "shh"
       end
 
-      $the_secret.must_equal &quot;shh&quot;
+      $the_secret.must_equal "shh"
     end
 
-    it &quot;return what was last evaluated&quot; do
+    it "return what was last evaluated" do
       (class Doot
          1 + 1
        end).must_equal 2
@@ -107,15 +108,15 @@ extreme flexibility of Ruby:</p>
   end
 
 
-  describe &quot;classes are objects&quot; do
-    it &quot;has methods (such as class) and reports that it has the type class&quot; do
+  describe "classes are objects" do
+    it "has methods (such as class) and reports that it has the type class" do
       class Dootz; end
       Dootz.class.must_equal Class
     end
   end
 
-  describe &quot;dynamically creating classes&quot; do
-    it &quot;can create new classes&quot; do
+  describe "dynamically creating classes" do
+    it "can create new classes" do
       x = Class.new
       y = x.new
       z = x.new
@@ -125,7 +126,7 @@ extreme flexibility of Ruby:</p>
       y.class.must_equal x
     end
 
-    it &quot;is just objects, so can be passed around&quot; do
+    it "is just objects, so can be passed around" do
       class Dootz; end
 
       x = Dootz.class.new.new
@@ -134,9 +135,10 @@ extreme flexibility of Ruby:</p>
     end
   end
 end
-</code></pre></div>
-<p>Next time we&#39;ll get into blocks. That way, we can cover the rest of
-the sweet things that can be done with the ruby object model. </p>
+</code></pre>
+
+<p>Next time we’ll get into blocks. That way, we can cover the rest of
+the sweet things that can be done with the ruby object model.</p>
 
                     </article>
 

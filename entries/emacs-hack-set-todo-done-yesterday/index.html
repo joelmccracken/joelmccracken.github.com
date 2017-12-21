@@ -57,57 +57,60 @@ organized. It is really great, and you should check it out. One of its
 less widely-known features is habit tracking. Normally, org mode
 gives you the ability to mark org entires as TODO items, change them
 to done, etc. This works really well, but it somewhat falls apart for
-things that we want to do regularly. </p>
+things that we want to do regularly.</p>
 
 <p>The 
 <a href="http://orgmode.org/manual/Tracking-your-habits.html#Tracking-your-habits">org-habits module</a> 
 allows you to make TODO items
 into habits. When you set one of these items to DONE, a log entry gets
 created, and the habit due date gets moved forward in time based on
-the repeater interval. </p>
+the repeater interval.</p>
 
-<p>The problem, though, is that I often don&#39;t get around to setting the
+<p>The problem, though, is that I often don’t get around to setting the
 TODO item to done when I actually do it. I am not always at my
-computer, after all. </p>
+computer, after all.</p>
 
 <p><a href="/2012/05/23/why-you-should-learn-elisp.html">Dynamic binding to the rescue!</a>
 We <em>could</em> handle this in a much more
-complicated way, but the easiest solution is to just &quot;pretend&quot; 
-that it is actually yesterday while the code that changes the TODO is run.<br>
+complicated way, but the easiest solution is to just “pretend” 
+that it is actually yesterday while the code that changes the TODO is run.<br />
 Because of dynamic binding, we can be make the change really easily.</p>
 
 <p>The code below that implements this uses some rather specific elisp
 features, so I heavily commented it to help, but the part that is
 important is at the end.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defun org-todo-toggle-yesterday ()
-  ;; this function is interactive, meaning a &quot;command&quot; that we call
-  ;; as an emacs user (allows us to do &quot;M-x org-todo-toggle-yesterday&quot;)
-  (interactive)
 
+<pre><code>(defun org-todo-toggle-yesterday ()
+  ;; this function is interactive, meaning a "command" that we call
+  ;; as an emacs user (allows us to do "M-x org-todo-toggle-yesterday")
+  (interactive)
+  
   (let ((time-in-question (decode-time))) 
     ;; time-in-question is the current time, decoded into convenient fields
 
-    ;; decrease the field by one which represents the day -- make it &quot;yesterday&quot;
+    ;; decrease the field by one which represents the day -- make it "yesterday"
     (decf (nth 3 time-in-question))
 
     ;; now, re-encode that time
-    (setq time-in-question (apply &#39;encode-time time-in-question))
-
+    (setq time-in-question (apply 'encode-time time-in-question))
+    
     (flet ((current-time () time-in-question))
       ;; flet temporarily binds current-time to this version, which
       ;; returns the time from yesterday 
-
+      
       (org-todo)
       ;; toggles the todo heading
       )))
-</code></pre></div>
+</code></pre>
+
 <p>Most of this code just helps with getting a date for the previous
 day. The important part is the last <code>flet</code>, which temporarily changes
-the definition of <code>current-time</code> for those let body calls. </p>
+the definition of <code>current-time</code> for those let body calls.</p>
 
 <p>Okay, hope this helps anyone who uses org mode and the habits
 module. Dynamic binding lets this solution work well, and so is not
-nearly as problematic as could be seen. </p>
+nearly as problematic as could be seen.</p>
+
 
                     </article>
 

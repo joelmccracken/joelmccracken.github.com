@@ -52,16 +52,16 @@
                     </header>
 
                     <article class="post-content">
-                        <h1>The Keyboard: Keys and Keymaps</h1>
+                        <h1 id="the-keyboard-keys-and-keymaps">The Keyboard: Keys and Keymaps</h1>
 
-<p>Its been a while since I posted in this series -- but don&#39;t fret! I
+<p>Its been a while since I posted in this series – but don’t fret! I
 sill am dedicated to providing a guide to Emacs Lisp, the guide that I
 wish I had a year ago. I also recently
 implied that I prefer Ruby to Lisp, but that is not
 important. Emacs is still the best developer environment in the world,
 and occupies a really important place in the future of code composition.</p>
 
-<div class='sidebar'>
+<div class="sidebar">
 <p>
 <h4>Afraid to change keybindings?</h4>
 </p>
@@ -83,71 +83,77 @@ variables, create functions, generally structure programs? So far, we have
 been mostly limited to these types of concerns. We have not yet
 touched on manipulating Emacs itself. Which, is basically the goal of
 all of this Emacs hacking, right? So, to get started, lets look at
-manipulating keybindings. One of Emacs&#39; most &quot;famous&quot; features is the
+manipulating keybindings. One of Emacs’ most “famous” features is the
 magic you can do with the keyboard. I use quotes around famous because
 the finger stretching it requires is the primary source of criticism.</p>
 
 <p>Either way, keybindings are a good place to start talking about
 modifying Emacs.</p>
 
-<h2>Setting a Global Keyboard Binding</h2>
+<h2 id="setting-a-global-keyboard-binding">Setting a Global Keyboard Binding</h2>
 
 <p>On Mac OS X Emacs, the key Command-Q will kill Emacs. I always hated
-this. Disabling it was really easy, though: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(global-set-key (kbd &quot;s-q&quot;) nil)
-</code></pre></div>
+this. Disabling it was really easy, though:</p>
+
+<pre><code>(global-set-key (kbd "s-q") nil)
+</code></pre>
+
 <p>This code introduces a few things. First, we use the <code>global-set-key</code>
 function, which sets the key, well, globally. Other commands set keys
-for specific keymaps. Which we&#39;ll get to in a minute. </p>
+for specific keymaps. Which we’ll get to in a minute.</p>
 
 <p>Next, we have the form <code>kbd</code>. We could skip using <code>kbd</code>, but the
 strings we would need to use to specify a key binding would be uglier
 and more opaque. Using <code>kbd</code> lets us specify these in a much more
-consistent, natural way. In the above example, &quot;s-q&quot; is the
-&quot;Command-Q&quot; binding. </p>
+consistent, natural way. In the above example, “s-q” is the
+“Command-Q” binding.</p>
 
 <p>Finally, we have <code>nil</code>. This means that the key binding now does
 nothing, which disables the Command-Q quitting in our personal Emacs. Nice!</p>
 
 <p>We can bind functions to keys. Lets create a binding so that Meta-h
-will execute a &quot;hello world&quot; function:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(global-set-key (kbd &quot;M-h&quot;)
+will execute a “hello world” function:</p>
+
+<pre><code>(global-set-key (kbd "M-h")
                 (lambda ()
                   (interactive)
-                  (message &quot;Hello from Emacs!&quot;)))
-</code></pre></div>
-<p>Now, if you press Meta-h, you&#39;ll receive a friendly greeting from
-Emacs. </p>
+                  (message "Hello from Emacs!")))
+</code></pre>
+
+<p>Now, if you press Meta-h, you’ll receive a friendly greeting from
+Emacs.</p>
 
 <p>This is the essence of keybindings. If you were to stop reading here,
 you would be able to get pretty far. However, there is another feature
-that we should discuss: that is, keymaps. </p>
+that we should discuss: that is, keymaps.</p>
 
-<h2>Keymaps</h2>
+<h2 id="keymaps">Keymaps</h2>
 
 <p>A keymap is simply a collection of keys to bindings. They allow us to
 conveniently group bindings to be collectively added, enabled, or
-disabled. </p>
+disabled.</p>
 
 <p>Not only does a keymap hold keybindings, it can also itself be bound
 to a key. In this way, we create a hierarchy of bindings. Lets look at
 a quick example:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defvar joel-custom-keymap nil &quot;my keymap..&quot;)
+
+<pre><code>(defvar joel-custom-keymap nil "my keymap..")
 
 (setq joel-custom-keymap (make-sparse-keymap))
-(global-set-key (kbd &quot;C-x M-j&quot;)  joel-custom-keymap)
+(global-set-key (kbd "C-x M-j")  joel-custom-keymap)
 
-(define-key joel-custom-keymap (kbd &quot;s&quot;) &#39;otto/status)
-(define-key joel-custom-keymap (kbd &quot;t&quot;) &#39;twit)
-(define-key joel-custom-keymap (kbd &quot;p&quot;) &#39;plan)
-</code></pre></div>
+(define-key joel-custom-keymap (kbd "s") 'otto/status)
+(define-key joel-custom-keymap (kbd "t") 'twit)
+(define-key joel-custom-keymap (kbd "p") 'plan)
+</code></pre>
+
 <p>This is actual code that I use. It comes straight out of my dotemacs
 file. It binds the keymap <code>joel-custom-keymap</code> to the key sequence 
-&quot;C-x M-j&quot;. When I press those, I can then press <code>s</code>, <code>t</code>, or <code>p</code> to
-run the commands <code>otto/status</code>, <code>twit</code>, or <code>plan</code>, respectively. </p>
+“C-x M-j”. When I press those, I can then press <code>s</code>, <code>t</code>, or <code>p</code> to
+run the commands <code>otto/status</code>, <code>twit</code>, or <code>plan</code>, respectively.</p>
 
 <p>I feel like this is straightforward but awkward to explain. In any
-case, this is enough to get started. You&#39;ll probably want to
+case, this is enough to get started. You’ll probably want to
 get familiar with what 
 <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Keymaps.html">the manual entry</a>
 contains so that you will know where to look in the future. Happy hacking!</p>

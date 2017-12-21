@@ -52,12 +52,12 @@
                     </header>
 
                     <article class="post-content">
-                        <p>I&#39;ve been using term-mode for a while now and just recently decided to
+                        <p>I’ve been using term-mode for a while now and just recently decided to
 fix something that has been irking me.</p>
 
-<p>See, term-mode allows you to switch between what is called &quot;line mode&quot;
-and &quot;char mode&quot;. In line mode, emacs treats the shell as a plain
-buffer, except that pressing &quot;return&quot; will send the current line to
+<p>See, term-mode allows you to switch between what is called “line mode”
+and “char mode”. In line mode, emacs treats the shell as a plain
+buffer, except that pressing “return” will send the current line to
 the shell for execution. This is really cool! It allows for all sorts
 of fancy things, because you can treat your shell as a regular emacs buffer.
 This behavior is essentially the same behavior as in <code>comint-mode</code>,
@@ -75,24 +75,26 @@ the buffer to line mode.</p>
 <p>I can never remember which key does what and where. So, the other day
 I finally decided to sit down and fix the problem. I came up with
 this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(require &#39;term)
+
+<pre><code>(require 'term)
 
 (defun jnm/term-toggle-mode ()
-  &quot;Toggles term between line mode and char mode&quot;
+  "Toggles term between line mode and char mode"
   (interactive)
   (if (term-in-line-mode)
       (term-char-mode)
     (term-line-mode)))
 
-(define-key term-mode-map (kbd &quot;C-c C-j&quot;) &#39;jnm/term-toggle-mode)
-(define-key term-mode-map (kbd &quot;C-c C-k&quot;) &#39;jnm/term-toggle-mode)
+(define-key term-mode-map (kbd "C-c C-j") 'jnm/term-toggle-mode)
+(define-key term-mode-map (kbd "C-c C-k") 'jnm/term-toggle-mode)
 
-(define-key term-raw-map (kbd &quot;C-c C-j&quot;) &#39;jnm/term-toggle-mode)
-(define-key term-raw-map (kbd &quot;C-c C-k&quot;) &#39;jnm/term-toggle-mode)
-</code></pre></div>
+(define-key term-raw-map (kbd "C-c C-j") 'jnm/term-toggle-mode)
+(define-key term-raw-map (kbd "C-c C-k") 'jnm/term-toggle-mode)
+</code></pre>
+
 <p>The idea is that what I actually want is a method to toggle which
 mode the buffer is in. I can then overwrite the previous bindings with
-this toggle method, and I won&#39;t have to deal with this ever again.</p>
+this toggle method, and I won’t have to deal with this ever again.</p>
 
 <p>Thus, the command <code>jnm/term-toggle-mode</code> toggles a buffer between
 character mode and line mode. In order to connect the command, we need

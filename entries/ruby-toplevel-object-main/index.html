@@ -53,38 +53,46 @@
 
                     <article class="post-content">
                         <p>Hey guys. My blog has become pretty lonely, so I want to try coming up
-with some smaller, less-refined posts. I hope you don&#39;t mind.</p>
+with some smaller, less-refined posts. I hope you don’t mind.</p>
 
 <p>One of the few things I still forget in Ruby is how the toplevel
 global instance works and how it relates to <code>main</code>, <code>Object</code>
 instances, and kernel. For some reason I always think that the
-toplevel object is called <code>kernel</code>, which it isn&#39;t.</p>
+toplevel object is called <code>kernel</code>, which it isn’t.</p>
 
 <p>The toplevel object is the context code that is run by default in
 Ruby. This toplevel object is referenced by <code>self</code>, and is called
-&#39;main&#39;:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ ruby -e &#39;puts self&#39;
+‘main’:</p>
+
+<pre><code>bash-3.2$ ruby -e 'puts self'
 main
-</code></pre></div>
-<p>This &#39;main&#39; object is of class <code>Object</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ ruby -e &#39;puts self.class&#39;
+</code></pre>
+
+<p>This ‘main’ object is of class <code>Object</code>:</p>
+
+<pre><code>bash-3.2$ ruby -e 'puts self.class'
 Object
-</code></pre></div>
-<p>I thought it was intersting that this &#39;main&#39; object returns the string
-&#39;main&#39;; most instance of objects don&#39;t look like that:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ ruby -e &#39;puts self.class.new&#39;
+</code></pre>
+
+<p>I thought it was intersting that this ‘main’ object returns the string
+‘main’; most instance of objects don’t look like that:</p>
+
+<pre><code>bash-3.2$ ruby -e 'puts self.class.new'
 #&lt;Object:0x007f94e3835ae8&gt;
-bash-3.2$ ruby -e &#39;puts Object.new&#39;
+bash-3.2$ ruby -e 'puts Object.new'
 #&lt;Object:0x007fc2f4035b60&gt;
-</code></pre></div>
+</code></pre>
+
 <p>I wonder if there are any singleton methods on this metaclass that
 explains this different behavior?</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ ruby -e &#39;puts self.singleton_methods&#39;
+
+<pre><code>bash-3.2$ ruby -e 'puts self.singleton_methods'
 to_s
 public
 private
 include
-</code></pre></div>
+</code></pre>
+
 <p>Cool! Problem figured out.</p>
 
                     </article>

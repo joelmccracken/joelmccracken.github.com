@@ -56,7 +56,7 @@
 <a href="/entries/your-workstation-is-a-massive-technical-debt/">personal technical debt</a>,
 I have been trying to figure out how to handle my passwords.
 See, I have not maintained good personal password policies. To help get
-control of that, I&#39;ve been using
+control of that, I’ve been using
 <a href="https://lastpass.com/">LastPass</a>.</p>
 
 <p>Unfortunately, LastPass is not
@@ -66,31 +66,39 @@ people, but I think of it as
 a risky choice, and as its
 <a href="/entries/closed-source-as-risk">own form of technical debt</a>.
 There is something troubling about replacing one form of technical
-debt with another that I don&#39;t like.</p>
+debt with another that I don’t like.</p>
 
 <p>That being said, I am trying to be more practical and less
 ideological, whenever possible.
-Good enough is good enough. Better is better. Perfection doesn&#39;t exist.
+Good enough is good enough. Better is better. Perfection doesn’t exist.
 Thus, I think LastPass is a reasonably good way to tackle
 my password problems.</p>
 
 <p>However, one requirement I have is to be able to export my lastpass
-passwords. I don&#39;t want to be dependent upon LastPass for my entire
+passwords. I don’t want to be dependent upon LastPass for my entire
 online life.</p>
 
 <p>I was able to hack together a nice little script to do this for me.
 Basically, it:</p>
 
 <ol>
-<li><p>Prompts the user for LastPass authentication data. Passwords are
-read via <code>IO#noecho</code> so your passwords won&#39;t be visible on the
-console.</p></li>
-<li><p>Contacts LastPass and downloads the password database. The
+  <li>
+    <p>Prompts the user for LastPass authentication data. Passwords are
+read via <code>IO#noecho</code> so your passwords won’t be visible on the
+console.</p>
+  </li>
+  <li>
+    <p>Contacts LastPass and downloads the password database. The
 <a href="https://github.com/detunized/lastpass-ruby">LastPass ruby gem</a>
-makes this easy.</p></li>
-<li><p>Prompts the user for a password to encrypt the downloaded lastpass
-data with.</p></li>
-<li><p>Uses the gpg command to create a password-encrypted database.</p></li>
+makes this easy.</p>
+  </li>
+  <li>
+    <p>Prompts the user for a password to encrypt the downloaded lastpass
+data with.</p>
+  </li>
+  <li>
+    <p>Uses the gpg command to create a password-encrypted database.</p>
+  </li>
 </ol>
 
 <p>The code is available
@@ -98,7 +106,8 @@ data with.</p></li>
 It requires the lastpass gem to be installed, along with gpg.</p>
 
 <p>Example Usage:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ lastpass-backup ~/Dropbox/foo.gpg
+
+<pre><code>bash-3.2$ lastpass-backup ~/Dropbox/foo.gpg
 Lastpass Email:
 Lastpass Password:
 Connecting to lastpass
@@ -106,13 +115,17 @@ GPG Passphrase to encrypt export:
 You access the export by running:
     gpg -d /Users/joel/Dropbox/foo.gpg
 And entering the GPG passphrase you used.
-</code></pre></div>
+</code></pre>
+
 <p>Accessing the database:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">bash-3.2$ gpg -d ~/Dropbox/foo.gpg
+
+<pre><code>bash-3.2$ gpg -d ~/Dropbox/foo.gpg
 gpg: CAST5 encrypted data
 gpg: encrypted with 1 passphrase
 ...
-</code></pre></div>
+</code></pre>
+
+
                     </article>
 
                     <div id="disqus_thread"></div>

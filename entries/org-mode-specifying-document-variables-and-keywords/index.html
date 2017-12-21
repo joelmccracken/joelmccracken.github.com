@@ -60,12 +60,14 @@ me, which I want to cover here, because I am sure they have confused
 other people, too: keywords, properties, and plain old variables. Each
 of these essentially are used to set keys to values.</p>
 
-<h1>Keywords</h1>
+<h1 id="keywords">Keywords</h1>
 
 <p>Keywords look like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> #+KEYWORD: value
-</code></pre></div>
-<p>Keywords are predefined and used for specific things. They don&#39;t seem
+
+<pre><code> #+KEYWORD: value
+</code></pre>
+
+<p>Keywords are predefined and used for specific things. They don’t seem
 to be explicity explained anywhere in the manual, but they are
 referenced throughout.</p>
 
@@ -73,62 +75,69 @@ referenced throughout.</p>
 
 <p>More information:
 http://orgmode.org/worg/dev/org-syntax.html#Keywords
-http://orgmode.org/manual/In<em>002dbuffer-settings.html#In</em>002dbuffer-settings</p>
+http://orgmode.org/manual/In_002dbuffer-settings.html#In_002dbuffer-settings</p>
 
-<h1>Properties</h1>
+<h1 id="properties">Properties</h1>
 
 <p>Properties look like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> * header1
+
+<pre><code> * header1
  :PROPERTIES:
  :LOCATION: foo
  :STYLE:    scoot
  :END:
  * header2
-</code></pre></div>
+</code></pre>
+
 <p>Properties are used to provide settings that are specific to the
 structure. Above, <code>header1</code> has properties set for location and style,
 whereas <code>header2</code> does not have any values for these properties.</p>
 
 <p>Default property values may be set with the property keyword, like so:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> #+PROPERTY: property-name property-value
-</code></pre></div>
+
+<pre><code> #+PROPERTY: property-name property-value
+</code></pre>
+
 <p>More Information:</p>
 
 <ol>
-<li>http://orgmode.org/manual/Properties-and-Columns.html#Properties-and-Columns</li>
-<li>http://orgmode.org/manual/Property-syntax.html#Property-syntax</li>
-<li>http://orgmode.org/manual/In<em>002dbuffer-settings.html#In</em>002dbuffer-settings
-(search for &quot;property&quot;)</li>
+  <li>http://orgmode.org/manual/Properties-and-Columns.html#Properties-and-Columns</li>
+  <li>http://orgmode.org/manual/Property-syntax.html#Property-syntax</li>
+  <li>http://orgmode.org/manual/In_002dbuffer-settings.html#In_002dbuffer-settings
+(search for “property”)</li>
 </ol>
 
-<h1>Variables</h1>
+<h1 id="variables">Variables</h1>
 
 <p>Finally, we come to variables. The org mode documentation refers to
 variables that control settings on a regular basis, and I have never
 been sure what the right solution is.</p>
 
-<p>Now, I&#39;m familiar with Emacs lisp. I know what is meant by variables
+<p>Now, I’m familiar with Emacs lisp. I know what is meant by variables
 in a general sense, but it always seemed like there should be a syntax
 to set any variable. I was going to write in this article that I
-haven&#39;t found it, but I have since found it. Setting arbitrary
+haven’t found it, but I have since found it. Setting arbitrary
 variables looks like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> #+BIND: variable-name variable-value
-</code></pre></div>
+
+<pre><code> #+BIND: variable-name variable-value
+</code></pre>
+
 <p>However, since it took me some time to find it, I have used
-file variables to achieve the same thing. I&#39;ll include a link to the
+file variables to achieve the same thing. I’ll include a link to the
 documentation below about it.</p>
 
 <p>More Information:</p>
 
 <ol>
-<li>http://orgmode.org/manual/Export-settings.html#Export-settings
-(search for &quot;BIND&quot;)</li>
-<li>http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html</li>
+  <li>http://orgmode.org/manual/Export-settings.html#Export-settings
+(search for “BIND”)</li>
+  <li>http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html</li>
 </ol>
 
 <p>HTH,</p>
 
 <p>Joel</p>
+
 
                     </article>
 

@@ -1022,7 +1022,7 @@ Indeed, this takes me back to an old quote from Charles Babbage:
 
 &lt;blockquote&gt;
 &lt;p&gt;
-On two occasions I have been asked, — &quot;Pray, Mr. Babbage, if you put
+On two occasions I have been asked,   &quot;Pray, Mr. Babbage, if you put
 into the machine wrong figures, will the right answers come out?&quot; In
 one case a member of the Upper, and in the other a member of the
 Lower, House put this question. I am not able rightly to apprehend the
@@ -5270,7 +5270,7 @@ Bash completion has been installed to:
 zsh completion has been installed to:
   /usr/local/share/zsh/site-functions
 ==&amp;gt; Summary
-🍺  /usr/local/Cellar/rust/1.0.0: 13947 files, 353M
+   /usr/local/Cellar/rust/1.0.0: 13947 files, 353M
 &lt;/pre&gt;
 
 

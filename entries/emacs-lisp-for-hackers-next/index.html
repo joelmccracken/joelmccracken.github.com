@@ -56,70 +56,77 @@
 learning curve less steep, which I introduced <a href="/2012/08/28/the-little-emacs-lisp-book-for-hackers.html">here</a>.</p>
 
 <p>So far, you should be able to read Elisp and understand how to get
-around Emacs&#39; documentation. Now, its time to get into writing real
-Emacs Lisp. </p>
+around Emacs’ documentation. Now, its time to get into writing real
+Emacs Lisp.</p>
 
-<h2>Saying &quot;Hello, World&quot; in Emacs</h2>
+<h2 id="saying-hello-world-in-emacs">Saying “Hello, World” in Emacs</h2>
 
 <p>Lets get right to it: our very first, very minimal function. Run <code>M-x
 elm</code> to open up an 
-elisp interpreter, and evaluate the following code: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defun say-hello ()
-    &quot;hello&quot;)
-</code></pre></div>
+elisp interpreter, and evaluate the following code:</p>
+
+<pre><code>(defun say-hello ()
+    "hello")
+</code></pre>
+
 <p>Next, run it via <code>(say-hello)</code>. Your *ielm* buffer should look
 something like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (defun say-hello ()
-         &quot;Heya, World!&quot;)
+
+<pre><code>ELISP&gt; (defun say-hello ()
+         "Heya, World!")
 say-hello
 ELISP&gt; (say-hello)
-&quot;Heya, World!&quot;
-</code></pre></div>
+"Heya, World!"
+</code></pre>
+
 <p>This function definition is very simple. 
 It declares a function (via <code>defun</code>) named
 <code>say-hello</code>
 This function takes no arguments (signified by the empty parameter
 list <code>()</code>). 
-It returns the string &quot;Heya, World!&quot;. Easy. 
-Lets do the same thing, but <em>slightly</em> differently this time: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defun say-hello ()
-   &quot;Says hello.&quot;
+It returns the string “Heya, World!”. Easy. 
+Lets do the same thing, but <em>slightly</em> differently this time:</p>
+
+<pre><code>(defun say-hello ()
+   "Says hello."
    (interactive)
-   (message &quot;Hello, World!&quot;))
-</code></pre></div>
+   (message "Hello, World!"))
+</code></pre>
+
 <p>Lets slow down a bit and explain these new features. They are still
 easy, but do not necessarily directly translate from experience
 programming in other language</p>
 
-<p>The first piece we come to is the documentation string, &quot;Says Hello.&quot;
+<p>The first piece we come to is the documentation string, “Says Hello.”
 Documentation strings are used to document what a function does. The
 function <code>describe-function</code> displays the documentation string of the
 function that is being described.</p>
 
 <p>Other things also get documentation strings, such as variables with
-the <code>defvar</code> declaration. We will revisit <code>defvars</code> later, though. </p>
+the <code>defvar</code> declaration. We will revisit <code>defvars</code> later, though.</p>
 
 <p>The code <code>(interactive)</code> signifies that this function should be
 considered a <em>command</em>; that is, it should be user-invocable. This
-command can be invoked via &quot;M-x say-hello&quot;, and it can also be bound
+command can be invoked via “M-x say-hello”, and it can also be bound
 to a keyboard key.</p>
 
 <p>We begin to see the power and flexibility of Emacs with interactive
 functions. A user can easily create new commands; they need not be
 constrained to what the authors thought he would need, or use. More on
-this later. </p>
+this later.</p>
 
-<p>Finally, we use <code>message</code> to say &quot;Hello, World!&quot; The function
+<p>Finally, we use <code>message</code> to say “Hello, World!” The function
 <code>message</code> is used to send a message to the user. The string passed
  to <code>message</code> will be displayed in the echo area and output to the
  <code>*Messages*</code> buffer for reference. Its a really handy little function
-for telling the user about all sorts of things. </p>
+for telling the user about all sorts of things.</p>
 
-<p>We&#39;re almost done with the basic introduction to Emacs and Emacs
+<p>We’re almost done with the basic introduction to Emacs and Emacs
 lisp. At this point, you can get really far by understanding how to
 build your own functions, look at the way other functions are built,
 and experimenting. Next time, we will look at variables, and the
-various ways to use and define them. </p>
+various ways to use and define them.</p>
+
 
                     </article>
 

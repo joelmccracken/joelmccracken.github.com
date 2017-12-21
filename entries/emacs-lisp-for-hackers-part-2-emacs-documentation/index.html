@@ -62,32 +62,32 @@ use emacs.</p>
 that you learn about them highly enough. Some of the documentation is
 available online, but that is not nearly the same</p>
 
-<h2>Help documentation</h2>
+<h2 id="help-documentation">Help documentation</h2>
 
 <p>The command <code>help-for-help</code>, bound to <code>C-h ?</code>, is the self-documenting
 starting point. However, I myself even found <em>it</em> to be confusing
 (specifically, it is overly complete when what you may be looking for
 is only a guide). So,
-look at it quickly, remember it is there, and maybe move on. </p>
+look at it quickly, remember it is there, and maybe move on.</p>
 
 <p>A better place to start is with the command <code>describe-key</code>, which is
 bound to <code>C-h k</code>. The command allows you to type in a key sequence
 that you are used to using, and tells you what command that runs,
-along with the documentation for that command. </p>
+along with the documentation for that command.</p>
 
 <p>This is an easy way to start writing emacs lisp scripts. Every
 keybinding maps to an elisp function. And, since these are just
 regular functions, they can be called just like regular functions. So,
 if you know how to do something with a keybinding, you <em>also</em> know how
-to do it in elisp. </p>
+to do it in elisp.</p>
 
 <p>Another key feature to note is that many of these help windows contain
-&quot;links&quot; to the actual function definitions that these
+“links” to the actual function definitions that these
 describe. Clicking on the link or moving point to the link and
 pressing RET will take you to the source code for that function, which
 lets you see how this command is implemented, as long as it was
 implemented in elisp (functions that are implemented in C cannot be
-browsed in this way). </p>
+browsed in this way).</p>
 
 <p>You will occasionally come across a function that you do not
 understand. The command <code>describe-function</code>, bound to <code>C-h f</code>, asks
@@ -95,42 +95,43 @@ for a function name, and displays the documentation for that function.</p>
 
 <p>Similar to <code>describe-function</code> is <code>describe-variable</code>, which is bound
 to <code>C-h v</code>. This command does the same thing as <code>describe-function</code>,
-except that it works for variables.   </p>
+except that it works for variables.</p>
 
 <p>Lastly, the various <code>apropos-*</code> commands. These commands search
 through every symbol in emacs, returning what matches the string you
 provided. The command <code>apropos</code> will search everything, such as
 functions, variables, and commands, while <code>apropos-command</code> and
 <code>apropos-variable</code> will only search for commands and variables,
-respectively. </p>
+respectively.</p>
 
-<p>This isn&#39;t strictly about writing emacs lisp, but my favorite way to
+<p>This isn’t strictly about writing emacs lisp, but my favorite way to
 get to know some feature is via <code>describe-mode</code>, bound to 
 <code>C-h m</code>. This command gives you information about the current
 modes that a buffer is in, both its major mode and its minor
 modes. This is a great way to explore Emacs, and basically provides a
-&quot;cheat-sheet&quot; for every mode that you&#39;d use. </p>
+“cheat-sheet” for every mode that you’d use.</p>
 
-<h2>Info manuals: the full documentation</h2>
+<h2 id="info-manuals-the-full-documentation">Info manuals: the full documentation</h2>
 
-<p>Emacs&#39; has extensive documentation provided by info files. These are
-essentially hypertext documentation files. They&#39;re really, really
-great. However, it takes a while to get the &quot;feel&quot; for it. </p>
+<p>Emacs’ has extensive documentation provided by info files. These are
+essentially hypertext documentation files. They’re really, really
+great. However, it takes a while to get the “feel” for it.</p>
 
 <p>Access info with the command <code>info</code>, which is bound to <code>C-h i</code>. This
-shows you a directory of info files. </p>
+shows you a directory of info files.</p>
 
 <p>The key <code>s</code> is bound to <code>Info-search</code>, which performs a regular-expression
 search on the current 
 info document you are viewing. The command <code>clone-buffer</code> (<code>M-n</code>) is
 very useful for opening another info buffer to continue
-exploring Emacs documentation. </p>
+exploring Emacs documentation.</p>
 
-<hr>
+<hr />
 
 <p>These commands will get you where you need to be. At this point, you
 should be familiar enough with using Emacs to be able to answer your
-own questions as they come up. </p>
+own questions as they come up.</p>
+
 
                     </article>
 

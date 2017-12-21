@@ -54,38 +54,41 @@
                     <article class="post-content">
                         <p>I think that one of the keys to making scripting manageable is via
 good logging. Especially when it comes to personal solutions,
-over-engineering a solution can be a huge waste. </p>
+over-engineering a solution can be a huge waste.</p>
 
 <p>I personally have a function called <code>emacs-log</code> that lets me see what
 all of my hacks have been doing. It works well. However, one of the
 irritations that I have with this rests within the function
 <code>write-file</code>, which messages the user when a file is written. This can
-be irritating when a log file is being written every few seconds.  </p>
+be irritating when a log file is being written every few seconds.</p>
 
 <p>The wonderful folks on #emacs suggested <code>write-region</code>. This function
-is pretty common, so I&#39;ve seen it before. Apparently, it has an option
+is pretty common, so I’ve seen it before. Apparently, it has an option
 that allows you to skip the call 
 to <code>message</code>, however the documentation is a little odd, so I missed
 it myself. Setting the <code>VISIT</code> parameter to a symbol will make it skip
 the message. Also, it has an <code>APPEND</code> parameter, which is ideal for
-logs. </p>
+logs.</p>
 
-<p>So, I ended up with: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(with-temp-buffer
+<p>So, I ended up with:</p>
+
+<pre><code>(with-temp-buffer
   (insert log-str)
   (write-region (point-min) (point-max) log-file-name t
-                &#39;nomessage))
-</code></pre></div>
-<p>If you want to know, the full function is: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defun emacs-log (&amp;rest args)
-  (let* ((log-buffer-name  &quot;*My-Emacs-Log*&quot;)
+                'nomessage))
+</code></pre>
+
+<p>If you want to know, the full function is:</p>
+
+<pre><code>(defun emacs-log (&amp;rest args)
+  (let* ((log-buffer-name  "*My-Emacs-Log*")
          (log-buffer (get-buffer-create log-buffer-name))
-         (log-file-name &quot;~/Logs/my_emacs_log.log&quot;)
+         (log-file-name "~/Logs/my_emacs_log.log")
          (log-str (concat
                    (current-time-string)
-                   &quot; -- &quot;
-                   (apply &#39;format args)
-                   &quot;\n&quot;)))
+                   " -- "
+                   (apply 'format args)
+                   "\n")))
     (save-excursion
       (with-current-buffer log-buffer
         (goto-char (point-max))
@@ -93,8 +96,9 @@ logs. </p>
       (with-temp-buffer
         (insert log-str)
         (write-region (point-min) (point-max) log-file-name t
-                      &#39;nomessage)))))
-</code></pre></div>
+                      'nomessage)))))
+</code></pre>
+
                     </article>
 
                     <div id="disqus_thread"></div>

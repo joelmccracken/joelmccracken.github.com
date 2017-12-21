@@ -61,7 +61,7 @@ for the the very excellent
 <a href="https://github.com/bbatsov/projectile">Projectile</a>
 project requesting this feature.</p>
 
-<p>I have personally been using Emacs&#39; per-directory local variable
+<p>I have personally been using Emacs’ per-directory local variable
 facilities to emulate this behavior for some time.
 The
 <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html">emacs documentation is found here</a>,
@@ -72,29 +72,31 @@ but lets explain it based upon this use case.</p>
 file would sit beside the <code>Projectile</code> file, for example.</p>
 
 <p>Inside this file contains a very specially crafted lisp expression
-that defines the variables we want. I&#39;m just going to quote the manual
-here, because I can&#39;t think of a better way to describe it:</p>
+that defines the variables we want. I’m just going to quote the manual
+here, because I can’t think of a better way to describe it:</p>
 
 <blockquote>
-<p>The <code>.dir-locals.el</code> file should hold a specially-constructed list,
+  <p>The <code>.dir-locals.el</code> file should hold a specially-constructed list,
 which maps major mode names (symbols) to alists (*note Association
 Lists: (elisp)Association Lists.).  Each alist entry consists of a
 variable name and the directory-local value to assign to that variable,
 when the specified major mode is enabled.  Instead of a mode name, you
-can specify `nil&#39;, which means that the alist applies to any mode; or
+can specify `nil’, which means that the alist applies to any mode; or
 you can specify a subdirectory name (a string), in which case the alist
 applies to all files in that subdirectory.</p>
 
-<p>Here&#39;s an example of a `.dir-locals.el&#39; file:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> ((nil . ((indent-tabs-mode . t)
+  <p>Here’s an example of a `.dir-locals.el’ file:</p>
+
+  <pre><code> ((nil . ((indent-tabs-mode . t)
           (fill-column . 80)))
-  (c-mode . ((c-file-style . &quot;BSD&quot;)
+  (c-mode . ((c-file-style . "BSD")
              (subdirs . nil)))
-  (&quot;src/imported&quot;
+  ("src/imported"
    . ((nil . ((change-log-default-name
-               . &quot;ChangeLog.local&quot;))))))
-</code></pre></div>
-<p>This sets <code>indent-tabs-mode</code> and <code>fill-column</code> for any file in the
+               . "ChangeLog.local"))))))
+</code></pre>
+
+  <p>This sets <code>indent-tabs-mode</code> and <code>fill-column</code> for any file in the
 directory tree, and the indentation style for any C source file.  The
 special <code>subdirs</code> element is not a variable, but a special keyword
 which indicates that the C mode settings are only to be applied in the
@@ -106,25 +108,29 @@ subdirectory.</p>
 <p>On second thought, the manual example is pretty exhaustive. Lets
 simplify: In order to specify a variable global to the whole project,
 use this form:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">((nil . ((my-project-global-variable . &quot;the value&quot;))))
-</code></pre></div>
+
+<pre><code>((nil . ((my-project-global-variable . "the value"))))
+</code></pre>
+
 <p>Nice and simple.</p>
 
-<p>A nuance here is that the &quot;values&quot; are not actually evaluated whenever
+<p>A nuance here is that the “values” are not actually evaluated whenever
 the variable is set for a buffer in a project. What if we require
 evaluation? What if we want, for example, to ensure an elisp function
 exists whenever working in a project?</p>
 
 <p>For this, we can use the <code>eval</code> special form:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">((nil . ((eval . (defun my-project-function ()
+
+<pre><code>((nil . ((eval . (defun my-project-function ()
                    ;; your code here
                    )))))
-</code></pre></div>
+</code></pre>
+
 <p>Safety is clearly a big concern here. What if we open a file in a
 project that has a maliciously crafted <code>.dir-locals.el</code> file?
 Well, Emacs has still got our back: By default, it will ask you if you
 wish to allow these variables to take effect. It also saves that
-setting for the future so it doesn&#39;t need to keep asking you forever.
+setting for the future so it doesn’t need to keep asking you forever.
 You can find out more
 <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Safe-File-Variables.html">in the documentation here</a>.</p>
 

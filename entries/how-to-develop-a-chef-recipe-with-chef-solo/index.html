@@ -75,43 +75,56 @@ and which recipes to run.</p>
 
 <p>So, how do we do this? First, clone the repository that contains the cookbooks you
 are interested in modifying, and then cd into it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">git clone path/to/cookbook/repository.git
+
+<pre><code>git clone path/to/cookbook/repository.git
 
 cd repository
-</code></pre></div>
+</code></pre>
+
 <p>Next we need to install some support software. Install Chef:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">gem install chef
-</code></pre></div>
+
+<pre><code>gem install chef
+</code></pre>
+
 <p>If your project uses librarian-chef like mine does, install it as well, and
 then use it to acquire any cookbook dependencies:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">gem install librarian-chef
+
+<pre><code>gem install librarian-chef
 
 librarian-chef install
-</code></pre></div>
+</code></pre>
+
 <p>Now we should be ready to start using chef solo. The first file we need is
 the configuration file, <code>solo.rb</code>. Within it add the following:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">cookbook_path File.expand_path(&quot;./cookbooks&quot;)
-</code></pre></div>
+
+<pre><code>cookbook_path File.expand_path("./cookbooks")
+</code></pre>
+
 <p>This tells chef solo where to find the cookbooks for its configuration.</p>
 
 <p>Next we need add an <code>attrs.json</code> file which is used to specify any node attributes.
 Add the following to it:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">{
-  &quot;run_list&quot;: [&quot;recipe[the_cookbook_you_are_working_on::the_recipe_you_are_working_on]&quot;]
+
+<pre><code>{
+  "run_list": ["recipe[the_cookbook_you_are_working_on::the_recipe_you_are_working_on]"]
 }
-</code></pre></div>
-<p>You&#39;ll notice that its only member is <code>run_list</code>. This is a list of the recipes
+</code></pre>
+
+<p>You’ll notice that its only member is <code>run_list</code>. This is a list of the recipes
 that should be run on the node. Since we are trying to establish a minimalistic
 run that will be as fast as possible, the run list should just include the recipe
 we are testing.</p>
 
 <p>Finally, we can test out our single recipe by running:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">librarian-chef install &amp;&amp; sudo chef-solo -c solo.rb -j attrs.json
-</code></pre></div>
+
+<pre><code>librarian-chef install &amp;&amp; sudo chef-solo -c solo.rb -j attrs.json
+</code></pre>
+
 <p>The <code>librarian-chef install</code> command will pull cookbook changes as we make them into the
 <code>cookbooks</code> directory so they will be accessible to <code>chef-solo</code>, and <code>chef-solo</code> will then.</p>
 
 <p>Thats it! You can now work on your recipes and run them with this (relativey) quick command.</p>
+
 
                     </article>
 

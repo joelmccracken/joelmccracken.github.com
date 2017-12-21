@@ -53,7 +53,7 @@
 
                     <article class="post-content">
                         <p>I have been a Lisp supporter for half a decade now. Learning Lisp
-changed my life as a programmer. Since then, I&#39;ve looked at the world
+changed my life as a programmer. Since then, I’ve looked at the world
 with a Lisp point of view, and it has been very satisfying.
 There is a rather large problem, though. 
 The more I write in Lisp along with other languages
@@ -63,17 +63,17 @@ scoffed at and dismissed. Before we get into the details of the
 problem, we need to set the stage.</p>
 
 <p>If you pay attention to what lispers perspective of the history of
-programming languages, you&#39;ll see a progression of programming
+programming languages, you’ll see a progression of programming
 languages that started off with generations of algol-based programming
-languages slowly adopting lisp&#39;s features. As of 2012, the only
+languages slowly adopting lisp’s features. As of 2012, the only
 feature left that makes Lisp systems, well, Lisp, is having homoiconic
-syntax -- that is, support for macros. Now, because you are reading
+syntax – that is, support for macros. Now, because you are reading
 this, I assume you are familiar with 
 macros. It is worth quickly going over the concept, just to make sure
 we are on the same page.</p>
 
 <p>Programming systems that have macros let the programmer do all sorts
-of awesome magic. Basically, whatever syntax the system &quot;supports&quot; can
+of awesome magic. Basically, whatever syntax the system “supports” can
 be transformed, allowing the programmer control over what that syntax
 does. The homoiconic property refers to the code being a data type
 that is native to the system.</p>
@@ -89,8 +89,8 @@ some a really compelling reason to use them. In practice, this often
 means that in any given program,
 you are likely to never create a macro.
 This point is important.
-The syntax of Lisp -- that is, s-expressions, the odd parenthesis
-syntax -- is designed around macro facilities that
+The syntax of Lisp – that is, s-expressions, the odd parenthesis
+syntax – is designed around macro facilities that
 many programmers do.not.use. And, when they are used, they are used
 infrequently.</p>
 
@@ -102,7 +102,7 @@ another post, but for the sake of argument just accept that
 s-expressions tend to force your application to take a shape that is
 contrary to the way you think about it.</p>
 
-<p>The thing is, we don&#39;t need s-expressions for a programming system to
+<p>The thing is, we don’t need s-expressions for a programming system to
 support macros. 
 As far as I understand it, the value of s-expressions lie in the
 obviousness of how they will parse. If you look at a given
@@ -120,15 +120,15 @@ more user-friendly, but we can still create syntax rewriters without
 them.</p>
 
 <p>This fact, more than any other, has turned my attentions away from
-Lisp. I can&#39;t ignore the irritation that
+Lisp. I can’t ignore the irritation that
 s-expressions cause. Ruby, by contrast, already naturally has a 
 form of metaprogramming that makes many kinds of macros
-unnecessary. </p>
+unnecessary.</p>
 
 <p>This is a good time to mention that I have started developing a Macro
 system for Ruby. Some of it is inspired by 
 what @raganwald developed, but I am trying to take it down a different
-route. </p>
+route.</p>
 
                     </article>
 

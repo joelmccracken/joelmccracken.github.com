@@ -53,7 +53,7 @@
 
                     <article class="post-content">
                         <p>If you pay attention to Ruby, you almost certainly know about all of
-the refinements drama that happened. I&#39;ll assume that you don&#39;t
+the refinements drama that happened. I’ll assume that you don’t
 though.</p>
 
 <p>Basically, refinements is a feature that was going to be in Ruby 2.0,
@@ -62,42 +62,45 @@ thorough
 <a href="http://timelessrepo.com/refinements-in-ruby">explanations</a>
 of the idea behind refinements, but basically the idea is that you can
 monkeypatch a class, and those monkeypatches only exist within a
-certain scope of execution. </p>
+certain scope of execution.</p>
 
 <p>With refinements, you can add functionality to a
 class that is specific to the sender,  without adding logic to the
 receiver that is not generally applicable.</p>
 
-<p>So, here is something that lets you do this in a library. This doesn&#39;t
+<p>So, here is something that lets you do this in a library. This doesn’t
 <em>completely</em> replicate native functionality, but it does let you get
 90% of the way. Basically, we create classes that wrap other classes.
 First, the tests:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">describe Refinery do
-  it &quot;ignores classes that have not been refined&quot; do
+
+<pre><code>describe Refinery do
+  it "ignores classes that have not been refined" do
     ref = Refinery.new
-    &quot;lol&quot;.class.must_equal ref.refine(&quot;lol&quot;).class
+    "lol".class.must_equal ref.refine("lol").class
   end
 
-  it &quot;refines&quot; do
+  it "refines" do
     ref = Refinery.new do
       refine String do
         def to_ruby
-          &quot;\&quot;#{to_s}\&quot;&quot;
+          "\"#{to_s}\""
         end
       end
     end
 
-    ref.refine(&quot;hi&quot;).to_ruby.must_equal &quot;\&quot;hi\&quot;&quot;
-    ref.refine(&quot;hi&quot;).length.must_equal 2
+    ref.refine("hi").to_ruby.must_equal "\"hi\""
+    ref.refine("hi").length.must_equal 2
 
     proc do
-      &quot;hi&quot;.to_ruby
+      "hi".to_ruby
     end.must_raise NoMethodError
   end
 end
-</code></pre></div>
-<p>And, the code: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">require &#39;delegate&#39;
+</code></pre>
+
+<p>And, the code:</p>
+
+<pre><code>require 'delegate'
 
 class Refinery
   def initialize(&amp;refine_def)
@@ -148,9 +151,10 @@ class Refinery
     end
   end
 end
-</code></pre></div>
-<p>I guess I think should put this somewhere better, but I&#39;m not sure
-where, so I&#39;m open to suggestions!</p>
+</code></pre>
+
+<p>I guess I think should put this somewhere better, but I’m not sure
+where, so I’m open to suggestions!</p>
 
                     </article>
 

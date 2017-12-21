@@ -61,18 +61,22 @@ brittle.</p>
 <p>In Unix terms, a shebang is first line of a script which how the
 script should be interpreted.
 A typical shebang looks like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">    #!/usr/bin/bash
 
-    echo &quot;hello, world&quot;
-</code></pre></div>
-<p>The first line of the above script -- the <code>#!/usr/bin/bash</code> --
-is the &quot;shebang&quot; we are talking about.</p>
+<pre><code>    #!/usr/bin/bash
+
+    echo "hello, world"
+</code></pre>
+
+<p>The first line of the above script – the <code>#!/usr/bin/bash</code> –
+is the “shebang” we are talking about.</p>
 
 <p>For a Ruby script, a shebang looks more like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">    #!/usr/bin/ruby
 
-    puts &quot;hello, world&quot;
-</code></pre></div>
+<pre><code>    #!/usr/bin/ruby
+
+    puts "hello, world"
+</code></pre>
+
 <p>On some systems, this is fine. But what if the <code>ruby</code> you would like to
 use is not at that location on another system?
 The <code>env</code> command can be used as an additional level of abstraction
@@ -81,29 +85,31 @@ The <code>env</code> env command will
 search your <code>$PATH</code> environment variable for the executable you specify
 as its first argument. So, the below example would be run with the
 first <code>ruby</code> that the <code>env</code> command finds in your <code>$PATH</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#!/usr/bin/env ruby
 
-puts &quot;hello, world&quot;
-</code></pre></div>
+<pre><code>#!/usr/bin/env ruby
+
+puts "hello, world"
+</code></pre>
+
 <p>Thus, our script can be run on a computer that
 has Ruby in a different location, and
 everything will work well.</p>
 
-<p>However, this doesn&#39;t completely end the complication. Say, for
+<p>However, this doesn’t completely end the complication. Say, for
 example, our computer has Ruby version <code>1.9.3</code> and uses <code>1.9.3</code>
 features, whereas another has <code>1.8.7</code>.</p>
 
-<p>If we only specify <code>ruby</code> in the script&#39;s shebang, our script
-won&#39;t work on that other computer.</p>
+<p>If we only specify <code>ruby</code> in the script’s shebang, our script
+won’t work on that other computer.</p>
 
 <p>We really want to be able to declaratively specify the <em>type</em> of
 interpreter our script requires.
 We do not care about the location of the interpreter. We just care
 that it exists and that it provides the features our script requires.
-For example, we need &#39;ruby, but only version 2.0&#39;.
+For example, we need ‘ruby, but only version 2.0’.
 Some systems provide us
 with executables
-named &#39;ruby-<version x.y.z>&#39;, but not all.</p>
+named ‘ruby-<version x.y.z="">', but not all.</version></p>
 
 <p>Fortunately, we can build build <em>our own</em> executables and reference
 them in our shebangs. We can make the names of those executables as
@@ -115,19 +121,22 @@ assume you have <code>~/bin</code> in your <code>$PATH</code>:</p>
 
 <p>First, Create the file <code>~/bin/ruby-2.0</code>.
 Inside it, add the following lines:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">  #!/usr/bin/env bash
-  exec rvm ruby-2.0.0-&lt;your patch level here&gt; do ruby &quot;$@&quot;
-</code></pre></div>
+
+<pre><code>  #!/usr/bin/env bash
+  exec rvm ruby-2.0.0-&lt;your patch level here&gt; do ruby "$@"
+</code></pre>
+
 <p>Then, save the file and mark it as executable.</p>
 
-<p>That&#39;s it! You can now use the ruby-2.0 executable in your scripts.
+<p>That’s it! You can now use the ruby-2.0 executable in your scripts.
 This shows the whole thing, all set up, and how it works together:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">    bash-3.2$ which ruby-2.0
+
+<pre><code>    bash-3.2$ which ruby-2.0
     /Users/joel/bin/ruby-2.0
 
     bash-3.2$ cat `which ruby-2.0`
     #!/usr/bin/env bash
-    exec rvm ruby-2.0.0-p247 do ruby &quot;$@&quot;
+    exec rvm ruby-2.0.0-p247 do ruby "$@"
 
     bash-3.2$ cat test.rb
     #!/usr/bin/env ruby-2.0
@@ -136,20 +145,23 @@ This shows the whole thing, all set up, and how it works together:</p>
 
     bash-3.2$ ./test.rb
     2.0.0
-</code></pre></div>
-<p>If we wanted to use our <code>./test.rb</code> script on a system that doesn&#39;t
+</code></pre>
+
+<p>If we wanted to use our <code>./test.rb</code> script on a system that doesn’t
 use RVM and has a ruby 2.0 version at <code>/usr/local/ruby-2.0/bin/ruby</code>
 on that system we can create a <code>ruby-2.0</code> executable with the
 following:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">    #!/usr/bin/env bash
-    exec /usr/local/ruby-2.0/bin/ruby &quot;$@&quot;
-</code></pre></div>
+
+<pre><code>    #!/usr/bin/env bash
+    exec /usr/local/ruby-2.0/bin/ruby "$@"
+</code></pre>
+
 <p>The two parts of the above scripts that need to be mentioned are
-<code>exec</code> and <code>&quot;$@&quot;</code>. Exec tells the bash script &quot;replace the currently
-executing script with the following script&quot;. This makes dealing with
-IO simpler and the <code>ruby-2.0</code> executable won&#39;t stay around as a useless
-process for the duration of our script&#39;s execution.
-The formulation <code>&quot;$@&quot;</code> tells bash to
+<code>exec</code> and <code>"$@"</code>. Exec tells the bash script “replace the currently
+executing script with the following script”. This makes dealing with
+IO simpler and the <code>ruby-2.0</code> executable won’t stay around as a useless
+process for the duration of our script’s execution.
+The formulation <code>"$@"</code> tells bash to
 pass all of its arguments along to the next process.</p>
 
 <p>This technique can be adapted to all sorts of applications, not just

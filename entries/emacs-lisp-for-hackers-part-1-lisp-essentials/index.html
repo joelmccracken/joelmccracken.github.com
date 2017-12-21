@@ -63,13 +63,13 @@ information next. Exhaustive manuals are great for reference, but not
 good for teaching. I do not want to sit
 down and read a manual from front to back, and only then start to
 give it some meaning. I cannot remember all of that, so I need to use
-the manual as a refernce anyway. I can&#39;t prioritize what
+the manual as a refernce anyway. I can’t prioritize what
 I am reading without real world context, as most of it wont make a ton
 of sense until I have internalized some of the system.</p>
 
 <p>All a hacker really needs to know is enough to get
 comfortable, and some guidance over the various gotchas on the
-platform. I personally prefer a &quot;layered&quot; approach to
+platform. I personally prefer a “layered” approach to
 learning, which alternates between exploration, instruction, and
 creation. That is the style that I would like to try to follow.</p>
 
@@ -80,7 +80,7 @@ suited to you, <a href="http://www.gnu.org/software/emacs/manual/html_node/eintr
 Lisp</a>
 This first post covers the very basics of lisp.</p>
 
-<h1>Getting Started</h1>
+<h1 id="getting-started">Getting Started</h1>
 
 <p>First of all, you need to know how to evaluate Emacs Lisp. For this
 tutorial, at first I suggest you use ielm, the interactive Emacs Lisp
@@ -88,72 +88,84 @@ interpreter.</p>
 
 <p>To get started, open Emacs. Type <code>M-x ielm</code>, and then press
 return. A new buffer should appear which looks like:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">*** Welcome to IELM ***  Type (describe-mode) for help.
+
+<pre><code>*** Welcome to IELM ***  Type (describe-mode) for help.
 ELISP&gt;
-</code></pre></div>
+</code></pre>
+
 <p>Now enter:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(message &quot;hullo middle earth&quot;)
-</code></pre></div>
+
+<pre><code>(message "hullo middle earth")
+</code></pre>
+
 <p>and press return. If your console looks something like below, you are
 read to continue.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">*** Welcome to IELM ***  Type (describe-mode) for help.
-ELISP&gt; (message &quot;hullo middle earth&quot;)
-&quot;hullo middle earth&quot;
+
+<pre><code>*** Welcome to IELM ***  Type (describe-mode) for help.
+ELISP&gt; (message "hullo middle earth")
+"hullo middle earth"
 ELISP&gt;
-</code></pre></div>
+</code></pre>
+
 <p>For now, you use ielm to experiment with Emacs Lisp.</p>
 
-<h1>Introduction to Lisp</h1>
+<h1 id="introduction-to-lisp">Introduction to Lisp</h1>
 
 <p>This tutorial is specific to Emacs Lisp, but really is basically applicable to
-any lisp in general. As such, I will be referring to &quot;Lisp&quot; for a
+any lisp in general. As such, I will be referring to “Lisp” for a
 little while. If you have already done some Lisp programming,
 feel free to skip to the next section (Introduction to Emacs
 Lisp). You can always come back here to review.</p>
 
-<h2>Numbers</h2>
+<h2 id="numbers">Numbers</h2>
 
 <p>In Lisp, an integer looks like this:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; 1
+
+<pre><code>ELISP&gt; 1
 1
 ELISP&gt; 3
 3
 ELISP&gt; 5435
 5435
-</code></pre></div>
+</code></pre>
+
 <p>That is all you need to know for a long time.</p>
 
 <p>More:</p>
 
 <p><a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Numbers.html#Numbers">Emacs Lisp Reference Manual: Numbers</a></p>
 
-<h2>Strings</h2>
+<h2 id="strings">Strings</h2>
 
 <p>Lisp strings are double quoted, only. No single quotes.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; &quot;this is a string&quot;
-&quot;this is a string&quot;
-</code></pre></div>
+
+<pre><code>ELISP&gt; "this is a string"
+"this is a string"
+</code></pre>
+
 <p>More:</p>
 
 <p><a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Strings-and-Characters.html#Strings-and-Characters">Emacs Lisp Reference Manual: Strings</a></p>
 
-<h2>Symbols</h2>
+<h2 id="symbols">Symbols</h2>
 
 <p>A symbol is a name for something. Just as names are
 essentially strings, so are symbols just essentially strings.
 Symbols are used to reference a variety of things within Lisp,
 espeically to values and functions.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; my-symbol
-*** Eval error ***  Symbol&#39;s value as variable is void: my-symbol
-ELISP&gt; &#39;my-symbol
+
+<pre><code>ELISP&gt; my-symbol
+*** Eval error ***  Symbol's value as variable is void: my-symbol
+ELISP&gt; 'my-symbol
 my-symbol
-</code></pre></div>
+</code></pre>
+
 <p>If you notice, the first expression gave an error. It recognized that
-&quot;my-symbol&quot; was a symbol, but it tried to evaluate it. Since
-&quot;my-symbol&quot; doesn&#39;t refer to anything here, evaluating it doesn&#39;t make
+“my-symbol” was a symbol, but it tried to evaluate it. Since
+“my-symbol” doesn’t refer to anything here, evaluating it doesn’t make
 sense.</p>
 
-<p>Afterwards, I &quot;quoted&quot; my symbol with the single quotation mark and
+<p>Afterwards, I “quoted” my symbol with the single quotation mark and
 the symbol name. That meant just return the symbol, and do not
 evaluate it. We will cover quoting in a minute, but first, we need to
 talk about evaluation</p>
@@ -162,82 +174,96 @@ talk about evaluation</p>
 
 <p><a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Symbols.html#Symbols">Emacs Lisp Reference Manual: Symbols</a></p>
 
-<h2>Evaluation</h2>
+<h2 id="evaluation">Evaluation</h2>
 
-<p>Evaluation is the process of taking an expression and &quot;evaluating&quot;
+<p>Evaluation is the process of taking an expression and “evaluating”
 it.</p>
 
 <p>We have already seen what happens when we evaluate a number,
 a string, a symbol, and a quoted symbol:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; 56
+
+<pre><code>ELISP&gt; 56
 56
-ELISP&gt; &quot;hullo&quot;
-&quot;hullo&quot;
+ELISP&gt; "hullo"
+"hullo"
 ELISP&gt; a-symbol
-*** Eval error ***  Symbol&#39;s value as variable is void: a-symbol
-ELISP&gt; &#39;a-symbol
+*** Eval error ***  Symbol's value as variable is void: a-symbol
+ELISP&gt; 'a-symbol
 a-symbol
-</code></pre></div>
+</code></pre>
+
 <p>Evaluation is the process of taking an expression and figuring out
-what it &quot;means&quot;.</p>
+what it “means”.</p>
 
 <p>More:
 <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Evaluation.html#Evaluation">Emacs Lisp Reference Manual: Evaluation</a></p>
 
-<h3>calling functions</h3>
+<h3 id="calling-functions">calling functions</h3>
 
 <p>In Lisp, calling a function looks like:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(function-name arg1 arg2 arg3)
-</code></pre></div>
-<p>So, the following calls the function &quot;+&quot; with the arguments 1 and 2.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (+ 1 2)
+
+<pre><code>(function-name arg1 arg2 arg3)
+</code></pre>
+
+<p>So, the following calls the function “+” with the arguments 1 and 2.</p>
+
+<pre><code>ELISP&gt; (+ 1 2)
 3
-</code></pre></div>
+</code></pre>
+
 <p>Thus, evaluating a list (a list is indicted by the parentheses) means
-&quot;apply these arguments to this function&quot;.</p>
+“apply these arguments to this function”.</p>
 
 <p><a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Function-Forms.html#Function-Forms">Emacs Lisp Reference Manual: Evaluation of Function Forms</a></p>
 
-<h3>quotation</h3>
+<h3 id="quotation">quotation</h3>
 
 <p>Sometimes it is convenient to <em>not</em> evaluate code. Lets imagine that you
 want to create a list of the first three numbers.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (1 2 3)
+
+<pre><code>ELISP&gt; (1 2 3)
 *** Eval error ***  Invalid function: 1
-</code></pre></div>
+</code></pre>
+
 <p>That was an error because when emacs evaluates that statement, since
 it is a list, it thinks that this is a function call.</p>
 
 <p>Of course, we can create a list using a regular function:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (list 1 2 3)
+
+<pre><code>ELISP&gt; (list 1 2 3)
 (1 2 3)
-</code></pre></div>
+</code></pre>
+
 <p>However, this gets unwieldly:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (list (list 1) (list 2) (list 3))
+
+<pre><code>ELISP&gt; (list (list 1) (list 2) (list 3))
 ((1)
  (2)
  (3))
-</code></pre></div>
-<p>So, for convenience, Lisp gives the ability to &quot;quote&quot; an expression,
+</code></pre>
+
+<p>So, for convenience, Lisp gives the ability to “quote” an expression,
 preventing it from being evaluated. The easiest way to do that is with
-the single quotation mark, &#39;.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; &#39;((1) (2) (3))
+the single quotation mark, ‘.</p>
+
+<pre><code>ELISP&gt; '((1) (2) (3))
 ((1)
  (2)
  (3))
-</code></pre></div>
+</code></pre>
+
 <p>Quoting makes it much, much easier to reference things within your code.</p>
 
 <p>More:</p>
 
 <p><a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Quoting.html#Quoting">Emacs Lisp Reference Manual: Quoting</a></p>
 
-<hr>
+<hr />
 
 <p>Next time, we will talk about some specifics of Emacs Lisp, which
 should hopefully be enough to enable you to understand most Emacs Lisp
 that you come accross. But for now, this covers the essentials of a
-Lisp program, and you should already be equipped to &quot;read&quot; an Emacs Lisp
+Lisp program, and you should already be equipped to “read” an Emacs Lisp
 program while relying heavily on a reference.</p>
 
                     </article>

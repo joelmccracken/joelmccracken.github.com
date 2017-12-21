@@ -52,15 +52,15 @@
                     </header>
 
                     <article class="post-content">
-                        <p>Emacs has a great &quot;daemonization&quot; feature which allows the user to
+                        <p>Emacs has a great “daemonization” feature which allows the user to
 connect to
-a currently-running Emacs instance (&quot;the server&quot;) in a &quot;client&quot;.
+a currently-running Emacs instance (“the server”) in a “client”.
 The running client looks and feels just
 like a regular Emacs instance.</p>
 
 <p>Creating an Emacs daemon is straightforward. The
 <code>emacs --daemon</code> command will create a new emacs daemon instance.
-Running the command <code>server-start</code> from within emacs will &#39;daemonize&#39;
+Running the command <code>server-start</code> from within emacs will ‘daemonize’
 the current emacs instance, allowing new emacsclients to connect to
 it.</p>
 
@@ -76,20 +76,25 @@ daemonization.
 So, launching a new Emacs instance from
 the command line was really awkward.
 The easiest method I had found is something like:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">emacs -e &#39;(setq server-name &quot;my-special-server&quot;)&#39; --daemon
-</code></pre></div>
+
+<pre><code>emacs -e '(setq server-name "my-special-server")' --daemon
+</code></pre>
+
 <p>This code sets the <code>server-name</code> variable before daemonization
 starts. This works, but is awkward. You also need to deal with
 quoting the code, which is also awkward.</p>
 
 <p>One day, it struck me: what if <code>--daemon</code> takes a name as an argument,
-but this just isn&#39;t documented anywhere?</p>
+but this just isn’t documented anywhere?</p>
 
 <p>As it turns out, it does. The above may be accomplished by the
 following, which is much more attractive:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">emacs --daemon=my-special-server
-</code></pre></div>
+
+<pre><code>emacs --daemon=my-special-server
+</code></pre>
+
 <p>Suddenly, launching new Emacs servers is much easier.</p>
+
 
                     </article>
 

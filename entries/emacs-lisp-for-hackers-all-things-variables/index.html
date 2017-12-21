@@ -52,95 +52,107 @@
                     </header>
 
                     <article class="post-content">
-                        <h2>All Things Variables</h2>
+                        <h2 id="all-things-variables">All Things Variables</h2>
 
-<p>Time to get into Variables. </p>
+<p>Time to get into Variables.</p>
 
 <p>If you are used to most programming languages, setting and updating
 variables is the way you operate. There are a few ways this happens in
-Emacs Lisp, but the most fundamental way is via <code>setq</code>. </p>
+Emacs Lisp, but the most fundamental way is via <code>setq</code>.</p>
 
 <p>The special form <code>setq</code> is <em>extremely</em> simple. It sets the value of a
-symbol, which can be referenced later: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (setq x 10)
+symbol, which can be referenced later:</p>
+
+<pre><code>ELISP&gt; (setq x 10)
 10
 ELISP&gt; (+ x x)
 20
-</code></pre></div>
+</code></pre>
+
 <p>There is another, similar function: <code>defvar</code>. 
 The special form <code>defvar</code> is similar in spirit to setq.
 It allows you to define special variables, give them default values if
 they do not already have values, and provide documentation for what
-that variable &quot;means&quot;. Some examples: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">(defvar user-name &quot;Joel&quot; 
-  &quot;The name of the person currently using Emacs.&quot;)
+that variable “means”. Some examples:</p>
 
+<pre><code>(defvar user-name "Joel" 
+  "The name of the person currently using Emacs.")
+  
 (defvar pomodoro-done-hook nil
-  &quot;Hook that gets done whenever a pomodoro is finished.&quot;)
+  "Hook that gets done whenever a pomodoro is finished.")
 
-(defvar my-favorite-numbers &#39;(4 8 15 16 23 42))
-</code></pre></div>
-<p>Use <code>defvar</code> whenever you want to &quot;declare&quot; a variable to have some
-special, global meaning. </p>
+(defvar my-favorite-numbers '(4 8 15 16 23 42))
+</code></pre>
+
+<p>Use <code>defvar</code> whenever you want to “declare” a variable to have some
+special, global meaning.</p>
 
 <p>Emacs Lisp is not the most opinionated of Lisps, so it lets you do all
 the imperative programming that you want. However, a cleaner style of
 handling variables is <code>let</code>:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (let ((x 10))
+
+<pre><code>ELISP&gt; (let ((x 10))
          (+ x x))
 20
-</code></pre></div>
+</code></pre>
+
 <p>Let takes a list of symbol and value bindings, and then evaluates
 body, which represents the remaining arguments to <code>let</code>.</p>
 
 <p>Another slightly more difficult example should help clarify the concept</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (let ((x 10))
-         (list (let ((x &quot;hi&quot;))
+
+<pre><code>ELISP&gt; (let ((x 10))
+         (list (let ((x "hi"))
                  x)
                x))
-(&quot;hi&quot; 10)
-</code></pre></div>
+("hi" 10)
+</code></pre>
+
 <p>This example illustrates how <code>let</code> changes bindings. There are two
 <code>let</code> calls in this fragment. The outer call sets the value of the
 symbol <code>x</code> to 10. After this happens, the body call occurs. Within the
-call to <code>list</code> is a second <code>let</code> form. This <code>let</code> binds &quot;hi&quot; to the
-symbol <code>x</code>, which is then returned from the <code>let</code>. This value (&quot;hi&quot;)
+call to <code>list</code> is a second <code>let</code> form. This <code>let</code> binds “hi” to the
+symbol <code>x</code>, which is then returned from the <code>let</code>. This value (“hi”)
 then gets made into a list, along with the original value of x, which
-was 10. Both of these then get returned, which gives us <code>(&quot;hi&quot; 10&quot;)</code>. </p>
+was 10. Both of these then get returned, which gives us <code>("hi" 10")</code>.</p>
 
 <p>The bindings list for <code>let</code> can take multiple bindings, which will all
-then be available when the body is executed: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (let ((a &quot;Heya&quot;)
-             (b &quot;worldz&quot;))
-         (concat a &quot; &quot; b))
-&quot;Heya worldz&quot;
-</code></pre></div>
+then be available when the body is executed:</p>
+
+<pre><code>ELISP&gt; (let ((a "Heya")
+             (b "worldz"))
+         (concat a " " b))
+"Heya worldz"
+</code></pre>
+
 <p>There is another form of <code>let</code>, called <code>let*</code>, which makes each
 binding available to 
 the next binding when it is evaluated. This is actually extremely
 useful, but when I first encountered this idea the usefulness was not
 immediately apparent. So, lets have one final example, shall we?
-Lets look at a quick regular expression example: </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">ELISP&gt; (let* ((filename &quot;2012-09-10-a-blog-post.markdown&quot;)
-              (file-without-extension-rx &quot;\\(.*\\).markdown&quot;)
+Lets look at a quick regular expression example:</p>
+
+<pre><code>ELISP&gt; (let* ((filename "2012-09-10-a-blog-post.markdown")
+              (file-without-extension-rx "\\(.*\\).markdown")
               (regular-filename (progn
                                   (string-match file-without-extension-rx filename)
                                   (match-string 1 filename))))
-         (message &quot;The filename sans extension was: %s&quot; regular-filename))
-&quot;The filename sans extension was: 2012-09-10-a-blog-post&quot;
-</code></pre></div>
+         (message "The filename sans extension was: %s" regular-filename))
+"The filename sans extension was: 2012-09-10-a-blog-post"
+</code></pre>
+
 <p>Notice how the <code>regular-filename</code> value comes from a compound
 expression, and that the arguments two both function calls come from
-the previous bindings. This is really, really useful in practice. </p>
+the previous bindings. This is really, really useful in practice.</p>
 
-<p>Well, that&#39;s about it for the basics of Emacs Lisp. With the Info
+<p>Well, that’s about it for the basics of Emacs Lisp. With the Info
 documentation and the documentation for the various parts of Emacs,
-you should be equipped to hack the good hacks.  </p>
+you should be equipped to hack the good hacks.</p>
 
-<p>Of course, I&#39;m not done helping you learn Emacs Lisp. There are many areas of the Emacs
+<p>Of course, I’m not done helping you learn Emacs Lisp. There are many areas of the Emacs
 APIs that can use some simplification. And then, there is the
 reorganization thing that will happen when this series
-gets rolled into book form. So, stay tuned. </p>
+gets rolled into book form. So, stay tuned.</p>
 
                     </article>
 
