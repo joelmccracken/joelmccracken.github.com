@@ -3,10 +3,10 @@
     <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Docker and Fixing the Internet</title>
+    <title>Dockerizing my Jekyll Blog</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="Nebby about Tech">
-    <link rel="canonical" href="http://joelmccracken.github.io/entries/docker-and-fixing-the-internet/">
+    <link rel="canonical" href="http://joelmccracken.github.io/entries/dockerizing-blog/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
@@ -26,38 +26,102 @@
             <div class="wrap">
                 <div class="post">
                     <header class="post-header">
-                        <h1>Docker and Fixing the Internet</h1>
-                        <p class="meta">Dec 3, 2013</p>
+                        <h1>Dockerizing my Jekyll Blog</h1>
+                        <p class="meta">Dec 28, 2017</p>
                     </header>
 
                     <article class="post-content">
-                        <p>I’ve been hearing about LXC and Docker (hereafter “Docker”)
-from all around the internet
-over the past few months. If you pay attention to Linux developments
-at all, you have probably heart about them both.</p>
+                        <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Goals</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Existing <code>org-mode</code> Inetration</a></li>
+<li><a href="#sec-1-2">1.2. Additional components</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Gotchas</a></li>
+<li><a href="#sec-3">3. Conclusion</a></li>
+</ul>
+</div>
+</div>
+<p>
+Over the last several months, I have been using Docker more and more at work.
+</p>
 
-<p>A while ago I outlined a solution
-<a href="/entries/lets-fix-the-internet/">to fix the internet</a>,
-which would
-shift control of the internet to individuals and away from
-centralization.</p>
+<p>
+I have been wanting to apply it to something personal, and dockerizing my blog seems like the right challenge for me right now.
+There were a number of weaknesses in the system that I wanted to address.
+</p>
 
-<p>Docker makes this project much easier.
-Installing and running many pieces of software on a system
-can cause them to
-interact in problematic ways. Beyond that, the entire system is made
-more complicated by each new component that is installed.</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Goals</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Existing <code>org-mode</code> Inetration</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+I rely on an <code>org-mode</code> compilation service to convert my <code>org</code> files into html for Jekyll. The tricky part is that this
+needs to run inside an emacs process. Before, I had some code for <a href="https://github.com/joelmccracken/joelmccracken.github.com/blob/0f270d6a112529b1507c7df079af6cf5acb9f6fc/_plugins/org-converter.rb#L19">automatically starting</a>
+the required emacs process, ensuring the service is ready when needed.
+This was tricky though, had bugs, and it makes sense as a separate service controlled as part of a `docker-compose` file.
+</p>
+</div>
+</div>
 
-<p>Instead of having configuration, logs, data, and binaries all on the
-same system, Docker lets us contain each application in its own
-machine. That way, each container much easier to understand, debug,
-and can be consider independent of the rest of the system.
-Before Docker, we could have simplified the project in the same way by
-installing each piece of software on a separate
-machine. Realistically, this would cost way too much.</p>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Additional components</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Over time, I have grown less-and-less satisfied with Jekyll. This is partially the reason I decided to hack together an
+<code>org-mode</code> service, which I noted above. Given that I want to make an orderly transition from Jekyll, I intend to add
+more processes/services to the system, not less. So, I am investigating a docker system as a way of managing these additions.
+</p>
 
-<p>I am pumped. In my mind, Docker removes the majority of the work
-blocking us from having such a system today.</p>
+<p>
+For example, a few of the things I want to add in the long term are:
+</p>
+
+<ul class="org-ul">
+<li>An <code>nginx</code> front-end to sit in front of the Jekyll site.
+</li>
+<li>Better logging/redirect support.
+</li>
+<li>A management interface for analytics.
+</li>
+<li>A replacement for Disqus.
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Gotchas</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+see it as great way to simplify things;
+</p>
+
+<p>
+notes/interesting bits
+</p>
+
+<ul class="org-ul">
+<li>communication issues; mysterious connection issues
+</li>
+
+<li>confusion around CMD vs ENTRYPOINT; move complex command to script
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Conclusion</h2>
+</div>
 
                     </article>
 
@@ -66,9 +130,9 @@ blocking us from having such a system today.</p>
                      var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
                      var disqus_config = function () {
-                         this.page.url = "http://joelmccracken.github.io/entries/docker-and-fixing-the-internet/";
-                         this.page.identifier = "/entries/docker-and-fixing-the-internet";
-                         this.page.title = "Docker and Fixing the Internet";
+                         this.page.url = "http://joelmccracken.github.io/entries/dockerizing-blog/";
+                         this.page.identifier = "/entries/dockerizing-blog";
+                         this.page.title = "Dockerizing my Jekyll Blog";
                      };
 
                      (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW

@@ -3,10 +3,10 @@
     <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Docker and Fixing the Internet</title>
+    <title>A Simple Web App in Rust, Conclusion: Putting Rust Aside for Now</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="Nebby about Tech">
-    <link rel="canonical" href="http://joelmccracken.github.io/entries/docker-and-fixing-the-internet/">
+    <link rel="canonical" href="http://joelmccracken.github.io/entries/update/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css">
@@ -26,38 +26,57 @@
             <div class="wrap">
                 <div class="post">
                     <header class="post-header">
-                        <h1>Docker and Fixing the Internet</h1>
-                        <p class="meta">Dec 3, 2013</p>
+                        <h1>A Simple Web App in Rust, Conclusion: Putting Rust Aside for Now</h1>
+                        <p class="meta">Dec 28, 2017</p>
                     </header>
 
                     <article class="post-content">
-                        <p>I’ve been hearing about LXC and Docker (hereafter “Docker”)
-from all around the internet
-over the past few months. If you pay attention to Linux developments
-at all, you have probably heart about them both.</p>
+                        <p>
+<i>Warning: this whole piece is full of opinion. It probably isn't surprising to anyone in the Rust community, but I want punctuate the series.</i>
+</p>
 
-<p>A while ago I outlined a solution
-<a href="/entries/lets-fix-the-internet/">to fix the internet</a>,
-which would
-shift control of the internet to individuals and away from
-centralization.</p>
+<p>
+Several years ago, I worked on a series of blog posts entitled "Building a Simple Webapp in Rust".
+I hoped to return to it at some point, but I have not, and I doubt I ever will finish the series &#x2013;
+at this point, almost everything in the post is probably out of date.
+</p>
 
-<p>Docker makes this project much easier.
-Installing and running many pieces of software on a system
-can cause them to
-interact in problematic ways. Beyond that, the entire system is made
-more complicated by each new component that is installed.</p>
+<p>
+In one important sense, the project was successful: I learned a ton about Rust.
+</p>
 
-<p>Instead of having configuration, logs, data, and binaries all on the
-same system, Docker lets us contain each application in its own
-machine. That way, each container much easier to understand, debug,
-and can be consider independent of the rest of the system.
-Before Docker, we could have simplified the project in the same way by
-installing each piece of software on a separate
-machine. Realistically, this would cost way too much.</p>
+<p>
+I did eventually stop, though.
+Why? In short, I began to doubt that Rust held enough value <b>for me</b> versus other avenues of interest.
+It is clear to me that Rust is a great language for situations that require tight control over the hardware and performance.
+Given a project with these requirements, I would absolutely start using Rust again.
+If I had any situation where I would otherwise write C++, I would use Rust.
+</p>
 
-<p>I am pumped. In my mind, Docker removes the majority of the work
-blocking us from having such a system today.</p>
+<p>
+However, hardware control is not the most important factor in most of the software I write.
+I never write software in C++.
+Clarity and maintainability are the most important factors, balanced against development time.
+Performance issues can almost always be addressed after the software works, by performance testing and
+making smart optimizations.
+</p>
+
+<p>
+There was one compelling reason for me to continue investigating Rust:
+I have heard some say Rust is the most productive language for them,
+and they believe this would apply to programmers in general.
+The reasoning goes that the ownership system makes them think more about their code,
+and in some ways significantly influences design for the better.
+I think this is quite possible,
+but I am not convinced enough to invest a significant amount of time in Rust.
+I think my time is best spent elsewhere.
+</p>
+
+<p>
+Ultimately, I decided that my time would be better spent learning other things.
+Specifically, Haskell (by way of Elm initially)
+and other languages with powerful effects systems.
+</p>
 
                     </article>
 
@@ -66,9 +85,9 @@ blocking us from having such a system today.</p>
                      var disqus_shortname = 'joelmccracken'; // required: replace example with your forum shortname
 
                      var disqus_config = function () {
-                         this.page.url = "http://joelmccracken.github.io/entries/docker-and-fixing-the-internet/";
-                         this.page.identifier = "/entries/docker-and-fixing-the-internet";
-                         this.page.title = "Docker and Fixing the Internet";
+                         this.page.url = "http://joelmccracken.github.io/entries/update/";
+                         this.page.identifier = "/entries/update";
+                         this.page.title = "A Simple Web App in Rust, Conclusion: Putting Rust Aside for Now";
                      };
 
                      (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
