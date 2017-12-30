@@ -938,3 +938,13 @@ When I was first planning this series, I expected the next task to be
 integrating the logging code with the ~nickel.rs~ code, but at this
 point I think it is going to be pretty simple. I suspect that the next
 difficult part will be handling [[http://doc.rust-lang.org/getopts/getopts/index.html][option parsing]].
+
+---
+
+Series: A Simple Web App in Rust
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/][Part 1]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/][Part 2a]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/][Part 2b]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/][Part 3]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/][Part 4]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/][Conclusion]]

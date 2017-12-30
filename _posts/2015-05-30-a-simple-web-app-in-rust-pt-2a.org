@@ -733,3 +733,13 @@ times in Rust, which will be the [[http://joelmccracken.github.io/entries/a-simp
   1. NMSpaz pointed out
      [[https://www.reddit.com/r/rust/comments/38ahgr/a_simple_web_app_in_rust_part_2a/crvvhkf][on Reddit]]
      that one of my examples had an error in it.
+
+---
+
+Series: A Simple Web App in Rust
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/][Part 1]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/][Part 2a]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/][Part 2b]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/][Part 3]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/][Part 4]]
+   - [[http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/][Conclusion]]
