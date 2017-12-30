@@ -1,0 +1,16 @@
+version: '3'
+services:
+  jekyll-base:
+    image: journal-jekyll
+    volumes:
+      - ".:/jekyll"
+    ports:
+      - "4000:4000"
+    build: ./_jekyll-image
+    depends_on:
+      - emacs-org-compiler
+    command: ["jekyll", "serve"]
+  emacs-org-compiler:
+    image: emacs-org-compiler
+    stop_signal: SIGKILL
+    build: ./_emacs-org-compiler

@@ -1,6 +1,6 @@
 version: '3'
 services:
-  jekyll:
+  jekyll-base:
     image: journal-jekyll
     volumes:
       - ".:/jekyll"
