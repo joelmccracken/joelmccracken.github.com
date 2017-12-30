@@ -7,6 +7,82 @@
     <atom:link href="http://joelmccracken.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>A Simple Web App in Rust, Conclusion: Putting Rust Aside for Now</title>
+        <description>&lt;p&gt;
+&lt;i&gt;Warning: this whole piece is full of opinion. It probably isn&#39;t surprising to anyone in the Rust community, but I want punctuate the series.&lt;/i&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+Several years ago, I worked on a series of blog posts entitled &quot;Building a Simple Webapp in Rust&quot;.
+I hoped to return to it at some point, but I have not, and I doubt I ever will finish the series &amp;#x2013;
+at this point, almost everything in the post is probably out of date.
+&lt;/p&gt;
+
+&lt;p&gt;
+In one important sense, the project was a success: I learned a ton about Rust.
+&lt;/p&gt;
+
+&lt;p&gt;
+I did eventually stop the project, and stop learning Rust.
+Why? In short, I began to doubt that Rust held enough value &lt;b&gt;for me&lt;/b&gt; versus other avenues of interest.
+It is clear to me that Rust is a great language for situations that require tight control over the hardware and performance.
+Given a project with these requirements, I would absolutely start using Rust again.
+If I had any situation where I would otherwise write C++, I would use Rust.
+&lt;/p&gt;
+
+&lt;p&gt;
+However, hardware control is not the most important factor in most of the software I write.
+I never write software in C++.
+Clarity and maintainability are the most important factors, balanced against development time.
+Performance issues can almost always be addressed after the software works, by performance testing and
+making smart optimizations.
+&lt;/p&gt;
+
+&lt;p&gt;
+There was one compelling reason for me to continue investigating Rust:
+I have heard some say Rust is the most productive language for them,
+and they believe this would apply to programmers in general.
+The reasoning goes that the ownership system makes them think more about their code,
+and in some ways significantly influences design for the better.
+I think this is quite possible,
+but I am not convinced enough to invest a significant amount of time in Rust.
+I think my time is best spent elsewhere.
+&lt;/p&gt;
+
+&lt;p&gt;
+Ultimately, I decided that my time would be better spent learning other things.
+Specifically, Haskell (by way of Elm initially)
+and other languages with powerful effects systems.
+&lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Series: A Simple Web App in Rust
+&lt;/p&gt;
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Part 1&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Part 2a&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/&quot;&gt;Part 2b&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/&quot;&gt;Part 3&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/&quot;&gt;Part 4&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/&quot;&gt;Conclusion&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 29 Dec 2017 22:48:58 -0500</pubDate>
+        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-conclusion/</link>
+        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-conclusion/</guid>
+      </item>
+    
+      <item>
         <title>Writing a &#39;Human Resource Machine&#39; Emulator in Elm</title>
         <description>&lt;div id=&quot;table-of-contents&quot;&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
@@ -2136,6 +2212,30 @@ from.
 I hope that as Rust matures, the error messages get better. If they
 do, I think all my concerns will disappear.
 &lt;/p&gt;
+
+
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Series: A Simple Web App in Rust
+&lt;/p&gt;
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Part 1&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Part 2a&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/&quot;&gt;Part 2b&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/&quot;&gt;Part 3&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/&quot;&gt;Part 4&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/&quot;&gt;Conclusion&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
@@ -2932,6 +3032,28 @@ Fortunately, I think I am slowly understanding how Rust works, and
 especially its borrowing functionality. This gives me hope for the
 future.
 &lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Series: A Simple Web App in Rust
+&lt;/p&gt;
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Part 1&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Part 2a&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/&quot;&gt;Part 2b&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/&quot;&gt;Part 3&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/&quot;&gt;Part 4&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/&quot;&gt;Conclusion&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>
@@ -4197,6 +4319,28 @@ integrating the logging code with the &lt;code&gt;nickel.rs&lt;/code&gt; code, b
 point I think it is going to be pretty simple. I suspect that the next
 difficult part will be handling &lt;a href=&quot;http://doc.rust-lang.org/getopts/getopts/index.html&quot;&gt;option parsing&lt;/a&gt;.
 &lt;/p&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Series: A Simple Web App in Rust
+&lt;/p&gt;
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Part 1&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Part 2a&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/&quot;&gt;Part 2b&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/&quot;&gt;Part 3&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/&quot;&gt;Part 4&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/&quot;&gt;Conclusion&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&quot;footnotes&quot;&gt;
@@ -5112,6 +5256,28 @@ times in Rust, which will be the &lt;a href=&quot;http://joelmccracken.github.io
 that one of my examples had an error in it.
 &lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;p&gt;
+&amp;#x2014;
+&lt;/p&gt;
+
+&lt;p&gt;
+Series: A Simple Web App in Rust
+&lt;/p&gt;
+&lt;ul class=&quot;org-ul&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-1/&quot;&gt;Part 1&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a/&quot;&gt;Part 2a&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2b/&quot;&gt;Part 2b&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-3/&quot;&gt;Part 3&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-4-cli-option-parsing/&quot;&gt;Part 4&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-conclusion/&quot;&gt;Conclusion&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&quot;footnotes&quot;&gt;
@@ -5128,660 +5294,6 @@ lol.
         <pubDate>Sat, 30 May 2015 00:00:00 -0400</pubDate>
         <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2a/</link>
         <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-2a/</guid>
-      </item>
-    
-      <item>
-        <title>A Simple Web App in Rust, Part 1</title>
-        <description>&lt;div id=&quot;table-of-contents&quot;&gt;
-&lt;h2&gt;Table of Contents&lt;/h2&gt;
-&lt;div id=&quot;text-table-of-contents&quot;&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-1&quot;&gt;1. Intro &amp;amp; Background&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-2&quot;&gt;2. The App&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-3&quot;&gt;3. The Plan&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-4&quot;&gt;4. Writing The &quot;Hello World&quot; Web App&lt;/a&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-4-1&quot;&gt;4.1. Installing Rust&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-4-2&quot;&gt;4.2. Setting Up the Project&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-4-3&quot;&gt;4.3. The &quot;Hello World&quot; Example Running&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#sec-4-4&quot;&gt;4.4. One Final Challenge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&quot;outline-container-sec-1&quot; class=&quot;outline-2&quot;&gt;
-&lt;h2 id=&quot;sec-1&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;1&lt;/span&gt; Intro &amp;amp; Background&lt;/h2&gt;
-&lt;div class=&quot;outline-text-2&quot; id=&quot;text-1&quot;&gt;
-&lt;p&gt;
-What is it like to write a tiny web app in Rust from
-the perspective of an experienced programmer who is new to the ecosystem?
-Read on to find out.
-&lt;/p&gt;
-
-&lt;p&gt;
-I&#39;ve been interested in Rust since I first heard about it. A systems
-language that supports macros &amp;amp; has room to grow towards higher-level
-abstractions? Awesome.
-&lt;/p&gt;
-
-&lt;p&gt;
-So far, I have only written read blog posts about Rust &amp;amp; done some
-very basic &quot;hello world&quot; style programs. So, I guess I&#39;m saying that
-my perspective is pretty raw.
-&lt;/p&gt;
-
-&lt;p&gt;
-A while back I saw &lt;a href=&quot;http://artyom.me/learning-racket-1&quot;&gt;this article&lt;/a&gt; about learning Racket, and I thought
-it was really great. We need more people writing about their
-experiences as beginners with a technology, especially those who
-already have a fair amount of experience with
-technology &lt;sup&gt;&lt;a id=&quot;fnr.1&quot; name=&quot;fnr.1&quot; class=&quot;footref&quot; href=&quot;#fn.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;. I also liked its stream-of-consciousness
-approach, and think it would be a nice experiment to write one for
-Rust.
-&lt;/p&gt;
-
-&lt;p&gt;
-So, with the preliminaries out of the way, let&#39;s get started.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-
-&lt;div id=&quot;outline-container-sec-2&quot; class=&quot;outline-2&quot;&gt;
-&lt;h2 id=&quot;sec-2&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;2&lt;/span&gt; The App&lt;/h2&gt;
-&lt;div class=&quot;outline-text-2&quot; id=&quot;text-2&quot;&gt;
-&lt;p&gt;
-The app I want to build serves a simple need of mine: A
-brain-dead-easy way to record when I take my medication each day. I
-want tap a link on my home screen and have it record the visit, and
-this will preserve a record of when I&#39;ve taken my medication.
-&lt;/p&gt;
-
-&lt;p&gt;
-Rust seems to be suited for this app. It&#39;s fast. Running a single,
-simple server takes relatively
-few resources, so it won&#39;t be taxing to my VPS. And, I have wanted to
-do something more real with Rust.
-&lt;/p&gt;
-
-&lt;p&gt;
-The MVP is very small, but there room for it to grow if I want to add
-more features. Sounds perfect.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&quot;outline-container-sec-3&quot; class=&quot;outline-2&quot;&gt;
-&lt;h2 id=&quot;sec-3&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;3&lt;/span&gt; The Plan&lt;/h2&gt;
-&lt;div class=&quot;outline-text-2&quot; id=&quot;text-3&quot;&gt;
-&lt;p&gt;
-So, I&#39;m going to quickly admit something here: I lost an earlier
-version of this project. This has some disadvantages: as I recreate
-this, I won&#39;t have the same level of unfamiliarity I did when I
-approached it some weeks ago. However, I think I remember those pain
-points, and will do my best to recreate them.
-&lt;/p&gt;
-
-&lt;p&gt;
-However, there is one thing that I learned that I want to apply here:
-it is much easier to build separate, individual programs while
-exploring APIs instead of trying to do everything all at once.
-&lt;/p&gt;
-
-&lt;p&gt;
-To that end, I have the following plan:
-&lt;/p&gt;
-&lt;ol class=&quot;org-ol&quot;&gt;
-&lt;li&gt;Build a simple web server that displays &quot;hello world&quot; when I
-visit.
-&lt;/li&gt;
-&lt;li&gt;Build a tiny program that logs the formatted date and time whenever
-it is run.
-&lt;/li&gt;
-&lt;li&gt;Integrate the two into a single application.
-&lt;/li&gt;
-&lt;li&gt;Deploy this application to my server, a Digital Ocean VPS.
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&quot;outline-container-sec-4&quot; class=&quot;outline-2&quot;&gt;
-&lt;h2 id=&quot;sec-4&quot;&gt;&lt;span class=&quot;section-number-2&quot;&gt;4&lt;/span&gt; Writing The &quot;Hello World&quot; Web App&lt;/h2&gt;
-&lt;div class=&quot;outline-text-2&quot; id=&quot;text-4&quot;&gt;
-&lt;p&gt;
-So, I&#39;m starting an empty git repo &amp;amp; have homebrew installed. Lets
-install Rust. I know this much, at least.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&quot;outline-container-sec-4-1&quot; class=&quot;outline-3&quot;&gt;
-&lt;h3 id=&quot;sec-4-1&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.1&lt;/span&gt; Installing Rust&lt;/h3&gt;
-&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-1&quot;&gt;
-&lt;pre class=&quot;example&quot;&gt;
-$ brew update
-...
-$ brew install rust
-==&amp;gt; Downloading https://homebrew.bintray.com/bottles/rust-1.0.0.yosemite.bottle.tar.gz
-############################################################################################# 100.0%
-==&amp;gt; Pouring rust-1.0.0.yosemite.bottle.tar.gz
-==&amp;gt; Caveats
-Bash completion has been installed to:
-  /usr/local/etc/bash_completion.d
-
-zsh completion has been installed to:
-  /usr/local/share/zsh/site-functions
-==&amp;gt; Summary
-   /usr/local/Cellar/rust/1.0.0: 13947 files, 353M
-&lt;/pre&gt;
-
-
-&lt;p&gt;
-Oook, before anything else, lets do a regular &quot;hello world&quot; program.
-&lt;/p&gt;
-
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cat &amp;gt; hello_world.rs
-fn main() {
-
-        println!(&quot;hello world&quot;);
-}
-^D
-$ rustc hello_world.rs
-$ ./hello_world
-hello world
-$
-&lt;/pre&gt;
-
-&lt;p&gt;
-So far, so good. Rust is working! Or, at least, the compiler is.
-&lt;/p&gt;
-
-&lt;p&gt;
-A friend suggested I try &lt;a href=&quot;http://nickel.rs/&quot;&gt;nickle.rs&lt;/a&gt; as a web application framework for
-Rust. It looks good to me!
-&lt;/p&gt;
-
-&lt;p&gt;
-As of today, the first example it uses is:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-#[macro_use] extern crate nickel;
-
-use nickel::Nickel;
-
-fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(router! {
-        get &quot;**&quot; =&amp;gt; |_req, _res| {
-            &quot;Hello world!&quot;
-        }
-    });
-
-    server.listen(&quot;127.0.0.1:6767&quot;);
-}
-&lt;/pre&gt;
-
-&lt;p&gt;
-So, the first time I did this, I got a little side tracked and learned
-a bit about cargo. This time, I notice that there&#39;s this
-&lt;a href=&quot;http://nickel.rs/getting-started.html&quot;&gt;&quot;getting started&quot; link&lt;/a&gt;, so I think I&#39;ll try that instead of getting
-everything set up on my own.
-&lt;/p&gt;
-
-&lt;p&gt;
-There&#39;s a script that I&#39;m supposed to &lt;code&gt;curl&lt;/code&gt; and pipe into a root
-shell, but that makes me paranoid so I&#39;m going to download it and look
-over it first.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-curl -LO https://static.rust-lang.org/rustup.sh
-&lt;/pre&gt;
-
-
-&lt;p&gt;
-Ok, this actually doesn&#39;t look like its going to do what I want. At
-least, there&#39;s a lot going on in this script, more than I want to deal
-with right now. Hmm. I &lt;i&gt;wonder&lt;/i&gt; if &lt;code&gt;cargo&lt;/code&gt; got installed with &lt;code&gt;rustc&lt;/code&gt;?
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ which cargo
-/usr/local/bin/cargo
-$ cargo -v
-Rust&#39;s package manager
-
-Usage:
-    cargo &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;...]
-    cargo [options]
-
-Options:
-    -h, --help       Display this message
-    -V, --version    Print version info and exit
-    --list           List installed commands
-    -v, --verbose    Use verbose output
-
-Some common cargo commands are:
-    build       Compile the current project
-    clean       Remove the target directory
-    doc         Build this project&#39;s and its dependencies&#39; documentation
-    new         Create a new cargo project
-    run         Build and execute src/main.rs
-    test        Run the tests
-    bench       Run the benchmarks
-    update      Update dependencies listed in Cargo.lock
-    search      Search registry for crates
-
-See &#39;cargo help &amp;lt;command&amp;gt;&#39; for more information on a specific command.
-&lt;/pre&gt;
-
-&lt;p&gt;
-Ok, that looks good I guess? I&#39;ll go with it for now.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ rm rustup.sh
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div id=&quot;outline-container-sec-4-2&quot; class=&quot;outline-3&quot;&gt;
-&lt;h3 id=&quot;sec-4-2&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.2&lt;/span&gt; Setting Up the Project&lt;/h3&gt;
-&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-2&quot;&gt;
-&lt;p&gt;
-So, the next step is to generate a new project directory. But I
-already have a project directory =(. I&#39;ll try it like this, anyway.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cargo new . --bin
-Destination `/Users/joel/Projects/simplelog/.` already exists
-&lt;/pre&gt;
-
-&lt;p&gt;
-Ugh, that didn&#39;t work.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cargo -h
-Create a new cargo package at &amp;lt;path&amp;gt;
-
-Usage:
-    cargo new [options] &amp;lt;path&amp;gt;
-    cargo new -h | --help
-
-Options:
-    -h, --help          Print this message
-    --vcs &amp;lt;vcs&amp;gt;         Initialize a new repository for the given version
-                        control system (git or hg) or do not initialize any version
-                        control at all (none) overriding a global configuration.
-    --bin               Use a binary instead of a library template
-    --name &amp;lt;name&amp;gt;       Set the resulting package name
-    -v, --verbose       Use verbose output
-&lt;/pre&gt;
-
-&lt;p&gt;
-Yeah, it doesn&#39;t look like this is going to do what I want it to. Blah
-I guess I&#39;ll just redo this repo.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cd ../
-$ rm -rf simplelog/
-$ cargo new simple-log --bin
-$ cd simple-log/
-&lt;/pre&gt;
-
-
-&lt;p&gt;
-Ok, what&#39;s up in here?
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ tree
-.
-|____.git
-| |____config
-| |____description
-| |____HEAD
-| |____hooks
-| | |____README.sample
-| |____info
-| | |____exclude
-| |____objects
-| | |____info
-| | |____pack
-| |____refs
-| | |____heads
-| | |____tags
-|____.gitignore
-|____Cargo.toml
-|____src
-| |____main.rs
-&lt;/pre&gt;
-
-&lt;p&gt;
-So, it made a git repository, &lt;code&gt;Cargo.toml&lt;/code&gt; and a &lt;code&gt;main.rs&lt;/code&gt; in a &lt;code&gt;src&lt;/code&gt;
-directory. Sounds fine to me.
-&lt;/p&gt;
-
-&lt;p&gt;
-Next on the nickel getting started page,
-I add the &lt;code&gt;nickel.rs&lt;/code&gt; dependency to the cargo file, and it now looks
-like:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-[package]
-name = &quot;simple-log&quot;
-version = &quot;0.1.0&quot;
-authors = [&quot;Joel McCracken &amp;lt;mccracken.joel@gmail.com&amp;gt;&quot;]
-
-[dependencies.nickel]
-
-git = &quot;https://github.com/nickel-org/nickel.rs.git&quot;
-&lt;/pre&gt;
-
-&lt;p&gt;
-This makes sense, I think. I&#39;m not sure what
-&quot;dependencies.nickel&quot; is actually &lt;i&gt;saying&lt;/i&gt;. Is &lt;code&gt;dependencies&lt;/code&gt; a hash
-with a &lt;code&gt;nickel&lt;/code&gt; key? I do get that I&#39;m saying &quot;get nickel from here,
-yo&quot;.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div id=&quot;outline-container-sec-4-3&quot; class=&quot;outline-3&quot;&gt;
-&lt;h3 id=&quot;sec-4-3&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.3&lt;/span&gt; The &quot;Hello World&quot; Example Running&lt;/h3&gt;
-&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-3&quot;&gt;
-&lt;p&gt;
-Anyway, moving on and pasting the example into &lt;code&gt;main.rs&lt;/code&gt;:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-#[macro_use] extern crate nickel;
-
-use nickel::Nickel;
-
-fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(router! {
-        get &quot;**&quot; =&amp;gt; |_req, _res| {
-            &quot;Hello world!&quot;
-        }
-    });
-
-    server.listen(&quot;127.0.0.1:6767&quot;);
-}
-&lt;/pre&gt;
-
-&lt;p&gt;
-So, what&#39;s the deal with &lt;code&gt;macro_use&lt;/code&gt;, &lt;code&gt;extern&lt;/code&gt;, and then needing to
-&lt;code&gt;use&lt;/code&gt;? All stuff I will figure out later.
-&lt;/p&gt;
-
-&lt;p&gt;
-&lt;i&gt;Oh snap&lt;/i&gt;, I had a few sentences about how &lt;code&gt;macro_use&lt;/code&gt; was probably a
-macro-time directive&lt;sup&gt;&lt;a id=&quot;fnr.2&quot; name=&quot;fnr.2&quot; class=&quot;footref&quot; href=&quot;#fn.2&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;, but I didn&#39;t see any actual
-macros, so I deleted it. Now I see &lt;code&gt;router!&lt;/code&gt;, though, so I&#39;m even more
-inclined to think this is a macro directive. Also, I doubt
-the term &#39;directive&#39; is correct, so don&#39;t pick it up.
-&lt;/p&gt;
-
-&lt;p&gt;
-Lets try it:
-&lt;/p&gt;
-&lt;pre class=&quot;example&quot;&gt;
-cargo run
-    Updating git repository `https://github.com/nickel-org/nickel.rs.git`
-    Updating registry `https://github.com/rust-lang/crates.io-index`
- Downloading unsafe-any v0.4.1
- Downloading httparse v0.1.2
- Downloading traitobject v0.0.3
- Downloading lazy_static v0.1.10
- Downloading pkg-config v0.3.4
- Downloading num_cpus v0.2.5
- Downloading modifier v0.1.0
- Downloading groupable v0.2.0
- Downloading unicase v0.1.0
- Downloading gcc v0.3.5
- Downloading time v0.1.25
- Downloading log v0.3.1
- Downloading url v0.2.34
- Downloading plugin v0.2.6
- Downloading hyper v0.4.0
- Downloading matches v0.1.2
- Downloading mustache v0.6.1
- Downloading bitflags v0.1.1
- Downloading typeable v0.1.1
- Downloading openssl v0.6.2
- Downloading rustc-serialize v0.3.14
- Downloading typemap v0.3.2
- Downloading regex v0.1.30
- Downloading cookie v0.1.20
- Downloading mime v0.0.11
- Downloading libc v0.1.8
- Downloading openssl-sys v0.6.2
-   Compiling modifier v0.1.0
-   Compiling traitobject v0.0.3
-   Compiling regex v0.1.30
-   Compiling libc v0.1.8
-   Compiling lazy_static v0.1.10
-   Compiling matches v0.1.2
-   Compiling httparse v0.1.2
-   Compiling rustc-serialize v0.3.14
-   Compiling groupable v0.2.0
-   Compiling pkg-config v0.3.4
-   Compiling gcc v0.3.5
-   Compiling bitflags v0.1.1
-   Compiling unicase v0.1.0
-   Compiling typeable v0.1.1
-   Compiling unsafe-any v0.4.1
-   Compiling log v0.3.1
-   Compiling num_cpus v0.2.5
-   Compiling typemap v0.3.2
-   Compiling mime v0.0.11
-   Compiling plugin v0.2.6
-   Compiling openssl-sys v0.6.2
-   Compiling time v0.1.25
-   Compiling openssl v0.6.2
-   Compiling url v0.2.34
-   Compiling mustache v0.6.1
-   Compiling cookie v0.1.20
-   Compiling hyper v0.4.0
-   Compiling nickel v0.5.0 (https://github.com/nickel-org/nickel.rs.git#69546f58)
-   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
-     Running `target/debug/simple-log`
-Listening on http://127.0.0.1:6767
-Ctrl-C to shutdown server
-^C
-&lt;/pre&gt;
-
-&lt;p&gt;
-Woo hoo! Visiting &lt;code&gt;localhost:6767&lt;/code&gt; in my browser worked.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div id=&quot;outline-container-sec-4-4&quot; class=&quot;outline-3&quot;&gt;
-&lt;h3 id=&quot;sec-4-4&quot;&gt;&lt;span class=&quot;section-number-3&quot;&gt;4.4&lt;/span&gt; One Final Challenge&lt;/h3&gt;
-&lt;div class=&quot;outline-text-3&quot; id=&quot;text-4-4&quot;&gt;
-&lt;p&gt;
-Ok, now I want to try one thing and then call it a night: can I move
-the &quot;hello world&quot; into its own function? Baby steps, after all.
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-fn say_hello() {
-    &quot;Hello dear world!&quot;;
-}
-
-fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(router! {
-        get &quot;**&quot; =&amp;gt; |_req, _res| {
-            say_hello();
-        }
-    });
-
-    server.listen(&quot;127.0.0.1:6767&quot;);
-}
-&lt;/pre&gt;
-
-&lt;p&gt;
-Err&amp;#x2026; when I run it this time, I see &quot;Not found&quot;. Let me try
-fiddling with semicolons just in case that&#39;s important:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-fn say_hello() {
-    &quot;Hello dear world!&quot;
-}
-
-fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(router! {
-        get &quot;**&quot; =&amp;gt; |_req, _res| {
-            say_hello()
-        }
-    });
-
-    server.listen(&quot;127.0.0.1:6767&quot;);
-}
-&lt;/pre&gt;
-
-&lt;p&gt;
-Ok&amp;#x2026; now I have a completely different error message:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cargo run
-   Compiling simple-log v0.1.0 (file:///Users/joel/Projects/simple-log)
-src/main.rs:6:5: 6:24 error: mismatched types:
- expected `()`,
-    found `&amp;amp;&#39;static str`
-(expected (),
-    found &amp;amp;-ptr) [E0308]
-src/main.rs:6     &quot;Hello dear world!&quot;
-                  ^~~~~~~~~~~~~~~~~~~
-error: aborting due to previous error
-Could not compile `simple-log`.
-
-To learn more, run the command again with --verbose.
-&lt;/pre&gt;
-
-
-&lt;p&gt;
-So, I &lt;i&gt;guess&lt;/i&gt; the presence/absence of the semicolon was important. And
-now I&#39;m getting a type error, at least. Oh, and I&#39;m 90% sure that &lt;code&gt;()&lt;/code&gt;
-is referring to what I remember to be &#39;unit&#39;, the Rust idea of
-undefined, nil, or whatever. I&#39;m sure this isn&#39;t quite right, but I
-guess it makes sense.
-&lt;/p&gt;
-
-&lt;p&gt;
-I &lt;i&gt;assumed&lt;/i&gt; Rust would do type inferencing. Does it not? Or does it
-just not do it around function boundaries? Hmm.
-&lt;/p&gt;
-
-&lt;p&gt;
-So, the error message is telling me that it expected the return value
-to be unit, but the actual return value was a static string(?). I&#39;m
-pretty sure I&#39;ve seen the syntax for specifying return value types;
-let me see:
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-#[macro_use] extern crate nickel;
-
-use nickel::Nickel;
-
-fn say_hello() -&amp;gt; &amp;amp;&#39;static str {
-    &quot;Hello dear world!&quot;
-}
-
-fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(router! {
-        get &quot;**&quot; =&amp;gt; |_req, _res| {
-            say_hello()
-        }
-    });
-
-    server.listen(&quot;127.0.0.1:6767&quot;);
-}
-&lt;/pre&gt;
-
-&lt;p&gt;
-The type &lt;code&gt;&amp;amp;&#39;static str&lt;/code&gt; looks very weird to me. Does it compile? Does
-it work?
-&lt;/p&gt;
-
-&lt;pre class=&quot;example&quot;&gt;
-$ cargo run &amp;amp;
-[1] 14997
-Running `target/debug/simple-log`
-Listening on http://127.0.0.1:6767
-Ctrl-C to shutdown server
-$ curl http://localhost:6767
-Hello dear world!
-$ fg
-cargo run
-^C
-&lt;/pre&gt;
-
-
-&lt;p&gt;
-Yay, it worked! This time around, Rust hasn&#39;t been &lt;i&gt;that&lt;/i&gt; frustrating. I&#39;m not
-sure if its because I&#39;m more familiar with some of this tooling, or
-I&#39;ve opted to read documentation more, but I&#39;m having fun. Also, the
-difference between &lt;i&gt;reading&lt;/i&gt; a language and &lt;i&gt;writing&lt;/i&gt; in a
-language sometimes very surprising. While I understand these code
-examples, I can&#39;t make edits quickly and effectively.
-&lt;/p&gt;
-
-&lt;p&gt;
-&amp;#x2014;
-&lt;/p&gt;
-
-&lt;p&gt;
-Next up, we will work through the process of writing the current date
-to a file. This can be found &lt;a href=&quot;http://joelmccracken.github.io/entries/a-simple-web-app-in-rust-pt-2a&quot;&gt;here&lt;/a&gt;.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&quot;footnotes&quot;&gt;
-&lt;h2 class=&quot;footnotes&quot;&gt;Footnotes: &lt;/h2&gt;
-&lt;div id=&quot;text-footnotes&quot;&gt;
-
-&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.1&quot; name=&quot;fn.1&quot; class=&quot;footnum&quot; href=&quot;#fnr.1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
-I&#39;m not trying to say that the experiences of
-beginners is not valuable &amp;#x2013; far from it! However, I do think those
-experiences bring a separate set of insights than those from someone
-who has been programming for a long time, and they may notice how
-non-standard some things in an ecosystem are.
-&lt;/p&gt;&lt;/div&gt;
-
-&lt;div class=&quot;footdef&quot;&gt;&lt;sup&gt;&lt;a id=&quot;fn.2&quot; name=&quot;fn.2&quot; class=&quot;footnum&quot; href=&quot;#fnr.2&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; &lt;p class=&quot;footpara&quot;&gt;
-I would normally say
-&#39;compile-time&#39; directive, but that doesn&#39;t make much sense since Rust
-is a compiled language. So, I say &#39;macro-time&#39; directive, but I really
-have no idea.
-&lt;/p&gt;&lt;/div&gt;
-
-
-&lt;/div&gt;
-&lt;/div&gt;</description>
-        <pubDate>Sun, 24 May 2015 00:00:00 -0400</pubDate>
-        <link>http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-1/</link>
-        <guid isPermaLink="true">http://joelmccracken.github.io//entries/a-simple-web-app-in-rust-pt-1/</guid>
       </item>
     
   </channel>
