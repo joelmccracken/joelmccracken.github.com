@@ -141,6 +141,9 @@ a:visited { color: #205caa; }
   background-color: #fff;
 }
 
+.footdef {
+    margin: 1em 0 1em 0;
+}
 
 .footdef > sup {
   display: inline;
