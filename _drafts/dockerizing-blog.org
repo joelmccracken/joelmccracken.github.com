@@ -1,0 +1,86 @@
+---
+layout: post
+title: "Dockerizing my Jekyll Blog"
+---
+
+
+Over the last several months, I have been using Docker more and more at work.
+
+I have been wanting to apply it to something personal, and dockerizing my blog just made sense.
+There were a number of weaknesses in the way my current blog works I wanted to address.
+
+As I worked through it, I ran into enough "gotchas" that I thought a more thorough writeup was worth doing. [fn:1]
+Shortly into the "small" project I ran into enough issues that I decided record them, and hopefully
+I could help someone else who is new-ish to docker.
+
+[fn:1] I keep telling myself that I need to write these things as I work on and learn things. And, I keep not doing it.
+Here I am trying to break that pattern.
+
+
+* Background
+
+  *tl;dr* basically I have two services that need to run, ~jekyll~ and an ~org-mode~ compiler service.
+
+  Over time, I have grown less-and-less satisfied with Jekyll (and Markdown, especially).
+  I really wanted author posts in ~org-mode~. Of course, there are several solutions that exist for this,
+  but the only one with the featues I wanted is the official implementation. So, I wrote a little ~org-mode~ compilation service.
+  A while ago I wrote about [[http://joelmccracken.github.io/entries/org-mode-jekyll-plugin/][the initial implementation]]. That ended up being unacceptably slow, so I hacked together a little TCP service
+  that vastly improved performance. [fn:regerts]
+
+[fn:regerts] At one point I wanted to write about that experience, which was actually kinda interesting (This was the first "raw tcp"
+service I had ever written that was useful (as opposed to being a learning experience). There are a few interesting pieces:
+
+The [[https://github.com/joelmccracken/joelmccracken.github.com/blob/444cac503c09d884ed148d961f449380b8ab72c5/_plugins/org-converter.rb][Jekyll plugin written in Ruby]] which starts and stops the ~org-mode~ compilation service, and
+[[https://github.com/joelmccracken/joelmccracken.github.com/blob/0f270d6a112529b1507c7df079af6cf5acb9f6fc/_emacs-org-compiler/org-convert.el][the org-mode service]] that receives the raw ~org-mode~ text over a socket and responds with the compiled html version.
+
+  Part of that support was code for [[https://github.com/joelmccracken/joelmccracken.github.com/blob/0f270d6a112529b1507c7df079af6cf5acb9f6fc/_plugins/org-converter.rb#L19][automatically starting]]
+  the required emacs process, so the service would be ready when Jekyll needed it.
+  This was tricky though and had bugs. It really made sense as a separate service specified in a ~docker-compose~ file.
+
+* End Goal
+
+** Project description
+
+** Existing ~org-mode~ Inetration
+* Lessons
+** When building docker images, look for existing ~Dockerfile~ examples
+
+   Sometimes, you might be able to find a Docker image that does exactly what you need it to, and you won't need to build a custom image.
+   For me, this has rarely been the case.
+
+   If you do need to build a custom image for your application, find a similar Dockerfile for you to use as an example. Even if you can't
+   build upon it as a base image, odds are someone else has run into your same issue.
+
+   In computing in general, I have gotten to the point where often it is faster for me to just try something instead of
+   looking for examples of how others have done it.
+
+   This tendency seems to be wrong when working with Docker.
+   I have consistently found it surprisingly hard to dockerize software.
+   I always run into some unexpected environment issues --
+   probably largely because of "minimal" base images[fn:base],
+   but there may be other issues in play.
+
+[fn:base] with a small base image, you end up needing to specify *everything* for your app. In my experience, an app that runs easily on regular ubuntu 16.04
+does not mean it works on the ubuntu:16.04 image just as easily, for example.
+
+
+   Eventually I was able to find
+   the repo jekyll-docker (https://github.com/envygeeks/jekyll-docker), which I was able to use as an example.
+   What I ended up with (https://github.com/joelmccracken/joelmccracken.github.com/blob/writing/_jekyll-image/Dockerfile) was way more
+   complicated than I initially expected![fn:complicated]
+
+[fn:complicated] Some of it is probably unnecessary and cargo-culted, but I tried pulling some of it out and ran into issues (e.g. running as ~jekyll~ user).
+
+
+ - At times it can be difficult to get software to run within docker. My initial naive attempts did not work out well.
+   - A quick Internet search gave me https://github.com/envygeeks/jekyll-docker, which I was able to use as an example.
+
+ - If you are dockerizing something that runs on your local machine, and components were connecting to each other on ~localhost~,
+   you will probably experience connectivitiy problems. Some things to be aware of:
+   - Unless you are sharing ports with the host, each container will need to be on the same docker "network" for them to communicate.
+   - Container names map to hostnames. Thus, if you have "containerA" trying to connect to "containerB" on port 12345, "containerA" will containerB:12345".
+
+ - When building docker images, it is MUCH easier to have a "run" script built into the image
+
+
+* Conclusion

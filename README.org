@@ -40,3 +40,12 @@ deploy:
   jekyll build && octopress deploy
 
 #+END_SRC
+
+example of how to  add an image with org mode:
+
+#+BEGIN_SRC org
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:SED-HR4049
+http:/img/a.jpg
+#+END_SRC
+assumes a file at ~/img/a.jpg~

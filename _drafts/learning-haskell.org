@@ -1,0 +1,19 @@
+i havent written anything here for a long time
+
+largely been a time of personal uncertainty re: tech
+
+dropped off interest in rrust because the more I learned the more i was skeptical of long-term prodctivity.
+i'm not certain of this opinion, and i fully intend to revisit the language
+
+
+----
+
+pure funcitonal programming
+
+pure funcitonal programming (for this purposes, this may mean "programming without side effects". Should I explain this more?)
+
+has long interested me. because of a project I worked konfor about a year, i was able to explore some of these ideas in ruby
+
+started learning haskell soon after that.
+
+(I guess I posted

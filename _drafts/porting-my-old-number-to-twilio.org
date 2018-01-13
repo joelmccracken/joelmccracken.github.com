@@ -1,0 +1,20 @@
+---
+layout: post
+title: "Porting my old phone number to Twillio"
+---
+
+Saving my old phone number.
+
+* confusion starting out
+I remember looking at twillio a little while ago
+
+(get image of configs...)
+
+* dislike youtube videos
+
+* bug in porting phone number form
+
+
+confusing starting out
+dislike youtube videos
+"twillio serverless" not
