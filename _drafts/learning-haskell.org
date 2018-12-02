@@ -1,11 +1,5 @@
-i havent written anything here for a long time
-
-largely been a time of personal uncertainty re: tech
-
-dropped off interest in rrust because the more I learned the more i was skeptical of long-term prodctivity.
-i'm not certain of this opinion, and i fully intend to revisit the language
-
-
+layout: post
+title: "Advice About Learning Haskell"
 ----
 
 pure funcitonal programming

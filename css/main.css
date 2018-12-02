@@ -145,6 +145,18 @@ a:visited { color: #205caa; }
     margin: 1em 0 1em 0;
 }
 
+.section-number-2 {
+    color: #aaa;
+}
+
+.section-number-3 {
+    color: #aaa;
+}
+
+.footnotes {
+    color: #aaa;
+}
+
 .footdef > sup {
   display: inline;
 }

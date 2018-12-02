@@ -1,14 +1,20 @@
 ---
 layout: post
 title: "Dockerizing my Jekyll Blog"
+date: 2018-01-22T12:54:09-05:00
 ---
 
-My blog has always been a bit tricky to set up and publish, and dockerizing the process made sense.
+Over the last several months, I have been using Docker more and more at work.
+
+I have been wanting to apply it to something personal, and dockerizing my blog just made sense.
 There were a number of weaknesses in the way my current blog works I wanted to address.
 
-As I worked through it, I ran into enough "gotchas" that I thought it might help someone else if they are in a similar situation.
-Hopefully I can help someone else who is new-ish to docker (If I stopped making some of these
-mistakes myself, that would be a bonus).
+As I worked through it, I ran into enough "gotchas" that I thought a more thorough writeup was worth doing. [fn:1]
+Hopefully I can help someone else who is new-ish to docker (or, more honestly, hopefully I stop making some of these
+mistakes myself).
+
+[fn:1] I keep telling myself that I need to write these things as I work on and learn things. And, I keep not doing it.
+Here I am trying to break that pattern.
 
 * Background
 
@@ -18,7 +24,7 @@ mistakes myself, that would be a bonus).
   I really wanted author posts in ~org-mode~. Of course, there are several solutions that exist for this,
   but the only one with the featues I wanted is the official implementation. So, I wrote a little ~org-mode~ compilation service.
   A while ago I wrote about [[http://joelmccracken.github.io/entries/org-mode-jekyll-plugin/][the initial implementation]]. That ended up being unacceptably slow, so I hacked together a little TCP service
-  that vastly improved performance[fn:regerts].
+  that vastly improved performance. [fn:regerts]
 
 [fn:regerts] At one point I wanted to write about that experience, which was actually kinda interesting (This was the first "raw tcp"
 service I had ever written that was useful (as opposed to being a learning experience). There are a few interesting pieces:
@@ -66,7 +72,7 @@ does not mean it works on the ubuntu:16.04 image just as easily, for example.
    Eventually I looked at the repo I had evaluated ealier (https://github.com/envygeeks/jekyll-docker),
    which I was able to use as an example.
    What I ended up with (https://github.com/joelmccracken/joelmccracken.github.com/blob/writing/_jekyll-image/Dockerfile) was way more
-   complicated than I initially expected[fn:complicated]!
+   complicated than I initially expected! [fn:complicated]
 
 [fn:complicated] Some of it is probably unnecessary and cargo-culted, but I tried pulling some of it out and ran into issues (e.g. not running as ~jekyll~ user).
 
